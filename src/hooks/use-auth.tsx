@@ -47,8 +47,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     if (!auth || !firestore) {
-      // Firebase services are not available yet.
-      // The loading state will be handled by the loading check below.
       setLoading(true);
       return;
     }
@@ -129,7 +127,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     <AuthContext.Provider
       value={{
         user,
-        loading,
+        loading: loading || !auth || !firestore,
         signup,
         login,
         logout,
