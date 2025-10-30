@@ -42,7 +42,7 @@ export function CartSheet({ open, onOpenChange }: CartSheetProps) {
       <SheetContent className="w-full sm:max-w-md flex flex-col">
         <SheetHeader>
           <SheetTitle className="font-headline text-xl">
-            Shopping Cart ({itemCount})
+            Carrito de Compras ({itemCount})
           </SheetTitle>
         </SheetHeader>
         {itemCount > 0 ? (
@@ -110,15 +110,15 @@ export function CartSheet({ open, onOpenChange }: CartSheetProps) {
                   <span>${totalPrice.toFixed(2)}</span>
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  Shipping and taxes will be calculated at checkout.
+                  El envío y los impuestos se calcularán en el checkout.
                 </p>
                 <div className="flex flex-col gap-2">
                    <Button asChild size="lg" className="w-full">
-                    <Link href="/checkout" onClick={() => onOpenChange(false)}>Proceed to Checkout</Link>
+                    <Link href="/checkout" onClick={() => onOpenChange(false)}>Proceder al Pago</Link>
                   </Button>
                   <SheetClose asChild>
                     <Button variant="outline" size="lg" className="w-full">
-                      Continue Shopping
+                      Seguir Comprando
                     </Button>
                   </SheetClose>
                 </div>
@@ -127,12 +127,12 @@ export function CartSheet({ open, onOpenChange }: CartSheetProps) {
           </>
         ) : (
           <div className="flex flex-col items-center justify-center h-full text-center">
-            <h3 className="text-lg font-semibold">Your cart is empty</h3>
+            <h3 className="text-lg font-semibold">Tu carrito está vacío</h3>
             <p className="text-muted-foreground mt-2">
-              Looks like you haven't added anything yet.
+              Parece que aún no has añadido nada.
             </p>
             <SheetClose asChild>
-              <Button className="mt-6">Start Shopping</Button>
+              <Button className="mt-6">Empezar a Comprar</Button>
             </SheetClose>
           </div>
         )}
