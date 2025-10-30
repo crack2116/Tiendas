@@ -31,11 +31,11 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-20 items-center justify-between">
-        <div className="flex items-center md:hidden">
+      <div className="flex h-20 items-center justify-between px-4 md:px-6 lg:px-8">
+        <div className="flex items-center">
           <Sheet>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon">
+              <Button variant="ghost" size="icon" className="md:hidden">
                 <Menu className="h-6 w-6" />
                 <span className="sr-only">Toggle Menu</span>
               </Button>
@@ -59,16 +59,13 @@ export function Header() {
               </div>
             </SheetContent>
           </Sheet>
+          <Link href="/" className="hidden md:flex mr-6">
+              <Logo className="h-10 w-auto" />
+          </Link>
         </div>
 
-        <div className="hidden md:flex items-center">
-            <Link href="/" className="mr-6">
-                <Logo className="h-10 w-auto" />
-            </Link>
-        </div>
-
-        <div className="flex-1 w-full px-4">
-            <form className="w-full max-w-xl mx-auto">
+        <div className="flex-1 max-w-xl mx-auto">
+            <form className="w-full">
               <div className="relative">
                 <Input
                   className="w-full appearance-none bg-secondary pl-4 pr-10 h-12 rounded-full text-base"
@@ -79,36 +76,20 @@ export function Header() {
             </form>
         </div>
 
-        <div className="hidden md:flex items-center justify-end space-x-1 ml-auto">
+        <div className="flex items-center justify-end space-x-1">
             <CartSheet open={isCartOpen} onOpenChange={setCartOpen} />
-            <Button variant="ghost" asChild className="text-foreground/80 font-normal">
+            <Button variant="ghost" asChild className="text-foreground/80 font-normal hidden md:inline-flex">
                 <Link href="#">
                 <Heart className="h-5 w-5 mr-1" />
                 Favoritos
                 </Link>
             </Button>
-            <Button variant="ghost" asChild className="text-foreground/80 font-normal">
+            <Button variant="ghost" asChild className="text-foreground/80 font-normal hidden md:inline-flex">
                 <Link href="/login">
                 <User className="h-5 w-5 mr-1" />
                 Entrar
                 </Link>
             </Button>
-        </div>
-
-         <div className="md:hidden ml-auto">
-            <CartSheet open={isCartOpen} onOpenChange={setCartOpen}>
-                <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="relative">
-                    <ShoppingCart className="h-5 w-5 text-foreground/80" />
-                    <span className="sr-only">Shopping Cart</span>
-                    {itemCount > 0 && (
-                    <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold">
-                        {itemCount}
-                    </span>
-                    )}
-                </Button>
-                </SheetTrigger>
-            </CartSheet>
          </div>
       </div>
 
