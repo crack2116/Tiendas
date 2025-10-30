@@ -45,7 +45,7 @@ export function LoginDialog({ children }: { children: React.ReactNode }) {
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader className="text-center items-center">
-           <div className="inline-block mx-auto mb-6">
+           <div className="inline-block mb-6 pl-4">
             <Link href="/" onClick={() => setOpen(false)}>
                 <Logo className="h-16 w-auto" />
             </Link>
