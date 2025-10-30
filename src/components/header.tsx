@@ -171,10 +171,10 @@ export function Header() {
         {navLinks.map(link => (
           <Button
             key={link.label}
-            variant='default'
+            variant='ghost'
             size="sm"
             asChild
-            className='bg-[#f37423] hover:bg-[#f37423]/90 text-white rounded-full'
+            className='hover:bg-[#f37423] hover:text-white rounded-full'
           >
             <Link
               href={link.href}
