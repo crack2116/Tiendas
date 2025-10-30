@@ -79,20 +79,20 @@ export function Header() {
             </form>
         </div>
 
-        <div className="hidden md:flex items-center justify-end space-x-4">
-          <CartSheet open={isCartOpen} onOpenChange={setCartOpen} />
-          <Button variant="ghost" asChild className="text-foreground/80 font-normal">
-            <Link href="#">
-              <Heart className="h-5 w-5 mr-1" />
-              Favoritos
-            </Link>
-          </Button>
-          <Button variant="ghost" asChild className="text-foreground/80 font-normal">
-            <Link href="/login">
-              <User className="h-5 w-5 mr-1" />
-              Entrar
-            </Link>
-          </Button>
+        <div className="hidden md:flex items-center justify-end space-x-2 ml-auto">
+            <CartSheet open={isCartOpen} onOpenChange={setCartOpen} />
+            <Button variant="ghost" asChild className="text-foreground/80 font-normal">
+                <Link href="#">
+                <Heart className="h-5 w-5 mr-1" />
+                Favoritos
+                </Link>
+            </Button>
+            <Button variant="ghost" asChild className="text-foreground/80 font-normal">
+                <Link href="/login">
+                <User className="h-5 w-5 mr-1" />
+                Entrar
+                </Link>
+            </Button>
         </div>
 
          <div className="md:hidden ml-auto">
