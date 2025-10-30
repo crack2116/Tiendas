@@ -17,27 +17,9 @@ import { Logo } from '@/components/logo';
 
 export function LoginDialog({ children }: { children: React.ReactNode }) {
   const [isLogin, setIsLogin] = useState(true);
-  const [dni, setDni] = useState('');
-  const [fullName, setFullName] = useState('');
-  const [isDniLoading, setIsDniLoading] = useState(false);
-
-  const handleDniBlur = async () => {
-    if (dni.length !== 8) return;
-
-    setIsDniLoading(true);
-    // Simulación: Llamada a API para validar DNI de Perú para mayores de 18
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    // En una aplicación real, esto sería una llamada a un servicio externo.
-    // Esto es solo una respuesta de ejemplo.
-    setFullName('Juan Alberto Pérez Diaz'); 
-    setIsDniLoading(false);
-  };
 
   const toggleForm = () => {
     setIsLogin(!isLogin);
-    // Resetear campos al cambiar de formulario
-    setDni('');
-    setFullName('');
   };
 
   return (
@@ -79,29 +61,23 @@ export function LoginDialog({ children }: { children: React.ReactNode }) {
             </>
           ) : (
             <>
-              <div className="grid gap-2">
-                <Label htmlFor="dni-dialog">DNI (Perú)</Label>
-                <Input
-                  id="dni-dialog"
-                  type="text"
-                  placeholder="12345678"
-                  required
-                  maxLength={8}
-                  value={dni}
-                  onChange={(e) => setDni(e.target.value)}
-                  onBlur={handleDniBlur}
-                />
+              <div className="grid grid-cols-2 gap-4">
+                <div className="grid gap-2">
+                  <Label htmlFor="dni-dialog">DNI</Label>
+                  <Input id="dni-dialog" type="text" placeholder="12345678" required maxLength={8} />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="age-dialog">Edad</Label>
+                  <Input id="age-dialog" type="number" placeholder="25" required />
+                </div>
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="fullName-dialog">Nombre completo</Label>
-                <Input 
-                  id="fullName-dialog" 
-                  type="text" 
-                  placeholder="Tu nombre aparecerá aquí" 
-                  required 
-                  value={isDniLoading ? 'Verificando...' : fullName} 
-                  readOnly={!isDniLoading && fullName !== ''} 
-                  />
+                <Label htmlFor="fullName-dialog">Nombre y Apellidos</Label>
+                <Input id="fullName-dialog" type="text" placeholder="Juan Pérez Diaz" required />
+              </div>
+              <div className="grid gap-2">
+                  <Label htmlFor="address-dialog">Dirección</Label>
+                  <Input id="address-dialog" type="text" placeholder="Av. Siempre Viva 123" required />
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="email-register-dialog">Email</Label>

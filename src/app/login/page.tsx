@@ -10,24 +10,9 @@ import { Logo } from '@/components/logo';
 
 export default function LoginPage() {
   const [isLogin, setIsLogin] = useState(true);
-  const [dni, setDni] = useState('');
-  const [fullName, setFullName] = useState('');
-  const [isDniLoading, setIsDniLoading] = useState(false);
-
-  const handleDniBlur = async () => {
-    if (dni.length !== 8) return;
-
-    setIsDniLoading(true);
-    // Simulación de llamada a API para verificar DNI de Perú
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    setFullName('Juan Alberto Pérez Diaz');
-    setIsDniLoading(false);
-  };
 
   const toggleForm = () => {
     setIsLogin(!isLogin);
-    setDni('');
-    setFullName('');
   };
 
   return (
@@ -69,22 +54,23 @@ export default function LoginPage() {
               </>
             ) : (
               <>
-                <div className="grid gap-2">
-                  <Label htmlFor="dni">DNI (Perú)</Label>
-                  <Input
-                    id="dni"
-                    type="text"
-                    placeholder="12345678"
-                    required
-                    maxLength={8}
-                    value={dni}
-                    onChange={(e) => setDni(e.target.value)}
-                    onBlur={handleDniBlur}
-                  />
+                <div className="grid grid-cols-2 gap-4">
+                    <div className="grid gap-2">
+                      <Label htmlFor="dni">DNI</Label>
+                      <Input id="dni" type="text" placeholder="12345678" required maxLength={8} />
+                    </div>
+                    <div className="grid gap-2">
+                      <Label htmlFor="age">Edad</Label>
+                      <Input id="age" type="number" placeholder="25" required />
+                    </div>
                 </div>
                 <div className="grid gap-2">
-                  <Label htmlFor="fullName">Nombre completo</Label>
-                  <Input id="fullName" type="text" placeholder="Tu nombre aparecerá aquí" required value={isDniLoading ? 'Verificando...' : fullName} readOnly={!isDniLoading && fullName !== ''} />
+                  <Label htmlFor="fullName">Nombre y Apellidos</Label>
+                  <Input id="fullName" type="text" placeholder="Juan Pérez Diaz" required />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="address">Dirección</Label>
+                  <Input id="address" type="text" placeholder="Av. Siempre Viva 123" required />
                 </div>
                 <div className="grid gap-2">
                   <Label htmlFor="email-register">Email</Label>
