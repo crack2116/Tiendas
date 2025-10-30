@@ -21,7 +21,7 @@
     {
       "id": "carousel-perfume",
       "description": "An elegant perfume bottle",
-      "imageUrl": "https://www.kneipp.com/dw/image/v2/BGQM_PRD/on/demandware.static/-/Sites-kneippES-Library/default/dwfeccb5a1/05_Life_Coach/05_01_Relax_and_sleep/05_01d_Aromacology/Aromatherapie_Aromakologie-bei-Kneipp.jpg",
+      "imageUrl": "https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=1920",
       "imageHint": "perfume bottle"
     },
     {
@@ -29,6 +29,24 @@
       "description": "A collection of fashion accessories like sunglasses and a watch",
       "imageUrl": "https://hips.hearstapps.com/hmg-prod/images/gettyimages-837641132-1531290955.jpg?crop=1.00xw:0.753xh;0,0.0234xh",
       "imageHint": "fashion accessories"
+    },
+    {
+      "id": "carousel-face",
+      "description": "Woman applying face cream",
+      "imageUrl": "https://images.unsplash.com/photo-1512496015851-a90137ba0a43?q=80&w=1920",
+      "imageHint": "face care"
+    },
+    {
+      "id": "carousel-hair",
+      "description": "Hair care products on a shelf",
+      "imageUrl": "https://images.unsplash.com/photo-1620916298379-2475a2254332?q=80&w=1920",
+      "imageHint": "hair products"
+    },
+    {
+      "id": "carousel-body",
+      "description": "Woman applying body lotion",
+      "imageUrl": "https://images.unsplash.com/photo-1563291885-26155933a2a6?q=80&w=1920",
+      "imageHint": "body lotion"
     },
     {
       "id": "product-1-a",
