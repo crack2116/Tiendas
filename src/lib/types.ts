@@ -16,6 +16,7 @@ export type Product = {
   description: string;
   details: string[];
   reviews: Review[];
+  badge?: string;
 };
 
 export type CartItem = {

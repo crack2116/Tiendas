@@ -5,9 +5,10 @@ import Link from 'next/link';
 import type { Product } from '@/lib/types';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from './ui/button';
-import { ShoppingCart } from 'lucide-react';
+import { ShoppingCart, Heart } from 'lucide-react';
 import { useCart } from '@/hooks/use-cart';
 import { useToast } from '@/hooks/use-toast';
+import { Badge } from './ui/badge';
 
 type ProductCardProps = {
   product: Product;
@@ -27,11 +28,29 @@ export function ProductCard({ product }: ProductCardProps) {
     });
   };
 
+  const getBadgeClass = (badgeText?: string) => {
+    if (badgeText === 'Mega Promo') {
+      return 'bg-blue-600 text-white';
+    }
+    if (badgeText === 'natura days') {
+      return 'bg-purple-300 text-purple-900';
+    }
+    return 'bg-primary text-primary-foreground';
+  }
+
   return (
     <Card className="overflow-hidden group transition-all duration-300 hover:shadow-xl hover:-translate-y-1 flex flex-col">
       <Link href={`/products/${product.slug}`} className="contents">
         <CardContent className="p-0 flex flex-col flex-grow">
           <div className="aspect-[4/5] overflow-hidden relative">
+            {product.badge && (
+              <Badge className={`absolute top-2 left-2 z-10 rounded-full px-3 py-1 text-xs ${getBadgeClass(product.badge)}`}>
+                {product.badge}
+              </Badge>
+            )}
+             <Button variant="ghost" size="icon" className="absolute top-2 right-2 z-10 bg-white/50 backdrop-blur-sm rounded-full h-8 w-8 hover:bg-white">
+              <Heart className="h-4 w-4 text-gray-700" />
+            </Button>
             <Image
               src={product.images[0].url}
               alt={product.images[0].alt}

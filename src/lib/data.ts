@@ -18,6 +18,7 @@ export const products: Product[] = [
     name: 'Classic White Tee',
     category: 'Tops',
     price: 29.99,
+    badge: 'Mega Promo',
     images: [
       getImage('product-1-a', 'Front view of a minimalist white t-shirt', 'white t-shirt'),
       getImage('product-1-b', 'Side view of a minimalist white t-shirt', 'white t-shirt'),
@@ -35,6 +36,7 @@ export const products: Product[] = [
     name: 'Slim Dark Denim',
     category: 'Jeans',
     price: 89.99,
+    badge: 'natura days',
     images: [
       getImage('product-2-a', 'Slim-fit dark wash denim jeans', 'denim jeans'),
       getImage('product-2-b', 'Close-up of denim jeans fabric', 'denim jeans'),
@@ -51,6 +53,7 @@ export const products: Product[] = [
     name: 'Leather Biker Jacket',
     category: 'Jackets',
     price: 249.99,
+    badge: 'natura days',
     images: [
       getImage('product-3-a', 'Classic leather biker jacket', 'leather jacket'),
       getImage('product-3-b', 'Detail of biker jacket zipper', 'leather jacket'),
@@ -67,6 +70,7 @@ export const products: Product[] = [
     name: 'Chunky Knit Sweater',
     category: 'Knitwear',
     price: 79.99,
+    badge: 'Mega Promo',
     images: [
       getImage('product-4-a', 'Chunky knit wool sweater', 'wool sweater'),
     ],
@@ -80,6 +84,7 @@ export const products: Product[] = [
     name: 'Chelsea Boots',
     category: 'Footwear',
     price: 129.99,
+    badge: 'Mega Promo',
     images: [
       getImage('product-5-a', 'Sleek black Chelsea boots', 'black boots'),
     ],
