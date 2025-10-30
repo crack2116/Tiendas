@@ -79,7 +79,7 @@ export function Header() {
             </form>
         </div>
 
-        <div className="hidden md:flex items-center justify-end space-x-4 flex-shrink-0 ml-4">
+        <div className="hidden md:flex items-center justify-end space-x-4">
             <Button variant="ghost" asChild className="text-foreground/80 font-normal">
               <Link href="#">
                 <Heart className="h-5 w-5 mr-1" />
