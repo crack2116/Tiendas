@@ -4,7 +4,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 
-import { products } from '@/lib/data';
 import { Button } from '@/components/ui/button';
 import { ProductCard } from '@/components/product-card';
 import { placeholderImages } from '@/lib/placeholder-images';
@@ -18,6 +17,9 @@ import {
 import Autoplay from "embla-carousel-autoplay"
 import { Filter } from 'lucide-react';
 import { ProductFilters } from '@/components/product-filters';
+import { useCollection } from '@/firebase/use-collection';
+import type { Product } from '@/lib/types';
+import { Skeleton } from '@/components/ui/skeleton';
 
 
 const carouselSlides = [
@@ -58,6 +60,7 @@ const carouselSlides = [
 
 export default function Home() {
   const [showFilters, setShowFilters] = useState(false);
+  const { data: products, loading, error } = useCollection<Product>('products');
   
   return (
     <main className="flex-1">
@@ -125,7 +128,15 @@ export default function Home() {
             )}
             <div className={showFilters ? "md:col-span-3" : "md:col-span-4"}>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8">
-                    {products.map(product => (
+                    {loading && Array.from({ length: 8 }).map((_, i) => (
+                      <div key={i} className="space-y-2">
+                        <Skeleton className="h-64" />
+                        <Skeleton className="h-6" />
+                        <Skeleton className="h-4 w-1/2" />
+                      </div>
+                    ))}
+                    {error && <p className='text-destructive col-span-full'>Error al cargar los productos: {error.message}</p>}
+                    {products?.map(product => (
                         <ProductCard key={product.id} product={product} />
                     ))}
                 </div>

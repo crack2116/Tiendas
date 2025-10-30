@@ -1,9 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
-import { products } from '@/lib/data';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import {
@@ -12,23 +11,65 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
-import { Star, MessageCircle, ShoppingCart } from 'lucide-react';
+import { Star, ShoppingCart } from 'lucide-react';
 import { useCart } from '@/hooks/use-cart';
 import { useToast } from '@/hooks/use-toast';
 import AiSuggestions from '@/components/ai-suggestions';
+import { useCollection } from '@/firebase/use-collection';
+import { Product } from '@/lib/types';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function ProductPage({ params }: { params: { slug: string } }) {
   const [quantity, setQuantity] = useState(1);
   const { addToCart } = useCart();
   const { toast } = useToast();
+  
+  const { data, loading, error } = useCollection<Product>('products', {
+    where: [['slug', '==', params.slug]],
+    limit: 1,
+  });
 
-  const product = products.find(p => p.slug === params.slug);
+  const product = data?.[0];
+  const [mainImage, setMainImage] = useState(product?.images[0]);
 
+  useEffect(() => {
+    if (product && product.images.length > 0) {
+      setMainImage(product.images[0]);
+    }
+  }, [product]);
+
+  if (loading) {
+    return (
+      <div className="container mx-auto px-4 py-8 md:py-12">
+        <div className="grid md:grid-cols-2 gap-8 lg:gap-16">
+          <div>
+            <Skeleton className="aspect-square w-full rounded-lg" />
+            <div className="grid grid-cols-4 gap-4 mt-4">
+              <Skeleton className="aspect-square w-full rounded-md" />
+              <Skeleton className="aspect-square w-full rounded-md" />
+              <Skeleton className="aspect-square w-full rounded-md" />
+              <Skeleton className="aspect-square w-full rounded-md" />
+            </div>
+          </div>
+          <div>
+            <Skeleton className="h-10 w-3/4 mb-4" />
+            <Skeleton className="h-8 w-1/4 mb-4" />
+            <Skeleton className="h-6 w-1/2 mb-6" />
+            <Skeleton className="h-20 w-full mb-8" />
+            <Skeleton className="h-12 w-1/2" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
+  
   if (!product) {
     notFound();
   }
-  
-  const [mainImage, setMainImage] = useState(product.images[0]);
 
   const handleAddToCart = () => {
     addToCart(product, quantity);
@@ -39,7 +80,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
   };
 
   const averageRating =
-    product.reviews.length > 0
+    product.reviews && product.reviews.length > 0
       ? product.reviews.reduce((acc, review) => acc + review.rating, 0) /
         product.reviews.length
       : 0;
@@ -48,21 +89,23 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
     <div className="container mx-auto px-4 py-8 md:py-12">
       <div className="grid md:grid-cols-2 gap-8 lg:gap-16">
         <div>
-          <div className="aspect-square w-full overflow-hidden rounded-lg shadow-lg mb-4">
-            <Image
-              src={mainImage.url}
-              alt={mainImage.alt}
-              width={800}
-              height={800}
-              className="object-cover w-full h-full transition-transform duration-300 hover:scale-105"
-            />
-          </div>
+          {mainImage && (
+            <div className="aspect-square w-full overflow-hidden rounded-lg shadow-lg mb-4">
+              <Image
+                src={mainImage.url}
+                alt={mainImage.alt}
+                width={800}
+                height={800}
+                className="object-cover w-full h-full transition-transform duration-300 hover:scale-105"
+              />
+            </div>
+          )}
           <div className="grid grid-cols-4 gap-4">
             {product.images.map(image => (
               <button
                 key={image.id}
                 onClick={() => setMainImage(image)}
-                className={`aspect-square w-full overflow-hidden rounded-md transition-all ${mainImage.id === image.id ? 'ring-2 ring-primary ring-offset-2' : 'hover:opacity-80'}`}
+                className={`aspect-square w-full overflow-hidden rounded-md transition-all ${mainImage?.id === image.id ? 'ring-2 ring-primary ring-offset-2' : 'hover:opacity-80'}`}
               >
                 <Image
                   src={image.url}
@@ -99,7 +142,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
                 />
               ))}
             </div>
-            <span>({product.reviews.length} reseñas)</span>
+            <span>({product.reviews?.length || 0} reseñas)</span>
           </div>
           <p className="mt-6 text-lg">{product.description}</p>
           
@@ -114,7 +157,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
               <AccordionTrigger className="font-headline text-lg">Detalles del Producto</AccordionTrigger>
               <AccordionContent>
                 <ul className="list-disc list-inside space-y-1 text-muted-foreground">
-                  {product.details.map((detail, index) => (
+                  {product.details?.map((detail, index) => (
                     <li key={index}>{detail}</li>
                   ))}
                 </ul>
@@ -123,7 +166,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
             <AccordionItem value="reviews">
               <AccordionTrigger className="font-headline text-lg">Reseñas</AccordionTrigger>
               <AccordionContent>
-                {product.reviews.length > 0 ? (
+                {product.reviews && product.reviews.length > 0 ? (
                   <div className="space-y-6">
                     {product.reviews.map(review => (
                       <div key={review.id}>

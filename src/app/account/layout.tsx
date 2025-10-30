@@ -7,6 +7,7 @@ import {
   User,
   LogOut,
   Shield,
+  Warehouse,
 } from "lucide-react"
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/use-auth';
@@ -70,14 +71,24 @@ export default function AccountLayout({
                 </SidebarMenuButton>
               </SidebarMenuItem>
                {user.role === 'admin' && (
-                <SidebarMenuItem>
-                  <SidebarMenuButton asChild>
-                    <Link href="/admin">
-                      <Shield />
-                      Panel de Admin
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
+                <>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton asChild>
+                      <Link href="/admin">
+                        <Shield />
+                        Panel de Admin
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton asChild>
+                      <Link href="/admin/inventory">
+                        <Warehouse />
+                        Inventario
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                </>
               )}
             </SidebarMenu>
           </SidebarContent>
