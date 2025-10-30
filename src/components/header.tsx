@@ -62,7 +62,7 @@ export function Header() {
               <SheetContent side="left" className="w-[300px]">
                 <div className="flex flex-col h-full">
                   <div className="flex items-center space-x-2 pb-4 border-b">
-                    <Logo className="h-8" />
+                    <Logo className="h-8 w-auto" />
                   </div>
                   <nav className="flex flex-col space-y-4 mt-6">
                     {navLinks.map(link => (
