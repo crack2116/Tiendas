@@ -21,7 +21,7 @@
     {
       "id": "carousel-perfume",
       "description": "An elegant perfume bottle",
-      "imageUrl": "https://images.unsplash.com/photo-1587038166462-2f3b9d031622?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxwZXJmdW1lJTIwYm90dGxlfGVufDB8fHx8MTc2Mjg4NzE1M3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://storage.googleapis.com/aif-staging-images-dev/e5b60706-03c6-4b85-84e9-fcb7a66b9319.png",
       "imageHint": "perfume bottle"
     },
     {
@@ -87,13 +87,13 @@
     {
       "id": "product-7-a",
       "description": "Silk floral print midi dress",
-      "imageUrl": "https://images.unsplash.com/photo-1503408024948-0a3e1b2b519c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxmbG9yYWwlMjBkcmVzc3xlbnwwfHx8fDE3NjE3OTU3NTd8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1503408024948-0a3e1b2b519c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxmbG9yYWwlMjBkcmVzc3xlbnwwfHx8fDE3NjE3OTU3NTd8MA&ixlib-rb-4.1.0&q=80&w=1080",
       "imageHint": "floral dress"
     },
     {
       "id": "product-8-a",
       "description": "Linen button-down shirt",
-      "imageUrl": "https://images.unsplash.com/photo-1665201462900-809f7773ff5f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxsaW5lbiUyMHNoaXJ0fGVufDB8fHx8MTc2MTg0NTQxM3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1665201462900-809f7773ff5f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxsaW5lbiUyMHNoaXJ0fGVufDB8fHx8MTc2MTg0NTQxM3ww&ixlib-rb-4.1.0&q=80&w=1080",
       "imageHint": "linen shirt"
     }
   ]
