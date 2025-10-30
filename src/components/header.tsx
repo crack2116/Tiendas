@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Menu, Search, ShoppingCart, User, Heart } from 'lucide-react';
+import { Menu, Search, Heart, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -9,6 +9,7 @@ import { useCart } from '@/hooks/use-cart';
 import { CartSheet } from './cart-sheet';
 import { useState } from 'react';
 import { Logo } from './logo';
+import { LoginDialog } from './login-dialog';
 
 const navLinks = [
   { href: '#', label: 'Natura Days', variant: 'primary' as const },
@@ -32,7 +33,7 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="w-full px-4 md:px-6 lg:px-8">
-        <div className="flex h-20 items-center gap-8">
+        <div className="flex h-20 items-center justify-between gap-8">
           <div className="flex items-center">
             <Sheet>
               <SheetTrigger asChild>
@@ -66,7 +67,7 @@ export function Header() {
           </div>
 
           <div className="flex-1 min-w-0">
-            <form className="w-full">
+            <form className="w-full max-w-xl mx-auto">
               <div className="relative">
                 <Input
                   className="w-full appearance-none bg-secondary pl-4 pr-10 h-12 rounded-full text-base"
@@ -78,7 +79,7 @@ export function Header() {
           </div>
 
           <div className="flex items-center justify-end space-x-1">
-            <CartSheet open={isCartOpen} onOpenChange={setCartOpen} />
+             <CartSheet open={isCartOpen} onOpenChange={setCartOpen} />
             <Button
               variant="ghost"
               asChild
@@ -89,16 +90,15 @@ export function Header() {
                 Favoritos
               </Link>
             </Button>
-            <Button
-              variant="ghost"
-              asChild
-              className="text-foreground/80 font-normal hidden md:inline-flex"
-            >
-              <Link href="/login">
-                <User className="h-5 w-5 mr-1" />
-                Entrar
-              </Link>
-            </Button>
+            <LoginDialog>
+                <Button
+                    variant="ghost"
+                    className="text-foreground/80 font-normal hidden md:inline-flex"
+                >
+                    <User className="h-5 w-5 mr-1" />
+                    Entrar
+                </Button>
+            </LoginDialog>
           </div>
         </div>
       </div>
