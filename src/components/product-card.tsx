@@ -44,7 +44,7 @@ export function ProductCard({ product }: ProductCardProps) {
         <CardContent className="p-0 flex flex-col flex-grow">
           <div className="aspect-[4/5] overflow-hidden relative">
             {product.badge && (
-              <Badge className={`absolute top-2 left-2 z-10 rounded-full px-3 py-1 text-xs ${getBadgeClass(product.badge)}`}>
+              <Badge className={`absolute top-0 left-0 z-10 rounded-none rounded-br-lg px-3 py-1 text-xs ${getBadgeClass(product.badge)}`}>
                 {product.badge}
               </Badge>
             )}
