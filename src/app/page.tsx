@@ -31,7 +31,7 @@ export default function Home() {
           </h1>
           <p className="mt-4 max-w-2xl text-lg md:text-xl text-gray-200">
             Discover the latest trends and curated collections that express your
-            unique style. Welcome to ModaVerse.
+            unique style. Welcome to Noemia.
           </p>
           <Button asChild size="lg" className="mt-8 font-bold">
             <Link href="#products">Shop Now</Link>

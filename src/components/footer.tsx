@@ -1,7 +1,8 @@
 import Link from 'next/link';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { ShoppingBag, Twitter, Instagram, Facebook } from 'lucide-react';
+import { Logo } from '@/components/logo';
+import { Twitter, Instagram, Facebook } from 'lucide-react';
 
 export function Footer() {
   return (
@@ -10,8 +11,8 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1 md:col-span-2 lg:col-span-1">
             <Link href="/" className="flex items-center space-x-2 mb-4">
-              <ShoppingBag className="h-8 w-8 text-primary" />
-              <span className="font-bold font-headline text-2xl">ModaVerse</span>
+              <Logo className="h-8 w-8 text-primary" />
+              <span className="font-bold font-headline text-2xl">Noemia</span>
             </Link>
             <p className="text-muted-foreground text-sm">
               Curating the future of fashion.
@@ -58,7 +59,7 @@ export function Footer() {
           </div>
         </div>
         <div className="border-t mt-8 pt-6 text-center text-sm text-muted-foreground">
-          <p>&copy; {new Date().getFullYear()} ModaVerse. All Rights Reserved.</p>
+          <p>&copy; {new Date().getFullYear()} Noemia. All Rights Reserved.</p>
         </div>
       </div>
     </footer>

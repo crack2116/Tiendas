@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { ShoppingBag } from 'lucide-react';
+import { Logo } from '@/components/logo';
 
 export default function LoginPage() {
   return (
@@ -12,8 +12,8 @@ export default function LoginPage() {
         <CardHeader className="text-center">
           <div className="inline-block mx-auto mb-4">
             <Link href="/" className="flex items-center space-x-2">
-                <ShoppingBag className="h-8 w-8 text-primary" />
-                <span className="font-bold font-headline text-2xl">ModaVerse</span>
+                <Logo className="h-8 w-8 text-primary" />
+                <span className="font-bold font-headline text-2xl">Noemia</span>
             </Link>
           </div>
           <CardTitle className="text-2xl font-headline">Welcome Back</CardTitle>

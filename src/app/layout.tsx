@@ -6,7 +6,7 @@ import { CartProvider } from '@/hooks/use-cart';
 import { Toaster } from '@/components/ui/toaster';
 
 export const metadata: Metadata = {
-  title: 'ModaVerse',
+  title: 'Noemia',
   description: 'A modern clothing store built with Next.js and AI.',
 };
 

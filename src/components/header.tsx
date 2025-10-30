@@ -6,13 +6,13 @@ import {
   Search,
   ShoppingCart,
   User,
-  ShoppingBag,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { useCart } from '@/hooks/use-cart';
 import { CartSheet } from './cart-sheet';
 import { useState } from 'react';
+import { Logo } from './logo';
 
 const navLinks = [
   { href: '#', label: 'New Arrivals' },
@@ -30,8 +30,8 @@ export function Header() {
       <div className="container flex h-16 items-center">
         <div className="mr-4 hidden md:flex">
           <Link href="/" className="mr-6 flex items-center space-x-2">
-            <ShoppingBag className="h-6 w-6 text-primary" />
-            <span className="font-bold font-headline text-lg">ModaVerse</span>
+            <Logo className="h-6 w-6 text-primary" />
+            <span className="font-bold font-headline text-lg">Noemia</span>
           </Link>
           <nav className="flex items-center space-x-6 text-sm font-medium">
             {navLinks.map(link => (
@@ -57,8 +57,8 @@ export function Header() {
             <SheetContent side="left" className="w-[300px]">
               <div className="flex flex-col h-full">
                 <div className="flex items-center space-x-2 pb-4 border-b">
-                  <ShoppingBag className="h-6 w-6 text-primary" />
-                  <span className="font-bold font-headline text-lg">ModaVerse</span>
+                  <Logo className="h-6 w-6 text-primary" />
+                  <span className="font-bold font-headline text-lg">Noemia</span>
                 </div>
                 <nav className="flex flex-col space-y-4 mt-6">
                   {navLinks.map(link => (
@@ -78,8 +78,8 @@ export function Header() {
 
         <div className="flex flex-1 items-center justify-end space-x-2">
           <Link href="/" className="md:hidden flex items-center space-x-2">
-            <ShoppingBag className="h-6 w-6 text-primary" />
-            <span className="font-bold font-headline text-lg">ModaVerse</span>
+            <Logo className="h-6 w-6 text-primary" />
+            <span className="font-bold font-headline text-lg">Noemia</span>
           </Link>
           <div className="flex-1" />
           <Button variant="ghost" size="icon">
