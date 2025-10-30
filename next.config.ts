@@ -45,6 +45,12 @@ const nextConfig: NextConfig = {
         hostname: 'hips.hearstapps.com',
         port: '',
         pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.iese.edu',
+        port: '',
+        pathname: '/**',
       }
     ],
   },
