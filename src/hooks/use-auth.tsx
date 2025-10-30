@@ -1,6 +1,5 @@
 'use client';
 
-import type { User } from '@/lib/types';
 import {
   createContext,
   useContext,
@@ -8,46 +7,116 @@ import {
   useEffect,
   type ReactNode,
 } from 'react';
+import {
+  getAuth,
+  onAuthStateChanged,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  type User as FirebaseUser,
+} from 'firebase/auth';
+import { getFirestore, doc, setDoc, getDoc } from 'firebase/firestore';
+import { useFirebase } from '@/firebase';
+import type { User } from '@/lib/types';
+import { useRouter } from 'next/navigation';
 
 interface AuthContextType {
   user: User | null;
-  login: (user: User) => void;
-  logout: () => void;
+  loading: boolean;
+  signup: (
+    email: string,
+    password: string,
+    additionalData?: Partial<User>
+  ) => Promise<void>;
+  login: (email: string, password: string) => Promise<void>;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const { app } = useFirebase();
+  const auth = getAuth(app);
+  const firestore = getFirestore(app);
+  const router = useRouter();
+
   const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // This is a simple mock of checking login status.
-    // In a real app, you might check a token in localStorage or make an API call.
-    try {
-      const storedUser = localStorage.getItem('noemia-user');
-      if (storedUser) {
-        setUser(JSON.parse(storedUser));
+    const unsubscribe = onAuthStateChanged(auth, async firebaseUser => {
+      if (firebaseUser) {
+        const userDocRef = doc(firestore, 'users', firebaseUser.uid);
+        const userDoc = await getDoc(userDocRef);
+        if (userDoc.exists()) {
+          setUser({ uid: firebaseUser.uid, ...userDoc.data() } as User);
+        } else {
+          // This case might happen if the user document wasn't created properly during signup
+          setUser({ uid: firebaseUser.uid, email: firebaseUser.email! });
+        }
+      } else {
+        setUser(null);
       }
-    } catch (error) {
-      console.error('Error parsing user from localStorage', error);
-      setUser(null);
-    }
-  }, []);
+      setLoading(false);
+    });
 
-  const login = (userData: User) => {
-    localStorage.setItem('noemia-user', JSON.stringify(userData));
-    setUser(userData);
+    return () => unsubscribe();
+  }, [auth, firestore]);
+
+  const signup = async (
+    email: string,
+    password: string,
+    additionalData: Partial<User> = {}
+  ) => {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const firebaseUser = userCredential.user;
+      const userDocRef = doc(firestore, 'users', firebaseUser.uid);
+
+      const newUser: User = {
+        uid: firebaseUser.uid,
+        email: email,
+        role: 'customer', // Assign default role
+        ...additionalData,
+      };
+
+      await setDoc(userDocRef, newUser);
+      setUser(newUser);
+    } catch (error) {
+      console.error('Error signing up:', error);
+      throw error;
+    }
   };
 
-  const logout = () => {
-    localStorage.removeItem('noemia-user');
-    setUser(null);
+  const login = async (email: string, password: string) => {
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+    } catch (error) {
+      console.error('Error logging in:', error);
+      throw error;
+    }
+  };
+
+  const logout = async () => {
+    try {
+      await signOut(auth);
+      router.push('/');
+    } catch (error) {
+      console.error('Error logging out:', error);
+      throw error;
+    }
   };
 
   return (
     <AuthContext.Provider
       value={{
         user,
+        loading,
+        signup,
         login,
         logout,
       }}

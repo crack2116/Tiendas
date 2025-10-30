@@ -9,26 +9,40 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Logo } from '@/components/logo';
 import { useAuth } from '@/hooks/use-auth';
+import { useToast } from '@/hooks/use-toast';
 
 export default function LoginPage() {
   const [isLogin, setIsLogin] = useState(true);
-  const { login } = useAuth();
+  const { signup, login } = useAuth();
   const router = useRouter();
+  const { toast } = useToast();
 
   const toggleForm = () => {
     setIsLogin(!isLogin);
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const email = formData.get('email') as string || formData.get('email-register') as string;
-    const name = formData.get('fullName') as string || 'Usuario de Prueba';
-    const address = formData.get('address') as string || '';
+    const password = formData.get('password') as string || formData.get('password-register') as string;
     
-    // Simple mock login
-    login({ id: '1', email, name, address });
-    router.push('/account/orders');
+    try {
+        if (isLogin) {
+            await login(email, password);
+        } else {
+            const name = formData.get('fullName') as string;
+            const address = formData.get('address') as string;
+            await signup(email, password, { name, address });
+        }
+        router.push('/account/orders');
+    } catch (error: any) {
+        toast({
+            variant: "destructive",
+            title: "Error",
+            description: error.message || (isLogin ? 'No se pudo iniciar sesión.' : 'No se pudo crear la cuenta.'),
+        });
+    }
   };
 
   return (

@@ -6,6 +6,7 @@ import { CartProvider } from '@/hooks/use-cart';
 import { AuthProvider } from '@/hooks/use-auth';
 import { Toaster } from '@/components/ui/toaster';
 import { ThemeProvider } from '@/hooks/theme-provider';
+import { FirebaseClientProvider } from '@/firebase/client-provider';
 
 export const metadata: Metadata = {
   title: 'Noemia',
@@ -42,6 +43,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
         >
+          <FirebaseClientProvider>
             <AuthProvider>
             <CartProvider>
                 <Header />
@@ -50,6 +52,7 @@ export default function RootLayout({
                 <Toaster />
             </CartProvider>
             </AuthProvider>
+          </FirebaseClientProvider>
         </ThemeProvider>
       </body>
     </html>

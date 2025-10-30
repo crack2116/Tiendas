@@ -11,33 +11,47 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogClose,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Logo } from '@/components/logo';
 import { useAuth } from '@/hooks/use-auth';
+import { useToast } from '@/hooks/use-toast';
 
 export function LoginDialog({ children }: { children: React.ReactNode }) {
   const [isLogin, setIsLogin] = useState(true);
   const [open, setOpen] = useState(false);
-  const { login } = useAuth();
+  const { login, signup } = useAuth();
   const router = useRouter();
+  const { toast } = useToast();
 
   const toggleForm = () => {
     setIsLogin(!isLogin);
   };
   
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const email = formData.get('email-dialog') as string || formData.get('email-register-dialog') as string;
-    const name = formData.get('fullName-dialog') as string || 'Usuario de Prueba';
-    const address = formData.get('address-dialog') as string || '';
+    const password = formData.get('password-dialog') as string || formData.get('password-register-dialog') as string;
 
-    login({ id: '1', email, name, address });
-    setOpen(false);
-    router.push('/account/orders');
+    try {
+        if (isLogin) {
+            await login(email, password);
+        } else {
+            const name = formData.get('fullName-dialog') as string;
+            const address = formData.get('address-dialog') as string;
+            await signup(email, password, { name, address });
+        }
+        setOpen(false);
+        router.push('/account/orders');
+    } catch (error: any) {
+        toast({
+            variant: "destructive",
+            title: "Error",
+            description: error.message || (isLogin ? 'No se pudo iniciar sesión.' : 'No se pudo crear la cuenta.'),
+        });
+    }
   };
 
   return (

@@ -1,0 +1,31 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+
+    // USERS
+    // Users can read their own profile.
+    // Users can create their own profile upon signup.
+    // Users can update their own profile.
+    match /users/{userId} {
+      allow read, update: if isSignedIn() && isOwner(userId);
+      allow create: if isSignedIn();
+    }
+
+    // PRODUCTS
+    // Any signed-in user can read products.
+    // In the future, we'll restrict write access to admins.
+    match /products/{productId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn(); // Placeholder - will be restricted to admins
+    }
+  }
+}

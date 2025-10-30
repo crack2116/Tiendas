@@ -38,8 +38,9 @@ export type Order = {
 };
 
 export type User = {
-    id: string;
-    name?: string;
+    uid: string;
     email: string;
+    name?: string;
     address?: string;
+    role?: 'admin' | 'customer';
 };

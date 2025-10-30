@@ -1,0 +1,108 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "User Profile",
+      "description": "Represents a user's profile information.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "description": "The user's unique ID."
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "The user's email address."
+        },
+        "name": {
+          "type": "string",
+          "description": "The user's full name."
+        },
+        "address": {
+          "type": "string",
+          "description": "The user's shipping address."
+        },
+        "role": {
+          "type": "string",
+          "description": "The user's role.",
+          "enum": ["admin", "customer"]
+        }
+      },
+      "required": ["uid", "email", "role"]
+    },
+    "Product": {
+      "title": "Product",
+      "description": "Represents a product in the store.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the product."
+        },
+        "slug": {
+          "type": "string",
+          "description": "A URL-friendly version of the product name."
+        },
+        "category": {
+          "type": "string",
+          "description": "The category the product belongs to."
+        },
+        "price": {
+          "type": "number",
+          "description": "The price of the product."
+        },
+        "originalPrice": {
+          "type": "number",
+          "description": "The original price before a discount."
+        },
+        "description": {
+          "type": "string",
+          "description": "A detailed description of the product."
+        },
+        "badge": {
+          "type": "string",
+          "description": "A badge to display on the product card (e.g., 'New', 'Sale')."
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "A list of product details."
+        },
+        "images": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "url": { "type": "string", "format": "uri" },
+              "alt": { "type": "string" },
+              "hint": { "type": "string" }
+            },
+            "required": ["id", "url", "alt"]
+          },
+          "description": "A list of images for the product."
+        }
+      },
+      "required": ["name", "slug", "price", "description", "images"]
+    }
+  },
+  "auth": {
+    "providers": ["email"]
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": {
+        "$ref": "#/entities/UserProfile"
+      },
+      "description": "Stores public information about a user."
+    },
+    "/products/{productId}": {
+      "schema": {
+        "$ref": "#/entities/Product"
+      },
+      "description": "Stores all the products available in the store."
+    }
+  }
+}
