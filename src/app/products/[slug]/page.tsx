@@ -80,9 +80,16 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
           <h1 className="text-3xl md:text-4xl font-bold font-headline">
             {product.name}
           </h1>
-          <p className="text-2xl md:text-3xl font-light text-primary mt-2">
-            ${product.price.toFixed(2)}
-          </p>
+          <div className="mt-2">
+            {product.originalPrice ? (
+              <div className="flex items-baseline gap-3">
+                <p className="text-red-500 font-bold text-3xl">S/{product.price.toFixed(2)}</p>
+                <p className="text-muted-foreground line-through text-xl">S/{product.originalPrice.toFixed(2)}</p>
+              </div>
+            ) : (
+              <p className="text-2xl md:text-3xl font-light text-primary">S/{product.price.toFixed(2)}</p>
+            )}
+          </div>
           <div className="flex items-center gap-2 mt-4 text-sm text-muted-foreground">
             <div className="flex items-center">
               {[...Array(5)].map((_, i) => (

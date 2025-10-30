@@ -63,7 +63,7 @@ export function CartSheet({ open, onOpenChange }: CartSheetProps) {
                         {item.product.name}
                       </Link>
                       <p className="text-muted-foreground text-sm">
-                        ${item.product.price.toFixed(2)}
+                        S/{item.product.price.toFixed(2)}
                       </p>
                       <div className="flex items-center gap-2 mt-2">
                         <Button
@@ -107,7 +107,7 @@ export function CartSheet({ open, onOpenChange }: CartSheetProps) {
                 <Separator />
                 <div className="flex justify-between items-center font-semibold">
                   <span>Subtotal</span>
-                  <span>${totalPrice.toFixed(2)}</span>
+                  <span>S/{totalPrice.toFixed(2)}</span>
                 </div>
                 <p className="text-xs text-muted-foreground">
                   El envío y los impuestos se calcularán en el checkout.

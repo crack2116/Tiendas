@@ -17,7 +17,8 @@ export const products: Product[] = [
     slug: 'classic-white-tee',
     name: 'Classic White Tee',
     category: 'Tops',
-    price: 29.99,
+    price: 19.99,
+    originalPrice: 29.99,
     badge: 'Mega Promo',
     images: [
       getImage('product-1-a', 'Front view of a minimalist white t-shirt', 'white t-shirt'),
@@ -69,7 +70,8 @@ export const products: Product[] = [
     slug: 'chunky-knit-sweater',
     name: 'Chunky Knit Sweater',
     category: 'Knitwear',
-    price: 79.99,
+    price: 59.99,
+    originalPrice: 79.99,
     badge: 'Mega Promo',
     images: [
       getImage('product-4-a', 'Chunky knit wool sweater', 'wool sweater'),
@@ -83,7 +85,8 @@ export const products: Product[] = [
     slug: 'chelsea-boots',
     name: 'Chelsea Boots',
     category: 'Footwear',
-    price: 129.99,
+    price: 99.99,
+    originalPrice: 129.99,
     badge: 'Mega Promo',
     images: [
       getImage('product-5-a', 'Sleek black Chelsea boots', 'black boots'),

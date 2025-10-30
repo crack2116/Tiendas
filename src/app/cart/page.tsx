@@ -34,7 +34,7 @@ export default function CartPage() {
                       {item.product.name}
                     </Link>
                     <p className="text-muted-foreground">
-                      ${item.product.price.toFixed(2)}
+                      S/{item.product.price.toFixed(2)}
                     </p>
                     <div className="flex items-center gap-2 mt-4">
                       <Button
@@ -63,7 +63,7 @@ export default function CartPage() {
                   </div>
                   <div className="text-right">
                     <p className="font-semibold text-lg">
-                      ${(item.product.price * item.quantity).toFixed(2)}
+                      S/{(item.product.price * item.quantity).toFixed(2)}
                     </p>
                     <Button
                       variant="ghost"
@@ -88,7 +88,7 @@ export default function CartPage() {
               <CardContent className="space-y-4">
                 <div className="flex justify-between">
                   <span>Subtotal ({itemCount} items)</span>
-                  <span>${totalPrice.toFixed(2)}</span>
+                  <span>S/{totalPrice.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Shipping</span>
@@ -97,7 +97,7 @@ export default function CartPage() {
                 <Separator />
                 <div className="flex justify-between font-bold text-lg">
                   <span>Total</span>
-                  <span>${totalPrice.toFixed(2)}</span>
+                  <span>S/{totalPrice.toFixed(2)}</span>
                 </div>
               </CardContent>
               <CardFooter>

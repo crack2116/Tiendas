@@ -61,7 +61,16 @@ export function ProductCard({ product }: ProductCardProps) {
           </div>
           <div className="p-4 flex flex-col flex-grow">
             <h3 className="font-semibold text-lg">{product.name}</h3>
-            <p className="text-muted-foreground mt-1">${product.price.toFixed(2)}</p>
+            <div className="mt-1">
+              {product.originalPrice ? (
+                <div className="flex items-baseline gap-2">
+                  <p className="text-red-500 font-bold text-lg">S/{product.price.toFixed(2)}</p>
+                  <p className="text-muted-foreground line-through text-sm">S/{product.originalPrice.toFixed(2)}</p>
+                </div>
+              ) : (
+                <p className="text-muted-foreground text-lg">S/{product.price.toFixed(2)}</p>
+              )}
+            </div>
             <div className="mt-4 flex-grow flex items-end">
               <Button onClick={handleAddToCart} className="w-full">
                 <ShoppingCart className="mr-2 h-4 w-4" />
