@@ -32,8 +32,8 @@ export function ProductCard({ product }: ProductCardProps) {
     if (badgeText === 'Mega Promo') {
       return 'bg-blue-600 text-white';
     }
-    if (badgeText === 'natura days') {
-      return 'bg-purple-300 text-purple-900';
+    if (badgeText === 'Nuevo') {
+      return 'bg-green-600 text-white';
     }
     return 'bg-primary text-primary-foreground';
   }

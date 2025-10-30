@@ -37,7 +37,7 @@ export const products: Product[] = [
     name: 'Slim Dark Denim',
     category: 'Jeans',
     price: 89.99,
-    badge: 'natura days',
+    badge: 'Nuevo',
     images: [
       getImage('product-2-a', 'Slim-fit dark wash denim jeans', 'denim jeans'),
       getImage('product-2-b', 'Close-up of denim jeans fabric', 'denim jeans'),
@@ -54,7 +54,7 @@ export const products: Product[] = [
     name: 'Leather Biker Jacket',
     category: 'Jackets',
     price: 249.99,
-    badge: 'natura days',
+    badge: 'Nuevo',
     images: [
       getImage('product-3-a', 'Classic leather biker jacket', 'leather jacket'),
       getImage('product-3-b', 'Detail of biker jacket zipper', 'leather jacket'),
