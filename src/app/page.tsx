@@ -1,4 +1,5 @@
 
+'use client';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -13,6 +14,8 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel';
+import Autoplay from "embla-carousel-autoplay"
+
 
 const carouselSlides = [
   {
@@ -55,7 +58,16 @@ export default function Home() {
   return (
     <main className="flex-1">
       <section className="relative w-full">
-        <Carousel className="w-full" opts={{ loop: true }} plugins={[]}>
+        <Carousel 
+            className="w-full" 
+            opts={{ loop: true }} 
+            plugins={[
+                Autoplay({
+                  delay: 5000,
+                  stopOnInteraction: true,
+                }),
+            ]}
+        >
           <CarouselContent>
             {carouselSlides.map((slide) => {
               const slideImage = placeholderImages.find(img => img.id === slide.id);
