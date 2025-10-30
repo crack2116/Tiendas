@@ -28,11 +28,18 @@ export type CartItem = {
 export type Order = {
   id: string;
   date: string;
-  status: 'Pending' | 'Shipped' | 'Delivered' | 'Cancelled';
+  status: 'Entregado' | 'Enviado' | 'Cancelado';
   total: number;
   items: {
     productName: string;
     quantity: number;
     price: number;
   }[];
+};
+
+export type User = {
+    id: string;
+    name?: string;
+    email: string;
+    address?: string;
 };

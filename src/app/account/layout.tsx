@@ -1,3 +1,5 @@
+'use client';
+
 import Link from "next/link"
 import {
   Package,
@@ -5,6 +7,9 @@ import {
   User,
   LogOut
 } from "lucide-react"
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/hooks/use-auth';
+import { useEffect } from 'react';
 
 import {
   SidebarProvider,
@@ -24,6 +29,23 @@ export default function AccountLayout({
 }: {
   children: React.ReactNode
 }) {
+  const { user, logout } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (user === null) {
+      router.push('/login');
+    }
+  }, [user, router]);
+
+  if (!user) {
+    return (
+        <div className="w-full min-h-screen flex items-center justify-center">
+            <p>Redirigiendo a la página de inicio de sesión...</p>
+        </div>
+    );
+  }
+
   return (
     <SidebarProvider>
       <div className="flex min-h-screen">
@@ -59,11 +81,9 @@ export default function AccountLayout({
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton asChild>
-                    <Link href="/login">
-                        <LogOut />
-                        Cerrar Sesión
-                    </Link>
+                <SidebarMenuButton onClick={logout}>
+                    <LogOut />
+                    Cerrar Sesión
                 </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>

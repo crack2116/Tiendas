@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Menu, Search, Heart, User } from 'lucide-react';
+import { Menu, Search, Heart, User, LogOut, Package } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -10,6 +10,17 @@ import { CartSheet } from './cart-sheet';
 import { useState } from 'react';
 import { Logo } from './logo';
 import { LoginDialog } from './login-dialog';
+import { useAuth } from '@/hooks/use-auth';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
+
 
 const navLinks = [
   { href: '#', label: 'Natura Days', variant: 'primary' as const },
@@ -27,8 +38,14 @@ const navLinks = [
 ];
 
 export function Header() {
-  const { itemCount } = useCart();
   const [isCartOpen, setCartOpen] = useState(false);
+  const { user, logout } = useAuth();
+  
+  const getInitials = (name?: string) => {
+    if (!name) return 'U';
+    return name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+  };
+
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -90,15 +107,50 @@ export function Header() {
                 Favoritos
               </Link>
             </Button>
-            <LoginDialog>
-                <Button
-                    variant="ghost"
-                    className="text-foreground/80 font-normal hidden md:inline-flex"
-                >
-                    <User className="h-5 w-5 mr-1" />
-                    Entrar
-                </Button>
-            </LoginDialog>
+            
+            {user ? (
+               <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                    <Avatar className="h-9 w-9">
+                       <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56" align="end" forceMount>
+                  <DropdownMenuLabel className="font-normal">
+                    <div className="flex flex-col space-y-1">
+                      <p className="text-sm font-medium leading-none">{user.name}</p>
+                      <p className="text-xs leading-none text-muted-foreground">
+                        {user.email}
+                      </p>
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                     <Link href="/account/orders">
+                        <Package className="mr-2 h-4 w-4" />
+                        <span>Mis Pedidos</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={logout}>
+                    <LogOut className="mr-2 h-4 w-4" />
+                    <span>Cerrar Sesión</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+                <LoginDialog>
+                    <Button
+                        variant="ghost"
+                        className="text-foreground/80 font-normal hidden md:inline-flex"
+                    >
+                        <User className="h-5 w-5 mr-1" />
+                        Entrar
+                    </Button>
+                </LoginDialog>
+            )}
           </div>
         </div>
       </div>

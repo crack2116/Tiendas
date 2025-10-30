@@ -8,10 +8,19 @@ import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/hooks/use-auth';
+import { useEffect } from 'react';
 
 export default function CheckoutPage() {
   const { cart, totalPrice, clearCart } = useCart();
+  const { user } = useAuth();
   const router = useRouter();
+
+  useEffect(() => {
+    if (user === null) {
+      router.push('/login');
+    }
+  }, [user, router]);
 
   const handlePlaceOrder = (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,6 +29,14 @@ export default function CheckoutPage() {
     clearCart();
     router.push('/account/orders');
   };
+
+  if (!user) {
+    return (
+        <div className="container mx-auto px-4 py-8 md:py-12 text-center">
+            <p>Redirigiendo a la página de inicio de sesión...</p>
+        </div>
+    );
+  }
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-12">
@@ -36,16 +53,16 @@ export default function CheckoutPage() {
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="firstName">Nombre</Label>
-                      <Input id="firstName" required />
+                      <Input id="firstName" required defaultValue={user.name?.split(' ')[0]} />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="lastName">Apellidos</Label>
-                      <Input id="lastName" required />
+                      <Input id="lastName" required defaultValue={user.name?.split(' ').slice(1).join(' ')} />
                     </div>
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="address">Dirección</Label>
-                    <Input id="address" required />
+                    <Input id="address" required defaultValue={user.address} />
                   </div>
                   <div className="grid sm:grid-cols-3 gap-4">
                     <div className="space-y-2">
