@@ -37,7 +37,7 @@ export default function LoginPage() {
         <CardHeader className="text-center">
           <div className="inline-block mx-auto mb-6">
             <Link href="/" className="flex items-center space-x-2">
-                <Logo className="h-24 w-auto" />
+                <Logo className="h-20 w-auto" />
             </Link>
           </div>
           <CardTitle className="text-2xl font-headline">
