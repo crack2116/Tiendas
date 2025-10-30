@@ -1,13 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import {
-  Menu,
-  Search,
-  ShoppingCart,
-  User,
-  Heart,
-} from 'lucide-react';
+import { Menu, Search, ShoppingCart, User, Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -15,7 +9,6 @@ import { useCart } from '@/hooks/use-cart';
 import { CartSheet } from './cart-sheet';
 import { useState } from 'react';
 import { Logo } from './logo';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
 
 const navLinks = [
   { href: '#', label: 'Natura Days', variant: 'primary' as const },
@@ -26,6 +19,10 @@ const navLinks = [
   { href: '#', label: 'Cabello' },
   { href: '#', label: 'Cuerpo' },
   { href: '#', label: 'Maquillaje' },
+  { href: '#', label: 'Regalos' },
+  { href: '#', label: 'Casa' },
+  { href: '#', label: 'Hombre' },
+  { href: '#', label: 'Marcas' },
 ];
 
 export function Header() {
@@ -34,78 +31,14 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center">
-        <div className="mr-4 flex">
+      <div className="container flex h-20 items-center">
+        <div className="mr-4 hidden md:flex">
           <Link href="/" className="mr-6 flex items-center space-x-2">
-            <Logo className="h-12 w-12" />
+            <Logo className="h-6" />
           </Link>
         </div>
 
-        <div className="hidden md:flex flex-1 items-center justify-end space-x-6">
-          <div className="w-full max-w-xl">
-            <form>
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  className="w-full appearance-none bg-secondary pl-9 pr-4"
-                  placeholder="¿Qué buscas hoy?"
-                />
-              </div>
-            </form>
-          </div>
-          <div className="flex items-center space-x-2">
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant="ghost" size="icon" className="text-foreground/80">
-                    <Heart className="h-5 w-5" />
-                    <span className="sr-only">Favoritos</span>
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Favoritos</p>
-                </TooltipContent>
-              </Tooltip>
-
-              <Tooltip>
-                <TooltipTrigger asChild>
-                   <Button variant="ghost" size="icon" asChild className="text-foreground/80">
-                    <Link href="/login">
-                      <User className="h-5 w-5" />
-                       <span className="sr-only">Entrar</span>
-                    </Link>
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Entrar</p>
-                </TooltipContent>
-              </Tooltip>
-
-               <CartSheet open={isCartOpen} onOpenChange={setCartOpen}>
-                <Tooltip>
-                    <TooltipTrigger asChild>
-                        <SheetTrigger asChild>
-                        <Button variant="ghost" size="icon" className="relative">
-                            <ShoppingCart className="h-5 w-5 text-foreground/80" />
-                            <span className="sr-only">Shopping Cart</span>
-                            {itemCount > 0 && (
-                            <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold">
-                                {itemCount}
-                            </span>
-                            )}
-                        </Button>
-                        </SheetTrigger>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                        <p>Carrito</p>
-                    </TooltipContent>
-                </Tooltip>
-              </CartSheet>
-            </TooltipProvider>
-          </div>
-        </div>
-
-        <div className="md:hidden ml-auto">
+        <div className="md:hidden mr-4">
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon">
@@ -116,7 +49,7 @@ export function Header() {
             <SheetContent side="left" className="w-[300px]">
               <div className="flex flex-col h-full">
                 <div className="flex items-center space-x-2 pb-4 border-b">
-                  <Logo className="h-8 w-8" />
+                  <Logo className="h-8" />
                 </div>
                 <nav className="flex flex-col space-y-4 mt-6">
                   {navLinks.map(link => (
@@ -133,19 +66,77 @@ export function Header() {
             </SheetContent>
           </Sheet>
         </div>
+        
+        <div className="flex-1 flex justify-center w-full">
+            <form className="w-full max-w-xl">
+              <div className="relative">
+                <Input
+                  className="w-full appearance-none bg-secondary pl-4 pr-10 h-12 rounded-full text-base"
+                  placeholder="¿Qué buscas hoy?"
+                />
+                <Search className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+              </div>
+            </form>
+        </div>
+
+        <div className="hidden md:flex items-center space-x-4 ml-6">
+            <Button variant="ghost" asChild className="text-foreground/80 font-normal">
+              <Link href="#">
+                <Heart className="h-5 w-5 mr-1" />
+                Favoritos
+              </Link>
+            </Button>
+            <Button variant="ghost" asChild className="text-foreground/80 font-normal">
+              <Link href="/login">
+                <User className="h-5 w-5 mr-1" />
+                Entrar
+              </Link>
+            </Button>
+            <CartSheet open={isCartOpen} onOpenChange={setCartOpen}>
+              <SheetTrigger asChild>
+                <Button variant="ghost" className="relative text-foreground/80 font-normal">
+                  <ShoppingCart className="h-5 w-5 mr-1" />
+                  <span className="sr-only">Carrito</span>
+                  {itemCount > 0 && (
+                    <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold">
+                      {itemCount}
+                    </span>
+                  )}
+                </Button>
+              </SheetTrigger>
+            </CartSheet>
+        </div>
+
+         <div className="md:hidden ml-auto">
+            <CartSheet open={isCartOpen} onOpenChange={setCartOpen}>
+                <SheetTrigger asChild>
+                <Button variant="ghost" size="icon" className="relative">
+                    <ShoppingCart className="h-5 w-5 text-foreground/80" />
+                    <span className="sr-only">Shopping Cart</span>
+                    {itemCount > 0 && (
+                    <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold">
+                        {itemCount}
+                    </span>
+                    )}
+                </Button>
+                </SheetTrigger>
+            </CartSheet>
+         </div>
+
+
       </div>
-      <nav className="hidden md:flex container items-center space-x-2 text-sm font-medium py-2">
+      <nav className="hidden md:flex container items-center justify-center space-x-2 text-sm font-medium py-2">
             {navLinks.map(link => (
                <Button
                key={link.label}
                variant={link.variant === 'primary' ? 'default' : 'ghost'}
                size="sm"
                asChild
-               className={link.variant === 'primary' ? 'bg-[#f37423] hover:bg-[#f37423]/90 text-white' : ''}
+               className={link.variant === 'primary' ? 'bg-[#f37423] hover:bg-[#f37423]/90 text-white rounded-full' : 'text-foreground/80 font-normal'}
              >
                 <Link
                   href={link.href}
-                  className={`transition-colors hover:text-foreground/80 ${link.variant === 'primary' ? 'text-white' : 'text-foreground/80'}`}
+                  className={`transition-colors hover:text-foreground/80 `}
                 >
                   {link.label}
                 </Link>
