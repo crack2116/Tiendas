@@ -15,6 +15,7 @@ import { useCart } from '@/hooks/use-cart';
 import { CartSheet } from './cart-sheet';
 import { useState } from 'react';
 import { Logo } from './logo';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
 
 const navLinks = [
   { href: '#', label: 'Natura Days', variant: 'primary' as const },
@@ -40,8 +41,8 @@ export function Header() {
           </Link>
         </div>
 
-        <div className="hidden md:flex flex-1 items-center justify-end space-x-4">
-          <div className="w-full max-w-lg">
+        <div className="hidden md:flex flex-1 items-center justify-end space-x-6">
+          <div className="w-full max-w-xl">
             <form>
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -52,30 +53,56 @@ export function Header() {
               </div>
             </form>
           </div>
-          <Button variant="ghost" size="sm" className="text-foreground/80">
-            <Heart className="mr-2 h-4 w-4" />
-            Favoritos
-          </Button>
-          <Button variant="ghost" size="sm" asChild className="text-foreground/80">
-            <Link href="/login">
-              <User className="mr-2 h-4 w-4" />
-              Entrar
-            </Link>
-          </Button>
+          <div className="flex items-center space-x-2">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant="ghost" size="icon" className="text-foreground/80">
+                    <Heart className="h-5 w-5" />
+                    <span className="sr-only">Favoritos</span>
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Favoritos</p>
+                </TooltipContent>
+              </Tooltip>
 
-          <CartSheet open={isCartOpen} onOpenChange={setCartOpen}>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="relative">
-                <ShoppingCart className="h-5 w-5 text-foreground/80" />
-                <span className="sr-only">Shopping Cart</span>
-                {itemCount > 0 && (
-                  <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold">
-                    {itemCount}
-                  </span>
-                )}
-              </Button>
-            </SheetTrigger>
-          </CartSheet>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                   <Button variant="ghost" size="icon" asChild className="text-foreground/80">
+                    <Link href="/login">
+                      <User className="h-5 w-5" />
+                       <span className="sr-only">Entrar</span>
+                    </Link>
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Entrar</p>
+                </TooltipContent>
+              </Tooltip>
+
+               <CartSheet open={isCartOpen} onOpenChange={setCartOpen}>
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <SheetTrigger asChild>
+                        <Button variant="ghost" size="icon" className="relative">
+                            <ShoppingCart className="h-5 w-5 text-foreground/80" />
+                            <span className="sr-only">Shopping Cart</span>
+                            {itemCount > 0 && (
+                            <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold">
+                                {itemCount}
+                            </span>
+                            )}
+                        </Button>
+                        </SheetTrigger>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                        <p>Carrito</p>
+                    </TooltipContent>
+                </Tooltip>
+              </CartSheet>
+            </TooltipProvider>
+          </div>
         </div>
 
         <div className="md:hidden ml-auto">
