@@ -39,6 +39,12 @@ const nextConfig: NextConfig = {
         hostname: 'www.kneipp.com',
         port: '',
         pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'hips.hearstapps.com',
+        port: '',
+        pathname: '/**',
       }
     ],
   },
