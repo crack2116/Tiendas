@@ -31,7 +31,7 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     // This ensures that Firebase is only initialized on the client side.
-    if (typeof window !== 'undefined') {
+    if (typeof window !== 'undefined' && firebaseConfig.apiKey) {
       const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
       const auth = getAuth(app);
       const firestore = getFirestore(app);
