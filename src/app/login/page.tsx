@@ -12,8 +12,7 @@ export default function LoginPage() {
         <CardHeader className="text-center">
           <div className="inline-block mx-auto mb-4">
             <Link href="/" className="flex items-center space-x-2">
-                <Logo className="h-8 w-8 text-primary" />
-                <span className="font-bold font-headline text-2xl">Noemia</span>
+                <Logo className="h-12 w-12" />
             </Link>
           </div>
           <CardTitle className="text-2xl font-headline">Welcome Back</CardTitle>

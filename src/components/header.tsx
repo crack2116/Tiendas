@@ -36,8 +36,7 @@ export function Header() {
       <div className="container flex h-16 items-center">
         <div className="mr-4 flex">
           <Link href="/" className="mr-6 flex items-center space-x-2">
-            <Logo className="h-8 w-8 text-primary-foreground" />
-            <span className="font-bold font-headline text-2xl text-primary-foreground">Noemia</span>
+            <Logo className="h-12 w-12" />
           </Link>
         </div>
 
@@ -90,7 +89,7 @@ export function Header() {
             <SheetContent side="left" className="w-[300px]">
               <div className="flex flex-col h-full">
                 <div className="flex items-center space-x-2 pb-4 border-b">
-                  <Logo className="h-6 w-6 text-primary-foreground" />
+                  <Logo className="h-8 w-8" />
                   <span className="font-bold font-headline text-lg">Noemia</span>
                 </div>
                 <nav className="flex flex-col space-y-4 mt-6">
