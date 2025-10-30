@@ -108,7 +108,7 @@ export default function Home() {
       </section>
 
       <section id="products" className="py-12 md:py-16">
-        <div className="w-full px-4 sm:px-6 md:px-8 mb-8 flex justify-end">
+        <div className="w-full px-4 sm:px-6 md:px-8 mb-8 flex justify-start">
             <Button variant="outline">
                 <Filter className="mr-2 h-4 w-4" />
                 Mostrar Filtros
