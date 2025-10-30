@@ -4,13 +4,13 @@ export function Logo({ className }: { className?: string }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 100 100"
+      viewBox="0 0 256 256"
       className={cn("h-6 w-6", className)}
       fill="currentColor"
     >
-      <circle cx="50" cy="50" r="48" stroke="currentColor" strokeWidth="4" fill="none" />
-      <path d="M 30 70 Q 50 20 70 70" stroke="currentColor" strokeWidth="4" fill="none" />
-      <path d="M 30 70 L 70 70" stroke="currentColor" strokeWidth="4" fill="none" />
+        <path d="M216.61,114.23a8,8,0,0,1-10.4,2.94,52,52,0,0,0-97.12-23.7,8,8,0,1,1-14.54-6.38,68,68,0,0,1,127.3-31.11,8,8,0,0,1-5.24,14.61Z"/>
+        <path d="M129.56,156.4A52,52,0,0,0,51,129.17a8,8,0,1,0-15.5,4.5,68,68,0,0,1,104.2,35.6,8,8,0,1,0,8.4-13.31Z"/>
+        <path d="M83.88,197.4A52,52,0,0,0,158.11,154a8,8,0,0,0-11-11.63,68,68,0,0,1-97.5,60,8,8,0,0,0,7.39,14.73C62,217.15,70.19,211.53,83.88,197.4Z"/>
     </svg>
   );
 }

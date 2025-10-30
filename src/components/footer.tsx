@@ -12,7 +12,7 @@ export function Footer() {
           <div className="col-span-1 md:col-span-2 lg:col-span-1">
             <Link href="/" className="flex items-center space-x-2 mb-4">
               <Logo className="h-8 w-8 text-primary" />
-              <span className="font-bold font-headline text-2xl">Noemia</span>
+              <span className="font-bold font-headline text-2xl">Natura</span>
             </Link>
             <p className="text-muted-foreground text-sm">
               Curating the future of fashion.
@@ -59,7 +59,7 @@ export function Footer() {
           </div>
         </div>
         <div className="border-t mt-8 pt-6 text-center text-sm text-muted-foreground">
-          <p>&copy; {new Date().getFullYear()} Noemia. All Rights Reserved.</p>
+          <p>&copy; {new Date().getFullYear()} Natura. All Rights Reserved.</p>
         </div>
       </div>
     </footer>
