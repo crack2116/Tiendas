@@ -107,7 +107,7 @@ export default function Home() {
       </section>
 
       <section id="products" className="py-12 md:py-24">
-        <div className="container mx-auto px-4">
+        <div className="w-full px-4 sm:px-6 md:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold font-headline">
               Featured Collection
