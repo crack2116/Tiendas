@@ -5,6 +5,7 @@ import { Footer } from '@/components/footer';
 import { CartProvider } from '@/hooks/use-cart';
 import { AuthProvider } from '@/hooks/use-auth';
 import { Toaster } from '@/components/ui/toaster';
+import { ThemeProvider } from '@/hooks/theme-provider';
 
 export const metadata: Metadata = {
   title: 'Noemia',
@@ -17,7 +18,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className="h-full">
+    <html lang="es" className="h-full" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
@@ -35,14 +36,21 @@ export default function RootLayout({
         />
       </head>
       <body className="font-body antialiased flex flex-col min-h-screen">
-        <AuthProvider>
-          <CartProvider>
-            <Header />
-            <div className="flex-grow">{children}</div>
-            <Footer />
-            <Toaster />
-          </CartProvider>
-        </AuthProvider>
+        <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            enableSystem
+            disableTransitionOnChange
+        >
+            <AuthProvider>
+            <CartProvider>
+                <Header />
+                <div className="flex-grow">{children}</div>
+                <Footer />
+                <Toaster />
+            </CartProvider>
+            </AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
