@@ -24,7 +24,7 @@ import { useTheme } from '@/hooks/use-theme';
 
 
 const navLinks = [
-  { href: '#', label: 'Natura Days', variant: 'primary' as const },
+  { href: '#', label: 'Natura Days' },
   { href: '#', label: 'Best Seller' },
   { href: '#', label: 'Promociones' },
   { href: '#', label: 'Perfumería' },
@@ -171,18 +171,13 @@ export function Header() {
         {navLinks.map(link => (
           <Button
             key={link.label}
-            variant={link.variant === 'primary' ? 'default' : 'ghost'}
+            variant='default'
             size="sm"
             asChild
-            className={
-              link.variant === 'primary'
-                ? 'bg-[#f37423] hover:bg-[#f37423]/90 text-white rounded-full'
-                : 'text-foreground/80 font-normal'
-            }
+            className='bg-[#f37423] hover:bg-[#f37423]/90 text-white rounded-full'
           >
             <Link
               href={link.href}
-              className={`transition-colors hover:text-foreground/80 `}
             >
               {link.label}
             </Link>
