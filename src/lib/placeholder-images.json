@@ -7,6 +7,30 @@
       "imageHint": "fashion model"
     },
     {
+      "id": "carousel-clothing",
+      "description": "A person wearing a stylish outfit",
+      "imageUrl": "https://images.unsplash.com/photo-1542062700-91d03b207556?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxmYXNoaW9uJTIwbW9kZWx8ZW58MHx8fHwxNzYyODg3MTM4fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "fashion model"
+    },
+    {
+      "id": "carousel-beauty",
+      "description": "A collection of beauty products",
+      "imageUrl": "https://images.unsplash.com/photo-1596462502278-27bfdc403348?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxiZWF1dHklMjBwcm9kdWN0c3xlbnwwfHx8fDE3NjI4ODcxNDZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "beauty products"
+    },
+    {
+      "id": "carousel-perfume",
+      "description": "An elegant perfume bottle",
+      "imageUrl": "https://images.unsplash.com/photo-1587038166462-2f3b9d031622?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxwZXJmdW1lJTIwYm90dGxlfGVufDB8fHx8MTc2Mjg4NzE1M3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "perfume bottle"
+    },
+    {
+      "id": "carousel-accessories",
+      "description": "A collection of fashion accessories like sunglasses and a watch",
+      "imageUrl": "https://images.unsplash.com/photo-1619865181498-50222cdf926d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxmYXNoaW9uJTIwYWNjZXNzb3JpZXN8ZW58MHx8fHwxNzYyODg3MTYwfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "fashion accessories"
+    },
+    {
       "id": "product-1-a",
       "description": "Front view of a minimalist white t-shirt",
       "imageUrl": "https://images.unsplash.com/photo-1688111421202-bda886f5e215?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHx3aGl0ZSUyMHQtc2hpcnR8ZW58MHx8fHwxNzYxNzk3OTQ4fDA&ixlib=rb-4.1.0&q=80&w=1080",
@@ -51,7 +75,7 @@
     {
       "id": "product-5-a",
       "description": "Sleek black Chelsea boots",
-      "imageUrl": "https://images.unsplash.com/photo-1637059037982-519896b99b0f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxibGFjayUyMGJvb3RzfGVufDB8fHx8MTc2MTg0OTE4MXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1637059037982-519896b99b0f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxibGFjayUyMGJvb3RzfGVufDB8fHx8MTc2MTg0OTE4MXww&ixlib-rb-4.1.0&q=80&w=1080",
       "imageHint": "black boots"
     },
     {
