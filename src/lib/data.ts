@@ -1,11 +1,6 @@
 import type { Product, Order } from '@/lib/types';
 import { placeholderImages } from './placeholder-images';
 
-const getImageUrl = (id: string, fallback: string) => {
-  const image = placeholderImages.find(img => img.id === id);
-  return image ? image.imageUrl : fallback;
-};
-
 const getImage = (id: string, description: string, hint: string) => {
   const image = placeholderImages.find(img => img.id === id);
   return {
