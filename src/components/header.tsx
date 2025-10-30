@@ -79,7 +79,7 @@ export function Header() {
             </form>
         </div>
 
-        <div className="hidden md:flex items-center justify-end space-x-2">
+        <div className="hidden md:flex items-center justify-end space-x-1 ml-auto">
             <CartSheet open={isCartOpen} onOpenChange={setCartOpen} />
             <Button variant="ghost" asChild className="text-foreground/80 font-normal">
                 <Link href="#">
