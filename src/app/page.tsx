@@ -69,7 +69,7 @@ export default function Home() {
             ]}
         >
           <CarouselContent>
-            {carouselSlides.map((slide) => {
+            {carouselSlides.map((slide, index) => {
               const slideImage = placeholderImages.find(img => img.id === slide.id);
               return (
                 <CarouselItem key={slide.id}>
@@ -80,7 +80,7 @@ export default function Home() {
                         alt={slideImage.description}
                         fill
                         className="object-cover"
-                        priority={carouselSlides[0].id === slide.id}
+                        priority={index === 0}
                         data-ai-hint={slide.imageHint}
                       />
                     )}
