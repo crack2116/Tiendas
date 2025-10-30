@@ -17,6 +17,7 @@ import {
   SidebarInset,
   SidebarFooter,
 } from "@/components/ui/sidebar"
+import { Logo } from "@/components/logo"
 
 export default function AccountLayout({
   children,
@@ -28,8 +29,11 @@ export default function AccountLayout({
       <div className="flex min-h-screen">
         <Sidebar>
           <SidebarHeader>
-            <div className="font-bold font-headline text-lg text-sidebar-primary-foreground p-2">
-                Noemia Account
+            <div className="flex items-center space-x-2 p-2">
+                <Logo className="h-10 w-10" />
+                <span className="font-bold font-headline text-lg text-sidebar-primary-foreground">
+                    Account
+                </span>
             </div>
           </SidebarHeader>
           <SidebarContent>
