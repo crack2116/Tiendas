@@ -5,7 +5,8 @@ import {
   Package,
   Home,
   User,
-  LogOut
+  LogOut,
+  Shield,
 } from "lucide-react"
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/use-auth';
@@ -68,6 +69,16 @@ export default function AccountLayout({
                     </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
+               {user.role === 'admin' && (
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild>
+                    <Link href="/admin">
+                      <Shield />
+                      Panel de Admin
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              )}
             </SidebarMenu>
           </SidebarContent>
           <SidebarFooter>

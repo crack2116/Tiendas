@@ -2,8 +2,9 @@
 import {
   createContext,
   useContext,
-  useMemo,
   type ReactNode,
+  useState,
+  useEffect,
 } from 'react';
 import { getApp, getApps, initializeApp, type FirebaseApp } from 'firebase/app';
 import { getAuth, type Auth } from 'firebase/auth';
@@ -11,15 +12,10 @@ import { getFirestore, type Firestore } from 'firebase/firestore';
 
 import { firebaseConfig } from './config';
 
-// Initialize Firebase
-const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const firestore = getFirestore(app);
-
 interface FirebaseContextType {
-  app: FirebaseApp;
-  auth: Auth;
-  firestore: Firestore;
+  app: FirebaseApp | null;
+  auth: Auth | null;
+  firestore: Firestore | null;
 }
 
 const FirebaseContext = createContext<FirebaseContextType | undefined>(
@@ -27,7 +23,21 @@ const FirebaseContext = createContext<FirebaseContextType | undefined>(
 );
 
 export function FirebaseProvider({ children }: { children: ReactNode }) {
-  const value = useMemo(() => ({ app, auth, firestore }), []);
+  const [value, setValue] = useState<FirebaseContextType>({
+    app: null,
+    auth: null,
+    firestore: null,
+  });
+
+  useEffect(() => {
+    // This ensures that Firebase is only initialized on the client side.
+    if (typeof window !== 'undefined') {
+      const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const firestore = getFirestore(app);
+      setValue({ app, auth, firestore });
+    }
+  }, []);
 
   return (
     <FirebaseContext.Provider value={value}>{children}</FirebaseContext.Provider>
@@ -42,6 +52,6 @@ export const useFirebase = () => {
   return context;
 };
 
-export const useFirebaseApp = () => useFirebase().app;
-export const useAuthContext = () => useFirebase().auth;
-export const useFirestore = () => useFirebase().firestore;
+export const useFirebaseApp = () => useFirebase()?.app;
+export const useAuthContext = () => useFirebase()?.auth;
+export const useFirestore = () => useFirebase()?.firestore;

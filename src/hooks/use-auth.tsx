@@ -6,6 +6,7 @@ import {
   useState,
   useEffect,
   type ReactNode,
+  useMemo,
 } from 'react';
 import {
   getAuth,
@@ -13,9 +14,9 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
-  type User as FirebaseUser,
+  type Auth,
 } from 'firebase/auth';
-import { getFirestore, doc, setDoc, getDoc } from 'firebase/firestore';
+import { getFirestore, doc, setDoc, getDoc, Firestore } from 'firebase/firestore';
 import { useFirebase } from '@/firebase';
 import type { User } from '@/lib/types';
 import { useRouter } from 'next/navigation';
@@ -36,14 +37,20 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const { app } = useFirebase();
-  const auth = getAuth(app);
-  const firestore = getFirestore(app);
   const router = useRouter();
+
+  const auth: Auth | null = useMemo(() => (app ? getAuth(app) : null), [app]);
+  const firestore: Firestore | null = useMemo(() => (app ? getFirestore(app) : null), [app]);
 
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!auth || !firestore) {
+        setLoading(false);
+        return;
+    }
+
     const unsubscribe = onAuthStateChanged(auth, async firebaseUser => {
       if (firebaseUser) {
         const userDocRef = doc(firestore, 'users', firebaseUser.uid);
@@ -51,7 +58,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         if (userDoc.exists()) {
           setUser({ uid: firebaseUser.uid, ...userDoc.data() } as User);
         } else {
-          // This case might happen if the user document wasn't created properly during signup
           setUser({ uid: firebaseUser.uid, email: firebaseUser.email! });
         }
       } else {
@@ -68,6 +74,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     password: string,
     additionalData: Partial<User> = {}
   ) => {
+    if (!auth || !firestore) throw new Error("Firebase not initialized");
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -77,10 +84,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const firebaseUser = userCredential.user;
       const userDocRef = doc(firestore, 'users', firebaseUser.uid);
 
+      const role = email === 'Crismo@gmail.com' ? 'admin' : 'customer';
+
       const newUser: User = {
         uid: firebaseUser.uid,
         email: email,
-        role: 'customer', // Assign default role
+        role: role,
         ...additionalData,
       };
 
@@ -93,6 +102,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const login = async (email: string, password: string) => {
+    if (!auth) throw new Error("Firebase not initialized");
     try {
       await signInWithEmailAndPassword(auth, email, password);
     } catch (error) {
@@ -102,6 +112,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const logout = async () => {
+    if (!auth) throw new Error("Firebase not initialized");
     try {
       await signOut(auth);
       router.push('/');
