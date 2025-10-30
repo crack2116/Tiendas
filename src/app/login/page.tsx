@@ -64,7 +64,7 @@ export default function LoginPage() {
                   <Input id="password" type="password" required />
                 </div>
                 <Button type="submit" className="w-full" asChild>
-                    <Link href="/account">Entrar</Link>
+                    <Link href="/account/orders">Entrar</Link>
                 </Button>
               </>
             ) : (
@@ -95,7 +95,7 @@ export default function LoginPage() {
                   <Input id="password-register" type="password" required />
                 </div>
                 <Button type="submit" className="w-full" asChild>
-                    <Link href="/account">Registrarse</Link>
+                    <Link href="/account/orders">Registrarse</Link>
                 </Button>
               </>
             )}

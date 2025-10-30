@@ -40,14 +40,6 @@ export default function AccountLayout({
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                    <Link href="/account">
-                        <User />
-                        Profile
-                    </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild>
                     <Link href="/account/orders">
                         <Package />
                         Orders

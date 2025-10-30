@@ -74,7 +74,7 @@ export function LoginDialog({ children }: { children: React.ReactNode }) {
                 <Input id="password-dialog" type="password" required />
               </div>
               <Button type="submit" className="w-full" asChild>
-                  <Link href="/account">Entrar</Link>
+                  <Link href="/account/orders">Entrar</Link>
               </Button>
             </>
           ) : (
@@ -112,7 +112,7 @@ export function LoginDialog({ children }: { children: React.ReactNode }) {
                 <Input id="password-register-dialog" type="password" required />
               </div>
               <Button type="submit" className="w-full" asChild>
-                  <Link href="/account">Registrarse</Link>
+                  <Link href="/account/orders">Registrarse</Link>
               </Button>
             </>
           )}
