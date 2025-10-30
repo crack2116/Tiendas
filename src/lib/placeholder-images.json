@@ -3,19 +3,19 @@
     {
       "id": "hero",
       "description": "Stylish woman in a modern cityscape",
-      "imageUrl": "https://images.unsplash.com/photo-1562572159-4efc207f5aff?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxmYXNoaW9uJTIwbW9kZWx8ZW58MHx8fHwxNzYxNzgxMzUwfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1562572159-4efc207f5aff?q=80&w=1920",
       "imageHint": "fashion model"
     },
     {
       "id": "carousel-clothing",
       "description": "A person wearing a stylish outfit",
-      "imageUrl": "https://images.unsplash.com/photo-1542062700-91d03b207556?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxmYXNoaW9uJTIwbW9kZWx8ZW58MHx8fHwxNzYyODg3MTM4fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1542062700-91d03b207556?q=80&w=1920",
       "imageHint": "fashion model"
     },
     {
       "id": "carousel-beauty",
       "description": "A collection of beauty products",
-      "imageUrl": "https://images.unsplash.com/photo-1596462502278-27bfdc403348?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxiZWF1dHklMjBwcm9kdWN0c3xlbnwwfHx8fDE3NjI4ODcxNDZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=1920",
       "imageHint": "beauty products"
     },
     {
@@ -27,73 +27,73 @@
     {
       "id": "carousel-accessories",
       "description": "A collection of fashion accessories like sunglasses and a watch",
-      "imageUrl": "https://images.unsplash.com/photo-1619865181498-50222cdf926d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxmYXNoaW9uJTIwYWNjZXNzb3JpZXN8ZW58MHx8fHwxNzYyODg3MTYwfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1619865181498-50222cdf926d?q=80&w=1920",
       "imageHint": "fashion accessories"
     },
     {
       "id": "product-1-a",
       "description": "Front view of a minimalist white t-shirt",
-      "imageUrl": "https://images.unsplash.com/photo-1688111421202-bda886f5e215?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHx3aGl0ZSUyMHQtc2hpcnR8ZW58MHx8fHwxNzYxNzk3OTQ4fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1688111421202-bda886f5e215?q=80&w=1080",
       "imageHint": "white t-shirt"
     },
     {
       "id": "product-1-b",
       "description": "Side view of a minimalist white t-shirt",
-      "imageUrl": "https://images.unsplash.com/photo-1576417677416-6ca3adfb5435?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHx3aGl0ZSUyMHQtc2hpcnR8ZW58MHx8fHwxNzYxNzk3OTQ4fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1576417677416-6ca3adfb5435?q=80&w=1080",
       "imageHint": "white t-shirt"
     },
     {
       "id": "product-2-a",
       "description": "Slim-fit dark wash denim jeans",
-      "imageUrl": "https://images.unsplash.com/photo-1658910453954-6ca847bb7470?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxkZW5pbSUyMGplYW5zfGVufDB8fHx8MTc2MTg0MjMwNHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1658910453954-6ca847bb7470?q=80&w=1080",
       "imageHint": "denim jeans"
     },
     {
       "id": "product-2-b",
       "description": "Close-up of denim jeans fabric",
-      "imageUrl": "https://images.unsplash.com/photo-1637069585336-827b298fe84a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxkZW5pbSUyMGplYW5zfGVufDB8fHx8MTc2MTg0MjMwNHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1637069585336-827b298fe84a?q=80&w=1080",
       "imageHint": "denim jeans"
     },
     {
       "id": "product-3-a",
       "description": "Classic leather biker jacket",
-      "imageUrl": "https://images.unsplash.com/photo-1489286696299-aa7486820bd5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxsZWF0aGVyJTIwamFja2V0fGVufDB8fHx8MTc2MTgxMjAwNnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1489286696299-aa7486820bd5?q=80&w=1080",
       "imageHint": "leather jacket"
     },
     {
       "id": "product-3-b",
       "description": "Detail of biker jacket zipper",
-      "imageUrl": "https://images.unsplash.com/photo-1551028719-00167b16eac5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxsZWF0aGVyJTIwamFja2V0fGVufDB8fHx8MTc2MTgxMjAwNnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1551028719-00167b16eac5?q=80&w=1080",
       "imageHint": "leather jacket"
     },
     {
       "id": "product-4-a",
       "description": "Chunky knit wool sweater",
-      "imageUrl": "https://images.unsplash.com/photo-1601379327928-bedfaf9da2d0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHx3b29sJTIwc3dlYXRlcnxlbnwwfHx8fDE3NjE3ODcwNzR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1601379327928-bedfaf9da2d0?q=80&w=1080",
       "imageHint": "wool sweater"
     },
     {
       "id": "product-5-a",
       "description": "Sleek black Chelsea boots",
-      "imageUrl": "https://images.unsplash.com/photo-1637059037982-519896b99b0f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxibGFjayUyMGJvb3RzfGVufDB8fHx8MTc2MTg0OTE4MXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1637059037982-519896b99b0f?q=80&w=1080",
       "imageHint": "black boots"
     },
     {
       "id": "product-6-a",
       "description": "Modern trench coat in beige",
-      "imageUrl": "https://images.unsplash.com/photo-1633821879282-0c4e91f96232?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHx0cmVuY2glMjBjb2F0fGVufDB8fHx8MTc2MTc0NDkzM3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1633821879282-0c4e91f96232?q=80&w=1080",
       "imageHint": "trench coat"
     },
     {
       "id": "product-7-a",
       "description": "Silk floral print midi dress",
-      "imageUrl": "https://images.unsplash.com/photo-1503408024948-0a3e1b2b519c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxmbG9yYWwlMjBkcmVzc3xlbnwwfHx8fDE3NjE3OTU3NTd8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1503408024948-0a3e1b2b519c?q=80&w=1080",
       "imageHint": "floral dress"
     },
     {
       "id": "product-8-a",
       "description": "Linen button-down shirt",
-      "imageUrl": "https://images.unsplash.com/photo-1665201462900-809f7773ff5f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxsaW5lbiUyMHNoaXJ0fGVufDB8fHx8MTc2MTg0NTQxM3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1665201462900-809f7773ff5f?q=80&w=1080",
       "imageHint": "linen shirt"
     }
   ]
