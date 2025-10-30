@@ -109,10 +109,16 @@ export function Header() {
       </div>
       <nav className="hidden md:flex container items-center space-x-2 text-sm font-medium py-2">
             {navLinks.map(link => (
-              <Button key={link.label} variant={link.variant === 'primary' ? 'default' : 'ghost'} size="sm" asChild>
+               <Button
+               key={link.label}
+               variant={link.variant === 'primary' ? 'default' : 'ghost'}
+               size="sm"
+               asChild
+               className={link.variant === 'primary' ? 'bg-[#f37423] hover:bg-[#f37423]/90 text-white' : ''}
+             >
                 <Link
                   href={link.href}
-                  className={`transition-colors hover:text-foreground/80 ${link.variant === 'primary' ? 'text-primary-foreground' : 'text-foreground/80'}`}
+                  className={`transition-colors hover:text-foreground/80 ${link.variant === 'primary' ? 'text-white' : 'text-foreground/80'}`}
                 >
                   {link.label}
                 </Link>
