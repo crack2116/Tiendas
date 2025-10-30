@@ -26,7 +26,7 @@ export default function AiSuggestions({ productDescription, productCategory }: A
         });
         setSuggestions(result);
       } catch (err) {
-        setError('Could not fetch AI suggestions. Please try again later.');
+        setError('No se pudieron obtener las sugerencias de la IA. Por favor, inténtalo de nuevo más tarde.');
         console.error(err);
       } finally {
         setLoading(false);
@@ -39,13 +39,13 @@ export default function AiSuggestions({ productDescription, productCategory }: A
     <section>
       <h2 className="text-2xl md:text-3xl font-bold font-headline mb-6 text-center">
         <Wand2 className="inline-block mr-2 -mt-1 h-7 w-7 text-accent" />
-        AI Styling Assistant
+        Asistente de Estilo IA
       </h2>
       <Card className="bg-card/80 border-primary/20 border-dashed">
         <CardHeader>
-          <CardTitle>Complete Your Look</CardTitle>
+          <CardTitle>Completa Tu Look</CardTitle>
           <CardDescription>
-            Our AI stylist suggests items that pair perfectly with what you're viewing.
+            Nuestro estilista de IA sugiere artículos que combinan perfectamente con lo que estás viendo.
           </CardDescription>
         </CardHeader>
         <CardContent>

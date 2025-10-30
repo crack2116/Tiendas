@@ -144,7 +144,7 @@ export const orders: Order[] = [
   {
     id: 'MV-1025',
     date: '2023-06-15',
-    status: 'Delivered',
+    status: 'Entregado',
     total: 119.98,
     items: [
       { productName: 'Classic White Tee', quantity: 1, price: 29.99 },
@@ -154,7 +154,7 @@ export const orders: Order[] = [
   {
     id: 'MV-1024',
     date: '2023-05-02',
-    status: 'Shipped',
+    status: 'Enviado',
     total: 249.99,
     items: [
       { productName: 'Leather Biker Jacket', quantity: 1, price: 249.99 },
@@ -163,7 +163,7 @@ export const orders: Order[] = [
   {
     id: 'MV-1023',
     date: '2023-04-20',
-    status: 'Delivered',
+    status: 'Entregado',
     total: 99.98,
     items: [
       { productName: 'Classic White Tee', quantity: 2, price: 29.99 },

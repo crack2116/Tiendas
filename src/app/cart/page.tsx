@@ -14,7 +14,7 @@ export default function CartPage() {
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-12">
-      <h1 className="text-3xl md:text-4xl font-bold font-headline mb-8">Your Shopping Cart</h1>
+      <h1 className="text-3xl md:text-4xl font-bold font-headline mb-8">Tu Carrito de Compras</h1>
       
       {itemCount > 0 ? (
         <div className="grid lg:grid-cols-3 gap-8 xl:gap-12">
@@ -72,7 +72,7 @@ export default function CartPage() {
                       onClick={() => removeFromCart(item.product.id)}
                     >
                       <Trash2 className="h-4 w-4 mr-1" />
-                      Remove
+                      Eliminar
                     </Button>
                   </div>
                 </CardContent>
@@ -83,16 +83,16 @@ export default function CartPage() {
           <div className="lg:col-span-1">
             <Card className="sticky top-24">
               <CardHeader>
-                <CardTitle className="font-headline text-2xl">Order Summary</CardTitle>
+                <CardTitle className="font-headline text-2xl">Resumen del Pedido</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex justify-between">
-                  <span>Subtotal ({itemCount} items)</span>
+                  <span>Subtotal ({itemCount} productos)</span>
                   <span>S/{totalPrice.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Shipping</span>
-                  <span className="text-green-600">FREE</span>
+                  <span>Envío</span>
+                  <span className="text-green-600">GRATIS</span>
                 </div>
                 <Separator />
                 <div className="flex justify-between font-bold text-lg">
@@ -103,7 +103,7 @@ export default function CartPage() {
               <CardFooter>
                 <Button asChild size="lg" className="w-full">
                   <Link href="/checkout">
-                    <CreditCard className="mr-2 h-5 w-5" /> Proceed to Checkout
+                    <CreditCard className="mr-2 h-5 w-5" /> Proceder al Pago
                   </Link>
                 </Button>
               </CardFooter>
@@ -112,11 +112,11 @@ export default function CartPage() {
         </div>
       ) : (
         <div className="text-center py-20 border-2 border-dashed rounded-lg">
-          <h2 className="text-2xl font-semibold">Your cart is empty</h2>
-          <p className="text-muted-foreground mt-2">Add some items to get started.</p>
+          <h2 className="text-2xl font-semibold">Tu carrito está vacío</h2>
+          <p className="text-muted-foreground mt-2">Añade algunos productos para empezar.</p>
           <Button asChild className="mt-6">
             <Link href="/">
-              Continue Shopping <ArrowRight className="ml-2 h-4 w-4" />
+              Seguir Comprando <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </Button>
         </div>

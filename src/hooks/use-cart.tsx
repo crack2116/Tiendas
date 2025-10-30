@@ -27,18 +27,18 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     try {
-      const storedCart = localStorage.getItem('moda-verse-cart');
+      const storedCart = localStorage.getItem('noemia-cart');
       if (storedCart) {
         setCart(JSON.parse(storedCart));
       }
     } catch (error) {
-      console.error('Failed to parse cart from localStorage', error);
+      console.error('Error al parsear el carrito desde localStorage', error);
       setCart([]);
     }
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('moda-verse-cart', JSON.stringify(cart));
+    localStorage.setItem('noemia-cart', JSON.stringify(cart));
   }, [cart]);
 
   const addToCart = (product: Product, quantity = 1) => {
@@ -111,7 +111,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 export const useCart = () => {
   const context = useContext(CartContext);
   if (context === undefined) {
-    throw new Error('useCart must be used within a CartProvider');
+    throw new Error('useCart debe ser usado dentro de un CartProvider');
   }
   return context;
 };

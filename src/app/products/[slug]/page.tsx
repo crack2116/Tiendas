@@ -33,7 +33,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
   const handleAddToCart = () => {
     addToCart(product, quantity);
     toast({
-      title: 'Added to cart',
+      title: 'Añadido al carrito',
       description: `${quantity} x ${product.name}`,
     });
   };
@@ -99,19 +99,19 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
                 />
               ))}
             </div>
-            <span>({product.reviews.length} reviews)</span>
+            <span>({product.reviews.length} reseñas)</span>
           </div>
           <p className="mt-6 text-lg">{product.description}</p>
           
           <div className="mt-8">
             <Button size="lg" className="w-full md:w-auto" onClick={handleAddToCart}>
-              <ShoppingCart className="mr-2 h-5 w-5" /> Add to Cart
+              <ShoppingCart className="mr-2 h-5 w-5" /> Añadir al carrito
             </Button>
           </div>
 
           <Accordion type="single" collapsible className="w-full mt-8">
             <AccordionItem value="details">
-              <AccordionTrigger className="font-headline text-lg">Product Details</AccordionTrigger>
+              <AccordionTrigger className="font-headline text-lg">Detalles del Producto</AccordionTrigger>
               <AccordionContent>
                 <ul className="list-disc list-inside space-y-1 text-muted-foreground">
                   {product.details.map((detail, index) => (
@@ -121,7 +121,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="reviews">
-              <AccordionTrigger className="font-headline text-lg">Reviews</AccordionTrigger>
+              <AccordionTrigger className="font-headline text-lg">Reseñas</AccordionTrigger>
               <AccordionContent>
                 {product.reviews.length > 0 ? (
                   <div className="space-y-6">
@@ -144,7 +144,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
                     ))}
                   </div>
                 ) : (
-                  <p className="text-muted-foreground">No reviews yet.</p>
+                  <p className="text-muted-foreground">Aún no hay reseñas.</p>
                 )}
               </AccordionContent>
             </AccordionItem>

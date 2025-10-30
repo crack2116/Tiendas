@@ -16,7 +16,7 @@ export default function CheckoutPage() {
   const handlePlaceOrder = (e: React.FormEvent) => {
     e.preventDefault();
     // In a real app, you would process the payment here.
-    alert('Order placed successfully! (This is a demo)');
+    alert('¡Pedido realizado con éxito! (Esto es una demostración)');
     clearCart();
     router.push('/account/orders');
   };
@@ -30,34 +30,34 @@ export default function CheckoutPage() {
             <div className="space-y-8">
               <Card>
                 <CardHeader>
-                  <CardTitle className="font-headline">Shipping Information</CardTitle>
+                  <CardTitle className="font-headline">Información de Envío</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="firstName">First Name</Label>
+                      <Label htmlFor="firstName">Nombre</Label>
                       <Input id="firstName" required />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="lastName">Last Name</Label>
+                      <Label htmlFor="lastName">Apellidos</Label>
                       <Input id="lastName" required />
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="address">Address</Label>
+                    <Label htmlFor="address">Dirección</Label>
                     <Input id="address" required />
                   </div>
                   <div className="grid sm:grid-cols-3 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="city">City</Label>
+                      <Label htmlFor="city">Ciudad</Label>
                       <Input id="city" required />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="state">State</Label>
+                      <Label htmlFor="state">Provincia</Label>
                       <Input id="state" required />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="zip">ZIP Code</Label>
+                      <Label htmlFor="zip">Código Postal</Label>
                       <Input id="zip" required />
                     </div>
                   </div>
@@ -66,17 +66,17 @@ export default function CheckoutPage() {
 
               <Card>
                 <CardHeader>
-                  <CardTitle className="font-headline">Payment Details</CardTitle>
+                  <CardTitle className="font-headline">Detalles de Pago</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="cardNumber">Card Number</Label>
+                    <Label htmlFor="cardNumber">Número de Tarjeta</Label>
                     <Input id="cardNumber" placeholder="**** **** **** ****" required />
                   </div>
                   <div className="grid sm:grid-cols-3 gap-4">
                     <div className="sm:col-span-2 space-y-2">
-                      <Label htmlFor="expiry">Expiration Date</Label>
-                      <Input id="expiry" placeholder="MM / YY" required />
+                      <Label htmlFor="expiry">Fecha de Caducidad</Label>
+                      <Input id="expiry" placeholder="MM / AA" required />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="cvc">CVC</Label>
@@ -90,7 +90,7 @@ export default function CheckoutPage() {
           <div className="lg:col-span-1">
             <Card className="sticky top-24">
               <CardHeader>
-                <CardTitle className="font-headline">Your Order</CardTitle>
+                <CardTitle className="font-headline">Tu Pedido</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
@@ -106,7 +106,7 @@ export default function CheckoutPage() {
                         />
                         <div>
                           <p className="font-semibold">{item.product.name}</p>
-                          <p className="text-sm text-muted-foreground">Qty: {item.quantity}</p>
+                          <p className="text-sm text-muted-foreground">Cant: {item.quantity}</p>
                         </div>
                       </div>
                       <p>S/{(item.product.price * item.quantity).toFixed(2)}</p>
@@ -121,7 +121,7 @@ export default function CheckoutPage() {
               </CardContent>
             </Card>
             <Button size="lg" className="w-full mt-6" type="submit">
-              Place Order
+              Realizar Pedido
             </Button>
           </div>
         </div>

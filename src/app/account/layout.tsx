@@ -32,7 +32,7 @@ export default function AccountLayout({
             <div className="flex items-center space-x-2 p-2">
                 <Logo className="h-10 w-10" />
                 <span className="font-bold font-headline text-lg text-sidebar-primary-foreground">
-                    Account
+                    Mi Cuenta
                 </span>
             </div>
           </SidebarHeader>
@@ -42,7 +42,7 @@ export default function AccountLayout({
                 <SidebarMenuButton asChild>
                     <Link href="/account/orders">
                         <Package />
-                        Orders
+                        Pedidos
                     </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -54,7 +54,7 @@ export default function AccountLayout({
                 <SidebarMenuButton asChild>
                     <Link href="/">
                         <Home />
-                        Back to Store
+                        Volver a la Tienda
                     </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -62,7 +62,7 @@ export default function AccountLayout({
                 <SidebarMenuButton asChild>
                     <Link href="/login">
                         <LogOut />
-                        Logout
+                        Cerrar Sesión
                     </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>

@@ -15,11 +15,11 @@ import Link from "next/link"
 export default function OrdersPage() {
   const getBadgeVariant = (status: string) => {
     switch (status) {
-      case "Delivered":
+      case "Entregado":
         return "default";
-      case "Shipped":
+      case "Enviado":
         return "secondary";
-      case "Cancelled":
+      case "Cancelado":
         return "destructive";
       default:
         return "outline";
@@ -28,20 +28,20 @@ export default function OrdersPage() {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold font-headline mb-6">Order History</h1>
+      <h1 className="text-3xl font-bold font-headline mb-6">Historial de Pedidos</h1>
       <Card>
         <CardHeader>
-          <CardTitle>Your Orders</CardTitle>
+          <CardTitle>Tus Pedidos</CardTitle>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Order ID</TableHead>
-                <TableHead>Date</TableHead>
-                <TableHead>Status</TableHead>
+                <TableHead>Pedido ID</TableHead>
+                <TableHead>Fecha</TableHead>
+                <TableHead>Estado</TableHead>
                 <TableHead className="text-right">Total</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead className="text-right">Acciones</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -52,10 +52,10 @@ export default function OrdersPage() {
                   <TableCell>
                     <Badge variant={getBadgeVariant(order.status) as any}>{order.status}</Badge>
                   </TableCell>
-                  <TableCell className="text-right">${order.total.toFixed(2)}</TableCell>
+                  <TableCell className="text-right">S/{order.total.toFixed(2)}</TableCell>
                   <TableCell className="text-right">
                     <Button variant="outline" size="sm" asChild>
-                        <Link href="#">View Details</Link>
+                        <Link href="#">Ver Detalles</Link>
                     </Button>
                   </TableCell>
                 </TableRow>
