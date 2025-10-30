@@ -31,7 +31,7 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-20 items-center">
+      <div className="container flex h-20 items-center justify-between">
         <div className="flex items-center md:hidden">
           <Sheet>
             <SheetTrigger asChild>
@@ -79,7 +79,7 @@ export function Header() {
             </form>
         </div>
 
-        <div className="hidden md:flex items-center justify-end space-x-2 ml-auto">
+        <div className="hidden md:flex items-center justify-end space-x-2">
           <CartSheet open={isCartOpen} onOpenChange={setCartOpen} />
           <Button variant="ghost" asChild className="text-foreground/80 font-normal">
             <Link href="#">
