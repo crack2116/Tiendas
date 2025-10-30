@@ -67,8 +67,8 @@ export function Header() {
             </Link>
         </div>
 
-        <div className="flex-1 flex justify-center w-full px-4">
-            <form className="w-full max-w-xl">
+        <div className="flex-1 w-full px-4">
+            <form className="w-full max-w-xl mx-auto">
               <div className="relative">
                 <Input
                   className="w-full appearance-none bg-secondary pl-4 pr-10 h-12 rounded-full text-base"
@@ -80,19 +80,19 @@ export function Header() {
         </div>
 
         <div className="hidden md:flex items-center justify-end space-x-2">
-          <CartSheet open={isCartOpen} onOpenChange={setCartOpen} />
-          <Button variant="ghost" asChild className="text-foreground/80 font-normal">
-            <Link href="#">
-              <Heart className="h-5 w-5 mr-1" />
-              Favoritos
-            </Link>
-          </Button>
-          <Button variant="ghost" asChild className="text-foreground/80 font-normal">
-            <Link href="/login">
-              <User className="h-5 w-5 mr-1" />
-              Entrar
-            </Link>
-          </Button>
+            <CartSheet open={isCartOpen} onOpenChange={setCartOpen} />
+            <Button variant="ghost" asChild className="text-foreground/80 font-normal">
+                <Link href="#">
+                <Heart className="h-5 w-5 mr-1" />
+                Favoritos
+                </Link>
+            </Button>
+            <Button variant="ghost" asChild className="text-foreground/80 font-normal">
+                <Link href="/login">
+                <User className="h-5 w-5 mr-1" />
+                Entrar
+                </Link>
+            </Button>
         </div>
 
          <div className="md:hidden ml-auto">
