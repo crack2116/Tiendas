@@ -90,7 +90,6 @@ export function Header() {
               <div className="flex flex-col h-full">
                 <div className="flex items-center space-x-2 pb-4 border-b">
                   <Logo className="h-8 w-8" />
-                  <span className="font-bold font-headline text-lg">Noemia</span>
                 </div>
                 <nav className="flex flex-col space-y-4 mt-6">
                   {navLinks.map(link => (
@@ -113,7 +112,7 @@ export function Header() {
               <Button key={link.label} variant={link.variant === 'primary' ? 'default' : 'ghost'} size="sm" asChild>
                 <Link
                   href={link.href}
-                  className="transition-colors hover:text-foreground/80 text-foreground/80"
+                  className={`transition-colors hover:text-foreground/80 ${link.variant === 'primary' ? 'text-primary-foreground' : 'text-foreground/80'}`}
                 >
                   {link.label}
                 </Link>
