@@ -80,31 +80,19 @@ export function Header() {
         </div>
 
         <div className="hidden md:flex items-center justify-end space-x-4">
-            <Button variant="ghost" asChild className="text-foreground/80 font-normal">
-              <Link href="#">
-                <Heart className="h-5 w-5 mr-1" />
-                Favoritos
-              </Link>
-            </Button>
-            <Button variant="ghost" asChild className="text-foreground/80 font-normal">
-              <Link href="/login">
-                <User className="h-5 w-5 mr-1" />
-                Entrar
-              </Link>
-            </Button>
-            <CartSheet open={isCartOpen} onOpenChange={setCartOpen}>
-                <SheetTrigger asChild>
-                <Button variant="ghost" className="relative text-foreground/80 font-normal">
-                    <ShoppingCart className="h-5 w-5 mr-1" />
-                    Mi Carrito
-                    {itemCount > 0 && (
-                    <span className="absolute top-0 right-0 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold">
-                        {itemCount}
-                    </span>
-                    )}
-                </Button>
-                </SheetTrigger>
-            </CartSheet>
+          <CartSheet open={isCartOpen} onOpenChange={setCartOpen} />
+          <Button variant="ghost" asChild className="text-foreground/80 font-normal">
+            <Link href="#">
+              <Heart className="h-5 w-5 mr-1" />
+              Favoritos
+            </Link>
+          </Button>
+          <Button variant="ghost" asChild className="text-foreground/80 font-normal">
+            <Link href="/login">
+              <User className="h-5 w-5 mr-1" />
+              Entrar
+            </Link>
+          </Button>
         </div>
 
          <div className="md:hidden ml-auto">

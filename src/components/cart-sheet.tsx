@@ -11,10 +11,11 @@ import {
   SheetTitle,
   SheetFooter,
   SheetClose,
+  SheetTrigger,
 } from '@/components/ui/sheet';
 import { ScrollArea } from './ui/scroll-area';
 import { Separator } from './ui/separator';
-import { Minus, Plus, Trash2 } from 'lucide-react';
+import { Minus, Plus, Trash2, ShoppingCart } from 'lucide-react';
 import { Input } from './ui/input';
 
 type CartSheetProps = {
@@ -27,6 +28,17 @@ export function CartSheet({ open, onOpenChange }: CartSheetProps) {
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
+      <SheetTrigger asChild>
+        <Button variant="ghost" className="relative text-foreground/80 font-normal">
+            <ShoppingCart className="h-5 w-5 mr-1" />
+            Mi Carrito
+            {itemCount > 0 && (
+            <span className="absolute top-0 right-0 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold">
+                {itemCount}
+            </span>
+            )}
+        </Button>
+      </SheetTrigger>
       <SheetContent className="w-full sm:max-w-md flex flex-col">
         <SheetHeader>
           <SheetTitle className="font-headline text-xl">
