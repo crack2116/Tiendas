@@ -31,7 +31,7 @@ export function Header() {
         <div className="mr-4 hidden md:flex">
           <Link href="/" className="mr-6 flex items-center space-x-2">
             <Logo className="h-6 w-6 text-primary" />
-            <span className="font-bold font-headline text-lg">Natura</span>
+            <span className="font-bold font-headline text-lg">Noemia</span>
           </Link>
           <nav className="flex items-center space-x-6 text-sm font-medium">
             {navLinks.map(link => (
@@ -58,7 +58,7 @@ export function Header() {
               <div className="flex flex-col h-full">
                 <div className="flex items-center space-x-2 pb-4 border-b">
                   <Logo className="h-6 w-6 text-primary" />
-                  <span className="font-bold font-headline text-lg">Natura</span>
+                  <span className="font-bold font-headline text-lg">Noemia</span>
                 </div>
                 <nav className="flex flex-col space-y-4 mt-6">
                   {navLinks.map(link => (
@@ -79,7 +79,7 @@ export function Header() {
         <div className="flex flex-1 items-center justify-end space-x-2">
           <Link href="/" className="md:hidden flex items-center space-x-2">
             <Logo className="h-6 w-6 text-primary" />
-            <span className="font-bold font-headline text-lg">Natura</span>
+            <span className="font-bold font-headline text-lg">Noemia</span>
           </Link>
           <div className="flex-1" />
           <Button variant="ghost" size="icon">

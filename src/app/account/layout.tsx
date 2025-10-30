@@ -29,7 +29,7 @@ export default function AccountLayout({
         <Sidebar>
           <SidebarHeader>
             <div className="font-bold font-headline text-lg text-sidebar-primary-foreground p-2">
-                Natura Account
+                Noemia Account
             </div>
           </SidebarHeader>
           <SidebarContent>
