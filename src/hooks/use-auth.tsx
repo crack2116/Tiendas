@@ -49,6 +49,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (!auth || !firestore) {
       // Firebase services are not available yet.
       // The loading state will be handled by the loading check below.
+      setLoading(true);
       return;
     }
 
@@ -123,15 +124,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       throw error;
     }
   };
-
-  // Wait until Firebase is initialized before rendering children
-  if (!auth || !firestore) {
-    return (
-      <div className="flex h-screen items-center justify-center">
-        <p>Loading Firebase...</p>
-      </div>
-    );
-  }
 
   return (
     <AuthContext.Provider
