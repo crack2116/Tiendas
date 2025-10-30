@@ -24,8 +24,8 @@ import { useTheme } from '@/hooks/use-theme';
 
 
 const navLinks = [
-  { href: '#', label: 'Natura Days' },
-  { href: '#', label: 'Best Seller' },
+  { href: '#', label: 'Lanzamientos' },
+  { href: '#', label: 'Más vendidos' },
   { href: '#', label: 'Promociones' },
   { href: '#', label: 'Perfumería' },
   { href: '#', label: 'Rostro' },
@@ -33,9 +33,7 @@ const navLinks = [
   { href: '#', label: 'Cuerpo' },
   { href: '#', label: 'Maquillaje' },
   { href: '#', label: 'Regalos' },
-  { href: '#', label: 'Casa' },
   { href: '#', label: 'Hombre' },
-  { href: '#', label: 'Marcas' },
 ];
 
 export function Header() {
