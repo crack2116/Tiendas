@@ -35,9 +35,9 @@ export default function LoginPage() {
     <div className="flex items-center justify-center min-h-screen bg-background p-4">
       <Card className="mx-auto max-w-sm w-full">
         <CardHeader className="text-center">
-          <div className="inline-block mb-6 pl-4">
+          <div className="inline-block mb-6 pl-8">
             <Link href="/" className="flex items-center space-x-2">
-                <Logo className="h-16 w-auto" />
+                <Logo className="h-12 w-auto" />
             </Link>
           </div>
           <CardTitle className="text-2xl font-headline">
