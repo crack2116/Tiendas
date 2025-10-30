@@ -47,8 +47,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     if (!auth || !firestore) {
-        setLoading(false);
-        return;
+      // Firebase services are not available yet.
+      // The loading state will be handled by the loading check below.
+      return;
     }
 
     const unsubscribe = onAuthStateChanged(auth, async firebaseUser => {
@@ -58,6 +59,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         if (userDoc.exists()) {
           setUser({ uid: firebaseUser.uid, ...userDoc.data() } as User);
         } else {
+          // This case might happen if user doc creation fails after signup
           setUser({ uid: firebaseUser.uid, email: firebaseUser.email! });
         }
       } else {
@@ -121,6 +123,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       throw error;
     }
   };
+
+  // Wait until Firebase is initialized before rendering children
+  if (!auth || !firestore) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <p>Loading Firebase...</p>
+      </div>
+    );
+  }
 
   return (
     <AuthContext.Provider
