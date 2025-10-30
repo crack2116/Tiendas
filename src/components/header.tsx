@@ -32,13 +32,7 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-20 items-center">
-        <div className="mr-4 hidden md:flex">
-          <Link href="/" className="mr-6 flex items-center space-x-2">
-            <Logo className="h-6" />
-          </Link>
-        </div>
-
-        <div className="md:hidden mr-4">
+        <div className="flex items-center md:hidden">
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon">
@@ -66,8 +60,14 @@ export function Header() {
             </SheetContent>
           </Sheet>
         </div>
-        
-        <div className="flex-1 flex justify-center w-full">
+
+        <div className="hidden md:flex items-center">
+            <Link href="/" className="mr-6">
+                <Logo className="h-10 w-auto" />
+            </Link>
+        </div>
+
+        <div className="flex-1 flex justify-center w-full px-4">
             <form className="w-full max-w-xl">
               <div className="relative">
                 <Input
@@ -79,7 +79,7 @@ export function Header() {
             </form>
         </div>
 
-        <div className="hidden md:flex items-center space-x-4 ml-6">
+        <div className="hidden md:flex items-center justify-end space-x-2 flex-shrink-0 ml-4">
             <Button variant="ghost" asChild className="text-foreground/80 font-normal">
               <Link href="#">
                 <Heart className="h-5 w-5 mr-1" />
@@ -93,17 +93,18 @@ export function Header() {
               </Link>
             </Button>
             <CartSheet open={isCartOpen} onOpenChange={setCartOpen}>
-              <SheetTrigger asChild>
+                <SheetTrigger asChild>
                 <Button variant="ghost" className="relative text-foreground/80 font-normal">
-                  <ShoppingCart className="h-5 w-5 mr-1" />
-                  <span className="sr-only">Carrito</span>
-                  {itemCount > 0 && (
+                    <ShoppingCart className="h-5 w-5 mr-1" />
+                    <span className="sr-only">Carrito</span>
+                    {itemCount > 0 && (
                     <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold">
-                      {itemCount}
+                        {itemCount}
                     </span>
-                  )}
+                    )}
+                    Mi Carrito
                 </Button>
-              </SheetTrigger>
+                </SheetTrigger>
             </CartSheet>
         </div>
 
@@ -122,9 +123,8 @@ export function Header() {
                 </SheetTrigger>
             </CartSheet>
          </div>
-
-
       </div>
+
       <nav className="hidden md:flex container items-center justify-center space-x-2 text-sm font-medium py-2">
             {navLinks.map(link => (
                <Button
