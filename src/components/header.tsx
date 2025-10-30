@@ -41,7 +41,7 @@ export function Header() {
         </div>
 
         <div className="hidden md:flex flex-1 items-center justify-end space-x-4">
-          <div className="w-full max-w-sm">
+          <div className="w-full max-w-lg">
             <form>
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
