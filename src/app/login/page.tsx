@@ -18,7 +18,7 @@ export default function LoginPage() {
     if (dni.length !== 8) return;
 
     setIsDniLoading(true);
-    // Simulate API call
+    // Simulación de llamada a API para verificar DNI de Perú
     await new Promise(resolve => setTimeout(resolve, 1000));
     setFullName('Juan Alberto Pérez Diaz');
     setIsDniLoading(false);
@@ -70,7 +70,7 @@ export default function LoginPage() {
             ) : (
               <>
                 <div className="grid gap-2">
-                  <Label htmlFor="dni">DNI</Label>
+                  <Label htmlFor="dni">DNI (Perú)</Label>
                   <Input
                     id="dni"
                     type="text"

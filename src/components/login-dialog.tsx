@@ -25,17 +25,17 @@ export function LoginDialog({ children }: { children: React.ReactNode }) {
     if (dni.length !== 8) return;
 
     setIsDniLoading(true);
-    // Simulate API call to fetch name from DNI for users >= 18
+    // Simulación: Llamada a API para validar DNI de Perú para mayores de 18
     await new Promise(resolve => setTimeout(resolve, 1000));
-    // In a real app, you would have an API endpoint.
-    // This is a mock response.
+    // En una aplicación real, esto sería una llamada a un servicio externo.
+    // Esto es solo una respuesta de ejemplo.
     setFullName('Juan Alberto Pérez Diaz'); 
     setIsDniLoading(false);
   };
 
   const toggleForm = () => {
     setIsLogin(!isLogin);
-    // Reset fields when toggling
+    // Resetear campos al cambiar de formulario
     setDni('');
     setFullName('');
   };
@@ -80,7 +80,7 @@ export function LoginDialog({ children }: { children: React.ReactNode }) {
           ) : (
             <>
               <div className="grid gap-2">
-                <Label htmlFor="dni-dialog">DNI</Label>
+                <Label htmlFor="dni-dialog">DNI (Perú)</Label>
                 <Input
                   id="dni-dialog"
                   type="text"
