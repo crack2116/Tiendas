@@ -10,6 +10,10 @@ service cloud.firestore {
     function isOwner(userId) {
       return request.auth.uid == userId;
     }
+    
+    function isAdmin() {
+        return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
 
     // USERS
     // Users can read their own profile.
@@ -22,10 +26,24 @@ service cloud.firestore {
 
     // PRODUCTS
     // Any signed-in user can read products.
-    // In the future, we'll restrict write access to admins.
+    // Only admins can write products.
     match /products/{productId} {
       allow read: if isSignedIn();
-      allow write: if isSignedIn(); // Placeholder - will be restricted to admins
+      allow write: if isAdmin();
+    }
+
+    // ORDERS
+    // Admins can read all orders.
+    // Users can only create orders for themselves.
+    match /orders/{orderId} {
+      allow read: if isAdmin();
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+    }
+
+    // USER-SPECIFIC ORDERS
+    // Users can read and create their own orders.
+    match /users/{userId}/orders/{orderId} {
+        allow read, create: if isOwner(userId);
     }
   }
 }

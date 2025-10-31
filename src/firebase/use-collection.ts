@@ -23,7 +23,7 @@ interface UseCollectionOptions {
 }
 
 export function useCollection<T>(
-  collectionName: string,
+  collectionPath: string | null, // Allow null to disable the query
   options: UseCollectionOptions = {}
 ) {
   const firestore = useFirestore();
@@ -31,64 +31,69 @@ export function useCollection<T>(
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
-  const optionsRef = useRef(options);
+  // Use a ref to store a stringified version of the options to avoid re-running the effect on every render.
+  const optionsStr = JSON.stringify(options);
 
   useEffect(() => {
-    if (!firestore) {
+    // Don't run if firestore is not available or if the path is null
+    if (!firestore || !collectionPath) {
       setLoading(false);
       return;
     }
+    
+    setLoading(true);
 
-    let collectionQuery: Query<DocumentData>;
     try {
-      let q: any = collection(firestore, collectionName);
+      const currentOptions = JSON.parse(optionsStr);
+      let collectionQuery: Query<DocumentData> = collection(firestore, collectionPath);
 
-      if (optionsRef.current.where) {
-        optionsRef.current.where.forEach(w => {
-          q = query(q, where(w[0], w[1], w[2]));
+      if (currentOptions.where) {
+        currentOptions.where.forEach((w: [string, any, any]) => {
+          collectionQuery = query(collectionQuery, where(w[0], w[1], w[2]));
         });
       }
 
-      if (optionsRef.current.orderBy) {
-        optionsRef.current.orderBy.forEach(o => {
-          q = query(q, orderBy(o[0], o[1]));
+      if (currentOptions.orderBy) {
+        currentOptions.orderBy.forEach((o: [string, 'asc' | 'desc']) => {
+          collectionQuery = query(collectionQuery, orderBy(o[0], o[1]));
         });
       }
 
-      if (optionsRef.current.limit) {
-        q = query(q, limit(optionsRef.current.limit));
+      if (currentOptions.limit) {
+        collectionQuery = query(collectionQuery, limit(currentOptions.limit));
       }
       
-      if (optionsRef.current.startAt) {
-        q = query(q, startAt(...optionsRef.current.startAt));
+      if (currentOptions.startAt) {
+        collectionQuery = query(collectionQuery, startAt(...currentOptions.startAt));
       }
 
-      if (optionsRef.current.endAt) {
-        q = query(q, endAt(...optionsRef.current.endAt));
+      if (currentOptions.endAt) {
+        collectionQuery = query(collectionQuery, endAt(...currentOptions.endAt));
       }
+      
+      const unsubscribe = onSnapshot(
+        collectionQuery,
+        snapshot => {
+          const docs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as T));
+          setData(docs);
+          setLoading(false);
+        },
+        err => {
+          console.error(`Error fetching collection ${collectionPath}:`, err)
+          setError(err);
+          setLoading(false);
+        }
+      );
 
-      collectionQuery = q;
+      return () => unsubscribe();
     } catch (e: any) {
+      console.error(`Error building query for ${collectionPath}:`, e)
       setError(e);
       setLoading(false);
       return;
     }
     
-    const unsubscribe = onSnapshot(
-      collectionQuery,
-      snapshot => {
-        const docs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as T));
-        setData(docs);
-        setLoading(false);
-      },
-      err => {
-        setError(err);
-        setLoading(false);
-      }
-    );
-
-    return () => unsubscribe();
-  }, [collectionName, firestore]);
+  }, [collectionPath, firestore, optionsStr]);
 
   return { data, loading, error };
 }

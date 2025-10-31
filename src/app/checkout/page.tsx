@@ -9,31 +9,86 @@ import { Separator } from '@/components/ui/separator';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/use-auth';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { useFirestore } from '@/firebase';
+import { collection, addDoc, serverTimestamp, writeBatch, doc } from 'firebase/firestore';
+import { useToast } from '@/hooks/use-toast';
+import type { Order } from '@/lib/types';
+
 
 export default function CheckoutPage() {
-  const { cart, totalPrice, clearCart } = useCart();
+  const { cart, totalPrice, clearCart, itemCount } = useCart();
   const { user } = useAuth();
   const router = useRouter();
+  const firestore = useFirestore();
+  const { toast } = useToast();
+  const [isSubmitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     if (user === null) {
-      router.push('/login');
+      router.push('/login?redirect=/checkout');
     }
-  }, [user, router]);
+     if (itemCount === 0 && user) {
+        router.push('/');
+    }
+  }, [user, router, itemCount]);
 
-  const handlePlaceOrder = (e: React.FormEvent) => {
+  const handlePlaceOrder = async (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real app, you would process the payment here.
-    alert('¡Pedido realizado con éxito! (Esto es una demostración)');
-    clearCart();
-    router.push('/account/orders');
+    if (!firestore || !user || isSubmitting) return;
+
+    setSubmitting(true);
+
+    const orderData: Omit<Order, 'id'> = {
+      userId: user.uid,
+      createdAt: serverTimestamp() as any, // Firestore will set the date
+      status: 'Procesando',
+      total: totalPrice,
+      items: cart.map(item => ({
+        productId: item.product.id,
+        productName: item.product.name,
+        quantity: item.quantity,
+        price: item.product.price,
+        imageUrl: item.product.images[0].url,
+      })),
+    };
+    
+    try {
+        const batch = writeBatch(firestore);
+
+        // Add to general orders collection (for admin)
+        const newOrderRef = doc(collection(firestore, 'orders'));
+        batch.set(newOrderRef, orderData);
+
+        // Add to user-specific orders subcollection
+        const userOrderRef = doc(collection(firestore, `users/${user.uid}/orders`, newOrderRef.id));
+        batch.set(userOrderRef, orderData);
+        
+        await batch.commit();
+
+        toast({
+            title: "¡Pedido realizado con éxito!",
+            description: "Gracias por tu compra. Puedes ver los detalles en tu cuenta.",
+        });
+        
+        clearCart();
+        router.push('/account/orders');
+
+    } catch (error) {
+        console.error("Error creating order: ", error);
+        toast({
+            variant: "destructive",
+            title: "Error al realizar el pedido",
+            description: "Hubo un problema al procesar tu pedido. Por favor, inténtalo de nuevo.",
+        });
+        setSubmitting(false);
+    }
   };
 
-  if (!user) {
+  if (!user || itemCount === 0) {
     return (
         <div className="container mx-auto px-4 py-8 md:py-12 text-center">
-            <p>Redirigiendo a la página de inicio de sesión...</p>
+            <p>Cargando...</p>
         </div>
     );
   }
@@ -137,8 +192,8 @@ export default function CheckoutPage() {
                 </div>
               </CardContent>
             </Card>
-            <Button size="lg" className="w-full mt-6" type="submit">
-              Realizar Pedido
+            <Button size="lg" className="w-full mt-6" type="submit" disabled={isSubmitting}>
+              {isSubmitting ? 'Procesando...' : 'Realizar Pedido'}
             </Button>
           </div>
         </div>
