@@ -99,7 +99,7 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
         images: [{ id: crypto.randomUUID(), url: '', alt: '', file: undefined }],
       });
     }
-  }, [product, form.reset]);
+  }, [product, form]);
 
 
   const { fields: imageFields, append: appendImage, remove: removeImage, update: updateImage } = useFieldArray({
@@ -220,7 +220,7 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
                 <FormItem>
                   <FormLabel>Nombre del Producto</FormLabel>
                   <FormControl>
-                    <Input placeholder="Ej: Camisa de Lino" {...field} />
+                    <Input placeholder="Ej: Camisa de Lino" {...field} value={field.value ?? ''} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -233,7 +233,7 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
                 <FormItem>
                   <FormLabel>Slug</FormLabel>
                   <FormControl>
-                    <Input placeholder="ej: camisa-de-lino" {...field} />
+                    <Input placeholder="ej: camisa-de-lino" {...field} value={field.value ?? ''} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -247,7 +247,7 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
                     <FormItem>
                     <FormLabel>Categoría</FormLabel>
                     <FormControl>
-                        <Input placeholder="Ej: Tops" {...field} />
+                        <Input placeholder="Ej: Tops" {...field} value={field.value ?? ''} />
                     </FormControl>
                     <FormMessage />
                     </FormItem>
@@ -275,7 +275,7 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
                     <FormItem>
                     <FormLabel>Precio</FormLabel>
                     <FormControl>
-                        <Input type="number" step="0.01" {...field} />
+                        <Input type="number" step="0.01" {...field} value={field.value ?? ''} />
                     </FormControl>
                     <FormMessage />
                     </FormItem>
@@ -302,7 +302,7 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
                 <FormItem>
                   <FormLabel>Descripción</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="Describe el producto..." {...field} rows={5} />
+                    <Textarea placeholder="Describe el producto..." {...field} rows={5} value={field.value ?? ''} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -352,7 +352,7 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
                                     <FormItem>
                                         <FormLabel>Texto Alternativo</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="Descripción de la imagen" {...field} />
+                                            <Input placeholder="Descripción de la imagen" {...field} value={field.value ?? ''} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -395,7 +395,7 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
                             <FormItem className='flex-1'>
                                 <FormLabel className="sr-only">Detalle</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="Ej: 100% Algodón" {...field} />
+                                    <Input placeholder="Ej: 100% Algodón" {...field} value={field.value ?? ''} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
