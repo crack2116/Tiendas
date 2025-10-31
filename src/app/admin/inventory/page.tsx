@@ -88,7 +88,7 @@ export default function InventoryPage() {
       
       {error && <p className="text-destructive px-4 sm:px-6 md:px-8">Error: {error.message}</p>}
 
-      <Card className="flex-1 flex flex-col m-4 mt-0 sm:m-6 sm:mt-0 md:m-8 md:mt-0 border-0 shadow-none sm:border sm:shadow">
+      <Card className="flex-1 flex flex-col border-0 shadow-none sm:border sm:shadow rounded-none sm:rounded-lg">
         <CardHeader className="pt-4 px-4 sm:px-6 md:px-7">
           <CardTitle>Productos</CardTitle>
           <CardDescription>
