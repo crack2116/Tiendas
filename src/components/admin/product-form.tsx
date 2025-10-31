@@ -12,7 +12,6 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import type { Product } from '@/lib/types';
 import { useFirestore } from '@/firebase';
@@ -21,15 +20,12 @@ import { useToast } from '@/hooks/use-toast';
 import { Trash, Image as ImageIcon } from 'lucide-react';
 import { Separator } from '../ui/separator';
 import { useState, useEffect } from 'react';
-import { Progress } from '@/components/ui/progress';
 import Image from 'next/image';
-import { uploadImageAction } from '@/app/actions/upload-image';
-
 
 const imageSchema = z.object({
   id: z.string(),
   url: z.string().url('Debe ser una URL válida.').or(z.literal('')),
-  alt: z.string(),
+  alt: z.string().min(1, 'El texto alternativo es requerido.'),
   hint: z.string().optional(),
 });
 
@@ -47,36 +43,23 @@ const formSchema = z.object({
 
 type ProductFormValues = z.infer<typeof formSchema>;
 
-
-// Helper function to convert file to base64
-const toBase64 = (file: File): Promise<string> => new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result as string);
-    reader.onerror = error => reject(error);
-});
-
-
 export function ProductForm({ product, onSaveSuccess }: { product: Product | null, onSaveSuccess: () => void }) {
   const firestore = useFirestore();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
-  // This state will hold temporary previews and files to be uploaded
-  const [imageFiles, setImageFiles] = useState<Record<string, { file: File, preview: string }>>({});
 
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-        name: '',
-        slug: '',
-        category: '',
-        price: 0,
-        originalPrice: undefined,
-        description: '',
-        badge: '',
-        details: [{ value: '' }],
-        images: [],
+      name: '',
+      slug: '',
+      category: '',
+      price: 0,
+      originalPrice: undefined,
+      description: '',
+      badge: '',
+      details: [{ value: '' }],
+      images: [],
     },
     mode: 'onChange'
   });
@@ -110,7 +93,7 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
   }, [product, form.reset]);
 
 
-  const { fields: imageFields, append: appendImage, remove: removeImage, update: updateImage } = useFieldArray({
+  const { fields: imageFields, append: appendImage, remove: removeImage } = useFieldArray({
     control: form.control,
     name: 'images',
   });
@@ -120,20 +103,6 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
     name: 'details',
   });
   
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, fieldId: string) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setImageFiles(prev => ({
-        ...prev,
-        [fieldId]: {
-            file,
-            preview: URL.createObjectURL(file)
-        }
-      }));
-    }
-  };
-
-
   const onSubmit = async (data: ProductFormValues) => {
     if (!firestore) return;
 
@@ -141,26 +110,21 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
     toast({ title: 'Guardando producto...', description: 'Por favor, espera.' });
 
     try {
-        const imageUploadPromises = data.images.map(async (image, index) => {
-            const imageFile = imageFiles[image.id];
-            if (imageFile) {
-                // New image to upload
-                const base64 = await toBase64(imageFile.file);
-                const { url, error } = await uploadImageAction(base64, imageFile.file.name, imageFile.file.type);
-                if (error) {
-                    throw new Error(`Error subiendo la imagen ${imageFile.file.name}: ${error}`);
+        // Generate placeholder URLs for images that don't have one
+        const processedImages = data.images.map(image => {
+            if (!image.url) {
+                return {
+                    ...image,
+                    url: `https://placehold.co/600x600?text=${encodeURIComponent(image.alt)}`,
+                    hint: image.alt,
                 }
-                return { ...image, url };
             }
-            // Existing image, just return its data
             return image;
         });
 
-        const uploadedImages = await Promise.all(imageUploadPromises);
-        
         const productDataForFirestore = {
             ...data,
-            images: uploadedImages,
+            images: processedImages,
             details: data.details?.map(d => d.value).filter(Boolean) || [],
         };
 
@@ -178,11 +142,10 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
         toast({
             variant: 'destructive',
             title: 'Error al guardar',
-            description: error.message || 'Ocurrió un error inesperado al subir las imágenes o guardar los datos.',
+            description: error.message || 'Ocurrió un error inesperado al guardar los datos.',
         });
     } finally {
         setIsSubmitting(false);
-        setImageFiles({});
     }
   };
 
@@ -297,8 +260,7 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
                 <h3 className="text-lg font-medium mb-4">Imágenes</h3>
                 <div className="space-y-4">
                 {imageFields.map((field, index) => {
-                    const imageFile = imageFiles[field.id];
-                    const previewUrl = imageFile?.preview || field.url;
+                    const previewUrl = field.url;
                     
                     return (
                     <div key={field.id} className="p-4 border rounded-md space-y-4">
@@ -311,22 +273,12 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
                             )}
                         </div>
                         <div className="flex-1 space-y-2">
-                            <div className="grid gap-2">
-                            <Label htmlFor={`images.${index}.file`}>Subir imagen</Label>
-                                <Input
-                                    id={`images.${index}.file`}
-                                    type="file"
-                                    accept="image/png, image/jpeg, image/gif"
-                                    className="text-sm"
-                                    onChange={(e) => handleFileChange(e, field.id)}
-                                />
-                            </div>
-                            <FormField
+                             <FormField
                                 control={form.control}
                                 name={`images.${index}.alt`}
                                 render={({ field: formField }) => (
                                     <FormItem>
-                                        <FormLabel>Texto Alternativo</FormLabel>
+                                        <FormLabel>Texto Alternativo (usado para generar la imagen)</FormLabel>
                                         <FormControl>
                                             <Input placeholder="Descripción de la imagen" {...formField} value={formField.value ?? ''} />
                                         </FormControl>
@@ -334,15 +286,21 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
                                     </FormItem>
                                 )}
                             />
+                            <FormField
+                                control={form.control}
+                                name={`images.${index}.url`}
+                                render={({ field: formField }) => (
+                                    <FormItem>
+                                        <FormLabel>URL de la imagen (Opcional)</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="Dejar en blanco para generar placeholder" {...formField} value={formField.value ?? ''} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
                         </div>
-                        <Button type="button" variant="destructive" size="icon" onClick={() => {
-                            removeImage(index);
-                            setImageFiles(prev => {
-                                const newState = {...prev};
-                                delete newState[field.id];
-                                return newState;
-                            })
-                        }} disabled={imageFields.length <= 1}>
+                        <Button type="button" variant="destructive" size="icon" onClick={() => removeImage(index)} disabled={imageFields.length <= 1}>
                             <Trash className="h-4 w-4" />
                         </Button>
                         </div>
@@ -359,7 +317,6 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
                     Añadir Imagen
                 </Button>
             </div>
-
 
             <Separator />
 
