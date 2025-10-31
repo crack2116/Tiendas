@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { useCollection, useFirestore } from '@/firebase';
 import type { Product } from '@/lib/types';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { FilePenLine, PlusCircle, Trash2 } from 'lucide-react';
@@ -70,7 +70,6 @@ export default function InventoryPage() {
     }
   };
 
-
   const handleDialogClose = () => {
     setDialogOpen(false);
     setSelectedProduct(null);
@@ -78,7 +77,7 @@ export default function InventoryPage() {
 
   return (
     <div className="flex flex-col h-full w-full p-4 sm:p-6 md:p-8">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between mb-6">
             <h1 className="text-3xl font-bold font-headline">Inventario de Productos</h1>
             <Button onClick={handleAddProduct}>
             <PlusCircle className="mr-2 h-4 w-4" />
@@ -86,9 +85,10 @@ export default function InventoryPage() {
             </Button>
         </div>
       
-      {error && <p className="text-destructive px-4 sm:px-6 md:px-8">Error: {error.message}</p>}
+      {error && <p className="text-destructive">Error: {error.message}</p>}
 
-      <Card className="flex-1 flex flex-col mt-6">
+      {/* Vista de tabla para pantallas grandes (md y superior) */}
+      <Card className="hidden md:flex flex-col flex-1">
         <CardHeader className="pt-4 px-4 sm:px-6 md:px-7">
           <CardTitle>Productos</CardTitle>
           <CardDescription>
@@ -99,49 +99,34 @@ export default function InventoryPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[120px] sm:w-[150px] pl-4 sm:pl-6 md:pl-8">
-                  Imagen
-                </TableHead>
+                <TableHead className="w-[120px] pl-8">Imagen</TableHead>
                 <TableHead>Nombre</TableHead>
-                <TableHead className="hidden lg:table-cell">Descripción</TableHead>
-                <TableHead className="hidden lg:table-cell">Detalles</TableHead>
-                <TableHead className="hidden md:table-cell w-[150px]">Categoría</TableHead>
-                <TableHead className="hidden md:table-cell text-right w-[120px]">
-                  Precio
-                </TableHead>
-                <TableHead className="text-right w-[120px] pr-4 sm:pr-6 md:pr-8">
-                  Acciones
-                </TableHead>
+                <TableHead>Descripción</TableHead>
+                <TableHead>Detalles</TableHead>
+                <TableHead>Categoría</TableHead>
+                <TableHead className="text-right">Precio</TableHead>
+                <TableHead className="text-right pr-8">Acciones</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {loading && Array.from({ length: 5 }).map((_, i) => (
                 <TableRow key={i}>
-                  <TableCell className="pl-4 sm:pl-6 md:pl-8">
-                    <Skeleton className="h-24 w-24 rounded-md" />
-                  </TableCell>
-                  <TableCell>
-                    <Skeleton className="h-4 w-32" />
-                  </TableCell>
-                  <TableCell className="hidden lg:table-cell"><Skeleton className="h-4 w-48" /></TableCell>
-                  <TableCell className="hidden lg:table-cell"><Skeleton className="h-4 w-40" /></TableCell>
-                  <TableCell className="hidden md:table-cell">
-                    <Skeleton className="h-4 w-24" />
-                  </TableCell>
-                  <TableCell className="hidden md:table-cell text-right">
-                    <Skeleton className="h-4 w-16 ml-auto" />
-                  </TableCell>
-                  <TableCell className="text-right pr-4 sm:pr-6 md:pr-8">
+                  <TableCell className="pl-8"><Skeleton className="h-24 w-24 rounded-md" /></TableCell>
+                  <TableCell><Skeleton className="h-4 w-32" /></TableCell>
+                  <TableCell><Skeleton className="h-16 w-48" /></TableCell>
+                  <TableCell><Skeleton className="h-12 w-40" /></TableCell>
+                  <TableCell><Skeleton className="h-4 w-24" /></TableCell>
+                  <TableCell className="text-right"><Skeleton className="h-4 w-16 ml-auto" /></TableCell>
+                  <TableCell className="text-right pr-8">
                     <div className="flex gap-2 justify-end">
-                      <Skeleton className="h-8 w-8" />
-                      <Skeleton className="h-8 w-8" />
+                      <Skeleton className="h-8 w-8" /><Skeleton className="h-8 w-8" />
                     </div>
                   </TableCell>
                 </TableRow>
               ))}
               {products?.map((product) => (
                 <TableRow key={product.id}>
-                  <TableCell className="pl-4 sm:pl-6 md:pl-8 align-top">
+                  <TableCell className="pl-8 align-top py-4">
                     <Image
                       alt={product.name}
                       className="aspect-square rounded-md object-cover"
@@ -150,35 +135,26 @@ export default function InventoryPage() {
                       width="100"
                     />
                   </TableCell>
-                  <TableCell className="font-medium align-top">{product.name}</TableCell>
-                   <TableCell className="hidden lg:table-cell text-sm text-muted-foreground align-top">
-                    <div className="max-w-xs whitespace-pre-wrap">{product.description}</div>
+                  <TableCell className="font-medium align-top py-4">{product.name}</TableCell>
+                   <TableCell className="text-sm text-muted-foreground align-top max-w-xs py-4">
+                    <div className="whitespace-pre-wrap">{product.description}</div>
                   </TableCell>
-                   <TableCell className="hidden lg:table-cell text-sm text-muted-foreground align-top">
-                    <ul className='list-disc list-inside'>
+                   <TableCell className="text-sm text-muted-foreground align-top py-4">
+                    <ul className='list-disc list-inside space-y-1'>
                       {product.details?.map((detail, i) => <li key={i}>{detail}</li>)}
                     </ul>
                   </TableCell>
-                  <TableCell className="hidden md:table-cell align-top">
+                  <TableCell className="align-top py-4">
                     <Badge variant="outline">{product.category}</Badge>
                   </TableCell>
-                  <TableCell className="hidden md:table-cell text-right align-top">S/{product.price.toFixed(2)}</TableCell>
-                  <TableCell className="text-right pr-4 sm:pr-6 md:pr-8 align-top">
+                  <TableCell className="text-right align-top py-4">S/{product.price.toFixed(2)}</TableCell>
+                  <TableCell className="text-right pr-8 align-top py-4">
                     <div className="flex gap-2 justify-end">
-                       <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => handleEditProduct(product)}
-                      >
+                       <Button variant="ghost" size="icon" onClick={() => handleEditProduct(product)}>
                         <FilePenLine className="h-4 w-4" />
                         <span className="sr-only">Editar</span>
                       </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => handleOpenDeleteDialog(product)}
-                        className="text-destructive hover:text-destructive"
-                      >
+                      <Button variant="ghost" size="icon" onClick={() => handleOpenDeleteDialog(product)} className="text-destructive hover:text-destructive">
                         <Trash2 className="h-4 w-4" />
                         <span className="sr-only">Eliminar</span>
                       </Button>
@@ -190,6 +166,57 @@ export default function InventoryPage() {
           </Table>
         </CardContent>
       </Card>
+
+      {/* Vista de tarjetas para pantallas pequeñas (menos de md) */}
+      <div className="grid gap-4 md:hidden">
+        {loading && Array.from({ length: 5 }).map((_, i) => (
+          <Card key={i}>
+            <CardContent className="p-4">
+              <div className="flex gap-4">
+                <Skeleton className="h-24 w-24 rounded-md" />
+                <div className="flex-1 space-y-2">
+                  <Skeleton className="h-5 w-3/4" />
+                  <Skeleton className="h-4 w-1/4" />
+                  <Skeleton className="h-4 w-1/2" />
+                </div>
+              </div>
+            </CardContent>
+            <CardFooter className="flex justify-end gap-2 p-4 pt-0">
+               <Skeleton className="h-9 w-20" />
+               <Skeleton className="h-9 w-20" />
+            </CardFooter>
+          </Card>
+        ))}
+        {products?.map((product) => (
+           <Card key={product.id}>
+             <CardContent className="p-4 flex gap-4">
+               <Image
+                 alt={product.name}
+                 className="aspect-square rounded-md object-cover"
+                 height="100"
+                 src={product.images[0]?.url || '/placeholder.svg'}
+                 width="100"
+               />
+               <div className="flex-1">
+                 <h3 className="font-semibold">{product.name}</h3>
+                 <p className="text-sm text-muted-foreground">{product.category}</p>
+                 <p className="font-semibold mt-2">S/{product.price.toFixed(2)}</p>
+               </div>
+             </CardContent>
+             <CardFooter className="flex justify-end gap-2 p-4 pt-0">
+               <Button variant="outline" size="sm" onClick={() => handleEditProduct(product)}>
+                 <FilePenLine className="mr-2 h-4 w-4" />
+                 Editar
+               </Button>
+               <Button variant="outline" size="sm" onClick={() => handleOpenDeleteDialog(product)} className="text-destructive hover:text-destructive hover:bg-destructive/10">
+                 <Trash2 className="mr-2 h-4 w-4" />
+                 Eliminar
+               </Button>
+             </CardFooter>
+           </Card>
+        ))}
+      </div>
+
       <ProductDialog 
         isOpen={isDialogOpen} 
         onClose={handleDialogClose}
@@ -198,7 +225,7 @@ export default function InventoryPage() {
        <AlertDialog open={isDeleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>¿Estás absolutely seguro?</AlertDialogTitle>
+            <AlertDialogTitle>¿Estás absolutamente seguro?</AlertDialogTitle>
             <AlertDialogDescription>
               Esta acción no se puede deshacer. Esto eliminará permanentemente
               el producto de tu base de datos.
@@ -213,5 +240,4 @@ export default function InventoryPage() {
         </AlertDialogContent>
       </AlertDialog>
     </div>
-  )
-}
+  );
