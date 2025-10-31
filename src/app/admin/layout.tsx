@@ -123,9 +123,9 @@ export default function AdminLayout({
             </SidebarMenu>
           </SidebarFooter>
         </Sidebar>
-        <div className="flex-1 bg-muted/40 p-4 sm:p-6 md:p-8 overflow-auto">
+        <SidebarInset className="flex-1 bg-muted/40 p-4 sm:p-6 md:p-8">
             {children}
-        </div>
+        </SidebarInset>
       </div>
     </SidebarProvider>
   )
