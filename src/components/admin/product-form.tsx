@@ -58,17 +58,7 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
 
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-        name: '',
-        slug: '',
-        category: '',
-        price: 0,
-        originalPrice: undefined,
-        description: '',
-        badge: '',
-        details: [{ value: '' }],
-        images: [],
-    },
+    defaultValues: {},
      mode: 'onChange'
   });
 
@@ -80,9 +70,9 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
         slug: product.slug || '',
         category: product.category || '',
         price: product.price || 0,
-        originalPrice: product.originalPrice,
+        originalPrice: product.originalPrice ?? undefined,
         description: product.description || '',
-        badge: product.badge || '',
+        badge: product.badge ?? '',
         details: product.details?.map(d => ({ value: d })) || [{ value: '' }],
         images: product.images || [],
       });
@@ -161,43 +151,50 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
     toast({ title: 'Guardando producto...', description: 'Por favor, espera.' });
 
     try {
-      const imageUploadPromises: Promise<{ url: string; alt: string; id: string, hint?: string }>[] = data.images.map(async (image, index) => {
-        if (image.file) {
-          const filePath = `products/${Date.now()}_${image.file.name}`;
-          const downloadURL = await uploadImage(image.file, filePath);
-          return { ...image, url: downloadURL };
-        }
-        // If there's no file, it's an existing image, so we just return its data.
-        return Promise.resolve(image);
-      });
+        const imageUploadPromises = data.images.map(async (image) => {
+            if (image.file) {
+                const filePath = `products/${Date.now()}_${image.file.name}`;
+                const downloadURL = await uploadImage(image.file, filePath);
+                // Return a clean object without the 'file' property
+                return {
+                    id: image.id,
+                    url: downloadURL,
+                    alt: image.alt,
+                    hint: image.hint,
+                };
+            }
+            // It's an existing image, return its data but without the file property
+            const { file, ...rest } = image;
+            return rest;
+        });
 
-      const uploadedImages = await Promise.all(imageUploadPromises);
+        const uploadedImages = await Promise.all(imageUploadPromises);
         
-      const productDataForFirestore = {
-        ...data,
-        images: uploadedImages.map(({ file, ...rest }) => rest), // Important: remove the 'file' property before saving to Firestore
-        details: data.details?.map(d => d.value).filter(Boolean) || [],
-      };
+        const productDataForFirestore = {
+            ...data,
+            images: uploadedImages,
+            details: data.details?.map(d => d.value).filter(Boolean) || [],
+        };
 
-      if (product && product.id) {
-        const productRef = doc(firestore, 'products', product.id);
-        await updateDoc(productRef, productDataForFirestore);
-        toast({ title: 'Éxito', description: 'Producto actualizado correctamente.' });
-      } else {
-        await addDoc(collection(firestore, 'products'), productDataForFirestore);
-        toast({ title: 'Éxito', description: 'Producto añadido correctamente.' });
-      }
-      onSaveSuccess();
+        if (product && product.id) {
+            const productRef = doc(firestore, 'products', product.id);
+            await updateDoc(productRef, productDataForFirestore as any);
+            toast({ title: 'Éxito', description: 'Producto actualizado correctamente.' });
+        } else {
+            await addDoc(collection(firestore, 'products'), productDataForFirestore);
+            toast({ title: 'Éxito', description: 'Producto añadido correctamente.' });
+        }
+        onSaveSuccess();
     } catch (error: any) {
-      console.error("Error submitting product:", error);
-      toast({
-        variant: 'destructive',
-        title: 'Error al guardar',
-        description: error.message || 'Ocurrió un error inesperado al subir las imágenes o guardar los datos.',
-      });
+        console.error("Error submitting product:", error);
+        toast({
+            variant: 'destructive',
+            title: 'Error al guardar',
+            description: error.message || 'Ocurrió un error inesperado al subir las imágenes o guardar los datos.',
+        });
     } finally {
-      setIsSubmitting(false);
-      setUploadProgress({});
+        setIsSubmitting(false);
+        setUploadProgress({});
     }
   };
 
@@ -415,3 +412,5 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
     </Form>
   );
 }
+
+    
