@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { FilePenLine, PlusCircle, Trash2 } from 'lucide-react';
+import { Pencil, PlusCircle, Trash } from 'lucide-react';
 import { ProductDialog } from '@/components/admin/product-dialog';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
@@ -76,7 +76,7 @@ export default function InventoryPage() {
   };
 
   return (
-    <div className="flex flex-col h-full w-full p-4 sm:p-6 md:p-8">
+    <div className="flex flex-col h-full w-full p-4 sm:p-6">
         <div className="flex items-center justify-between mb-6">
             <h1 className="text-3xl font-bold font-headline">Inventario de Productos</h1>
             <Button onClick={handleAddProduct}>
@@ -151,11 +151,11 @@ export default function InventoryPage() {
                   <TableCell className="text-right pr-8 align-top py-4">
                     <div className="flex gap-2 justify-end">
                        <Button variant="ghost" size="icon" onClick={() => handleEditProduct(product)}>
-                        <FilePenLine className="h-4 w-4" />
+                        <Pencil className="h-4 w-4" />
                         <span className="sr-only">Editar</span>
                       </Button>
                       <Button variant="ghost" size="icon" onClick={() => handleOpenDeleteDialog(product)} className="text-destructive hover:text-destructive">
-                        <Trash2 className="h-4 w-4" />
+                        <Trash className="h-4 w-4" />
                         <span className="sr-only">Eliminar</span>
                       </Button>
                     </div>
@@ -205,11 +205,11 @@ export default function InventoryPage() {
              </CardContent>
              <CardFooter className="flex justify-end gap-2 p-4 pt-0">
                <Button variant="outline" size="sm" onClick={() => handleEditProduct(product)}>
-                 <FilePenLine className="mr-2 h-4 w-4" />
+                 <Pencil className="mr-2 h-4 w-4" />
                  Editar
                </Button>
                <Button variant="outline" size="sm" onClick={() => handleOpenDeleteDialog(product)} className="text-destructive hover:text-destructive hover:bg-destructive/10">
-                 <Trash2 className="mr-2 h-4 w-4" />
+                 <Trash className="mr-2 h-4 w-4" />
                  Eliminar
                </Button>
              </CardFooter>
@@ -241,3 +241,4 @@ export default function InventoryPage() {
       </AlertDialog>
     </div>
   );
+}
