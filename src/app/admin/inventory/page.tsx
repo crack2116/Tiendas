@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { useCollection } from '@/firebase/use-collection';
+import { useCollection, useFirestore } from '@/firebase';
 import type { Product } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,11 +12,28 @@ import { MoreHorizontal, PlusCircle } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { ProductDialog } from '@/components/admin/product-dialog';
 import { Skeleton } from '@/components/ui/skeleton';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
+import { doc, deleteDoc } from 'firebase/firestore';
+import { useToast } from '@/hooks/use-toast';
 
 export default function InventoryPage() {
   const { data: products, loading, error } = useCollection<Product>('products');
+  const firestore = useFirestore();
+  const { toast } = useToast();
+
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isDialogOpen, setDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [productToDelete, setProductToDelete] = useState<Product | null>(null);
 
   const handleAddProduct = () => {
     setSelectedProduct(null);
@@ -27,6 +44,33 @@ export default function InventoryPage() {
     setSelectedProduct(product);
     setDialogOpen(true);
   };
+
+  const handleOpenDeleteDialog = (product: Product) => {
+    setProductToDelete(product);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteProduct = async () => {
+    if (!firestore || !productToDelete) return;
+
+    try {
+      await deleteDoc(doc(firestore, 'products', productToDelete.id));
+      toast({
+        title: 'Producto Eliminado',
+        description: `El producto "${productToDelete.name}" ha sido eliminado.`,
+      });
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        title: 'Error al eliminar',
+        description: error.message,
+      });
+    } finally {
+      setDeleteDialogOpen(false);
+      setProductToDelete(null);
+    }
+  };
+
 
   const handleDialogClose = () => {
     setDialogOpen(false);
@@ -120,7 +164,9 @@ export default function InventoryPage() {
                       <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Acciones</DropdownMenuLabel>
                         <DropdownMenuItem onClick={() => handleEditProduct(product)}>Editar</DropdownMenuItem>
-                        <DropdownMenuItem>Eliminar</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => handleOpenDeleteDialog(product)} className="text-destructive">
+                          Eliminar
+                        </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>
@@ -135,6 +181,23 @@ export default function InventoryPage() {
         onClose={handleDialogClose}
         product={selectedProduct}
       />
+       <AlertDialog open={isDeleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>¿Estás absolutamente seguro?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Esta acción no se puede deshacer. Esto eliminará permanentemente
+              el producto de tu base de datos.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDeleteProduct}>
+              Sí, eliminar producto
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }
