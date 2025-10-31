@@ -68,7 +68,9 @@ export default function AccountLayout({
         <Sidebar>
           <SidebarHeader>
             <div className="flex items-center space-x-2 p-2">
-                <Logo className="h-10 w-10" />
+                <Link href="/">
+                    <Logo className="h-10 w-10" />
+                </Link>
                 <span className="font-bold font-headline text-lg text-sidebar-primary-foreground">
                     Mi Cuenta
                 </span>

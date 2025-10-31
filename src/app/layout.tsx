@@ -1,12 +1,11 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import { Header } from '@/components/header';
-import { Footer } from '@/components/footer';
 import { CartProvider } from '@/hooks/use-cart';
 import { AuthProvider } from '@/hooks/use-auth';
 import { Toaster } from '@/components/ui/toaster';
 import { ThemeProvider } from '@/hooks/theme-provider';
 import { FirebaseClientProvider } from '@/firebase/client-provider';
+import { PublicLayout } from '@/components/public-layout';
 
 export const metadata: Metadata = {
   title: 'Noemia',
@@ -46,9 +45,9 @@ export default function RootLayout({
           <FirebaseClientProvider>
             <AuthProvider>
               <CartProvider>
-                <Header />
-                <div className="flex-grow">{children}</div>
-                <Footer />
+                <PublicLayout>
+                  {children}
+                </PublicLayout>
                 <Toaster />
               </CartProvider>
             </AuthProvider>

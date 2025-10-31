@@ -34,7 +34,7 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode
 }) {
-  const { user, logout, loading } = useAuth();
+  const { user, logout, loading, isAdmin } = useAuth();
   const router = useRouter();
   const { setTheme } = useTheme();
 
@@ -48,13 +48,13 @@ export default function AdminLayout({
     if (!loading) {
       if (!user) {
         router.push('/login');
-      } else if (user.role !== 'admin') {
+      } else if (!isAdmin) {
         router.push('/');
       }
     }
-  }, [user, loading, router]);
+  }, [user, loading, router, isAdmin]);
 
-  if (loading || !user || user.role !== 'admin') {
+  if (loading || !user || !isAdmin) {
     return (
         <div className="w-full min-h-screen flex items-center justify-center bg-background">
             <p>Cargando...</p>
