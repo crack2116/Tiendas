@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
@@ -17,19 +17,24 @@ export default function LoginPage() {
   const router = useRouter();
   const { toast } = useToast();
 
+  useEffect(() => {
+    if (user) {
+      if (isAdmin) {
+        router.push('/admin');
+      } else {
+        router.push('/account/orders');
+      }
+    }
+  }, [user, isAdmin, router]);
+
   const toggleForm = () => {
     setIsLogin(!isLogin);
   };
   
-   if (user) {
-    if (isAdmin) {
-      router.push('/admin');
-    } else {
-      router.push('/account/orders');
-    }
+  if (user) {
+    // Render nothing or a loading spinner while redirecting
     return null;
   }
-
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -45,7 +50,7 @@ export default function LoginPage() {
             const address = formData.get('address') as string;
             await signup(email, password, { name, address });
         }
-        // Redirection is handled by onAuthStateChanged in useAuth
+        // Redirection is handled by onAuthStateChanged in useAuth or the useEffect above
     } catch (error: any) {
         toast({
             variant: "destructive",
