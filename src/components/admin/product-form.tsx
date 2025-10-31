@@ -47,7 +47,6 @@ const formSchema = z.object({
 });
 
 type ProductFormValues = z.infer<typeof formSchema>;
-type ImageFieldValue = z.infer<typeof imageSchema>;
 
 
 export function ProductForm({ product, onSaveSuccess }: { product: Product | null, onSaveSuccess: () => void }) {
@@ -57,24 +56,51 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
   const [uploadProgress, setUploadProgress] = useState<Record<string, number>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-
-  const defaultValues: ProductFormValues = {
-    name: product?.name || '',
-    slug: product?.slug || '',
-    category: product?.category || '',
-    price: product?.price || 0,
-    originalPrice: product?.originalPrice,
-    description: product?.description || '',
-    badge: product?.badge || '',
-    details: product?.details?.map(d => ({ value: d })) || [{ value: '' }],
-    images: product?.images || [],
-  };
-
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues,
+    defaultValues: {
+        name: '',
+        slug: '',
+        category: '',
+        price: 0,
+        originalPrice: undefined,
+        description: '',
+        badge: '',
+        details: [{ value: '' }],
+        images: [],
+    },
      mode: 'onChange'
   });
+
+  // Reset form when product changes
+  useEffect(() => {
+    if (product) {
+      form.reset({
+        name: product.name || '',
+        slug: product.slug || '',
+        category: product.category || '',
+        price: product.price || 0,
+        originalPrice: product.originalPrice,
+        description: product.description || '',
+        badge: product.badge || '',
+        details: product.details?.map(d => ({ value: d })) || [{ value: '' }],
+        images: product.images || [],
+      });
+    } else {
+      form.reset({
+        name: '',
+        slug: '',
+        category: '',
+        price: 0,
+        originalPrice: undefined,
+        description: '',
+        badge: '',
+        details: [{ value: '' }],
+        images: [{ id: crypto.randomUUID(), url: '', alt: '', file: undefined }],
+      });
+    }
+  }, [product, form.reset]);
+
 
   const { fields: imageFields, append: appendImage, remove: removeImage, update: updateImage } = useFieldArray({
     control: form.control,
@@ -116,6 +142,7 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
         },
         (error) => {
           console.error("Upload error:", error);
+          setUploadProgress(prev => ({ ...prev, [path]: -1 })); // Indicate error
           reject(error);
         },
         () => {
@@ -134,29 +161,30 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
     toast({ title: 'Guardando producto...', description: 'Por favor, espera.' });
 
     try {
-      const uploadedImageUrls = await Promise.all(
-        data.images.map(async (image) => {
-          if (image.file) {
-            const filePath = `products/${Date.now()}_${image.file.name}`;
-            const downloadURL = await uploadImage(image.file, filePath);
-            return { ...image, url: downloadURL };
-          }
-          return image;
-        })
-      );
+      const imageUploadPromises: Promise<{ url: string; alt: string; id: string, hint?: string }>[] = data.images.map(async (image, index) => {
+        if (image.file) {
+          const filePath = `products/${Date.now()}_${image.file.name}`;
+          const downloadURL = await uploadImage(image.file, filePath);
+          return { ...image, url: downloadURL };
+        }
+        // If there's no file, it's an existing image, so we just return its data.
+        return Promise.resolve(image);
+      });
+
+      const uploadedImages = await Promise.all(imageUploadPromises);
         
       const productDataForFirestore = {
         ...data,
-        images: uploadedImageUrls.map(({ file, ...rest }) => rest), // Important: remove the 'file' property
+        images: uploadedImages.map(({ file, ...rest }) => rest), // Important: remove the 'file' property before saving to Firestore
         details: data.details?.map(d => d.value).filter(Boolean) || [],
       };
 
       if (product && product.id) {
         const productRef = doc(firestore, 'products', product.id);
-        await updateDoc(productRef, productDataForFirestore as any);
+        await updateDoc(productRef, productDataForFirestore);
         toast({ title: 'Éxito', description: 'Producto actualizado correctamente.' });
       } else {
-        await addDoc(collection(firestore, 'products'), productDataForFirestore as any);
+        await addDoc(collection(firestore, 'products'), productDataForFirestore);
         toast({ title: 'Éxito', description: 'Producto añadido correctamente.' });
       }
       onSaveSuccess();
@@ -165,18 +193,13 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
       toast({
         variant: 'destructive',
         title: 'Error al guardar',
-        description: error.message || 'Ocurrió un error inesperado.',
+        description: error.message || 'Ocurrió un error inesperado al subir las imágenes o guardar los datos.',
       });
     } finally {
       setIsSubmitting(false);
       setUploadProgress({});
     }
   };
-
-  // Reset form when product changes (e.g. closing and opening dialog for a new product)
-  useEffect(() => {
-    form.reset(defaultValues);
-  }, [product, form]);
 
 
   return (
@@ -290,8 +313,9 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
                 <div className="space-y-4">
                 {imageFields.map((field, index) => {
                     const currentFieldValue = form.watch(`images.${index}`);
-                    const progress = currentFieldValue.file ? uploadProgress[`products/${Date.now()}_${currentFieldValue.file.name}`] : null;
-                    const previewUrl = currentFieldValue.url;
+                    const progressKey = currentFieldValue.file ? `products/${currentFieldValue.file.name}` : field.id;
+                    const progress = uploadProgress[progressKey];
+                    const previewUrl = currentFieldValue?.url;
                     
                     return (
                     <div key={field.id} className="p-4 border rounded-md space-y-4">
@@ -332,9 +356,10 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
                             <Trash className="h-4 w-4" />
                         </Button>
                         </div>
-                        {progress != null && progress < 100 && (
+                        {progress != null && progress >= 0 && progress < 100 && (
                             <Progress value={progress} className="w-full" />
                         )}
+                        {progress === -1 && <p className='text-destructive text-sm'>Error al subir</p>}
                     </div>
                 )})}
                 </div>
