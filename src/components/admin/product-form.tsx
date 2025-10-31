@@ -57,7 +57,7 @@ export function ProductForm({ product, onSaveSuccess }: ProductFormProps) {
     description: product?.description || '',
     badge: product?.badge || '',
     details: product?.details?.map(d => ({ value: d })) || [{ value: '' }],
-    images: product?.images || [{ id: '', url: '', alt: '', hint: '' }],
+    images: product?.images || [{ id: crypto.randomUUID(), url: '', alt: '', hint: '' }],
   };
 
   const form = useForm<ProductFormValues>({
@@ -98,6 +98,7 @@ export function ProductForm({ product, onSaveSuccess }: ProductFormProps) {
         toast({ title: 'Éxito', description: 'Producto añadido correctamente.' });
       }
       onSaveSuccess();
+      form.reset();
     } catch (error: any) {
       toast({
         variant: 'destructive',
@@ -275,7 +276,7 @@ export function ProductForm({ product, onSaveSuccess }: ProductFormProps) {
                         </FormItem>
                     )}
                 />
-                 <Button type="button" variant="destructive" size="icon" onClick={() => removeDetail(index)}>
+                 <Button type="button" variant="destructive" size="icon" onClick={() => removeDetail(index)} disabled={detailFields.length <=1}>
                     <Trash className="h-4 w-4" />
                 </Button>
             </div>

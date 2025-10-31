@@ -31,19 +31,19 @@ export default function AccountLayout({
 }: {
   children: React.ReactNode
 }) {
-  const { user, logout } = useAuth();
+  const { user, logout, loading } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (user === null) {
+    if (!loading && !user) {
       router.push('/login');
     }
-  }, [user, router]);
+  }, [user, loading, router]);
 
-  if (!user) {
+  if (loading || !user) {
     return (
         <div className="w-full min-h-screen flex items-center justify-center">
-            <p>Redirigiendo a la página de inicio de sesión...</p>
+            <p>Cargando...</p>
         </div>
     );
   }
