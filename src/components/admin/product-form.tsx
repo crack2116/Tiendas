@@ -58,7 +58,17 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
 
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: {},
+    defaultValues: {
+      name: '',
+      slug: '',
+      category: '',
+      price: 0,
+      originalPrice: undefined,
+      description: '',
+      badge: '',
+      details: [{ value: '' }],
+      images: [],
+    },
      mode: 'onChange'
   });
 
@@ -72,7 +82,7 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
         price: product.price || 0,
         originalPrice: product.originalPrice ?? undefined,
         description: product.description || '',
-        badge: product.badge ?? '',
+        badge: product.badge || '',
         details: product.details?.map(d => ({ value: d })) || [{ value: '' }],
         images: product.images || [],
       });
@@ -412,5 +422,3 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
     </Form>
   );
 }
-
-    
