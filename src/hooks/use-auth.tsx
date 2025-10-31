@@ -47,7 +47,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     if (!auth || !firestore) {
-      setLoading(true); // Keep loading if firebase services are not available
+      // Keep loading if firebase services are not available yet.
+      // The effect will re-run once they are.
       return;
     }
 
@@ -69,6 +70,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     });
 
     return () => unsubscribe();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth, firestore]);
 
   const signup = async (
@@ -77,6 +79,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     additionalData: Partial<Omit<User, 'uid' | 'email' | 'role'>> = {}
   ) => {
     if (!auth || !firestore) throw new Error("Firebase not initialized");
+    
+    setLoading(true);
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -86,7 +90,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const firebaseUser = userCredential.user;
       const userDocRef = doc(firestore, 'users', firebaseUser.uid);
 
-      // Determine role, special-casing the admin email
       const role = email.toLowerCase() === 'crismo@gmail.com' ? 'admin' : 'customer';
 
       const newUser: User = {
@@ -97,23 +100,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         role: role,
       };
 
-      // Create the user document in Firestore
       await setDoc(userDocRef, newUser);
       
-      // Set the user in the local state
-      setUser(newUser);
+      // The onAuthStateChanged listener will handle setting the user,
+      // so we don't need to call setUser here.
     } catch (error) {
       console.error('Error signing up:', error);
+      setLoading(false); // Make sure to stop loading on error
       throw error;
     }
   };
 
   const login = async (email: string, password: string) => {
     if (!auth) throw new Error("Firebase not initialized");
+    setLoading(true);
     try {
       await signInWithEmailAndPassword(auth, email, password);
+      // onAuthStateChanged will handle the rest.
     } catch (error) {
       console.error('Error logging in:', error);
+      setLoading(false); // Make sure to stop loading on error
       throw error;
     }
   };
@@ -129,18 +135,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const isLoading = loading || !auth || !firestore;
+  const authContextValue = {
+    user,
+    loading,
+    signup,
+    login,
+    logout,
+  };
 
   return (
-    <AuthContext.Provider
-      value={{
-        user,
-        loading: isLoading,
-        signup,
-        login,
-        logout,
-      }}
-    >
+    <AuthContext.Provider value={authContextValue}>
       {children}
     </AuthContext.Provider>
   );
