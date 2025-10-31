@@ -87,10 +87,10 @@ export default function InventoryPage() {
             </Button>
         </div>
       
-      {error && <p className="text-destructive px-8">Error: {error.message}</p>}
+      {error && <p className="text-destructive px-4 sm:px-6 md:px-8">Error: {error.message}</p>}
 
-      <Card className="flex-1 flex flex-col m-4 mt-0 sm:m-6 sm:mt-0 md:m-8 md:mt-0 border-0">
-        <CardHeader className="pt-0">
+      <Card className="flex-1 flex flex-col m-4 mt-0 sm:m-6 sm:mt-0 md:m-8 md:mt-0 border-0 rounded-t-none">
+        <CardHeader className="pt-4 px-4 sm:px-6 md:px-8">
           <CardTitle>Productos</CardTitle>
           <CardDescription>
             Gestiona los productos de tu tienda.
@@ -100,7 +100,7 @@ export default function InventoryPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[120px] sm:w-[150px] pl-6">
+                <TableHead className="w-[120px] sm:w-[150px] pl-4 sm:pl-6 md:pl-8">
                   Imagen
                 </TableHead>
                 <TableHead>Nombre</TableHead>
@@ -108,7 +108,7 @@ export default function InventoryPage() {
                 <TableHead className="hidden md:table-cell text-right w-[120px]">
                   Precio
                 </TableHead>
-                <TableHead className="text-right w-[80px] pr-6">
+                <TableHead className="text-right w-[80px] pr-4 sm:pr-6 md:pr-8">
                   Acciones
                 </TableHead>
               </TableRow>
@@ -116,7 +116,7 @@ export default function InventoryPage() {
             <TableBody>
               {loading && Array.from({ length: 5 }).map((_, i) => (
                 <TableRow key={i}>
-                  <TableCell className="pl-6">
+                  <TableCell className="pl-4 sm:pl-6 md:pl-8">
                     <Skeleton className="h-24 w-24 rounded-md" />
                   </TableCell>
                   <TableCell>
@@ -128,14 +128,14 @@ export default function InventoryPage() {
                   <TableCell className="hidden md:table-cell text-right">
                     <Skeleton className="h-4 w-16 ml-auto" />
                   </TableCell>
-                  <TableCell className="text-right pr-6">
+                  <TableCell className="text-right pr-4 sm:pr-6 md:pr-8">
                     <Skeleton className="h-8 w-8 rounded-full ml-auto" />
                   </TableCell>
                 </TableRow>
               ))}
               {products?.map((product) => (
                 <TableRow key={product.id}>
-                  <TableCell className="pl-6">
+                  <TableCell className="pl-4 sm:pl-6 md:pl-8">
                     <Image
                       alt={product.name}
                       className="aspect-square rounded-md object-cover"
@@ -149,7 +149,7 @@ export default function InventoryPage() {
                     <Badge variant="outline">{product.category}</Badge>
                   </TableCell>
                   <TableCell className="hidden md:table-cell text-right">S/{product.price.toFixed(2)}</TableCell>
-                  <TableCell className="text-right pr-6">
+                  <TableCell className="text-right pr-4 sm:pr-6 md:pr-8">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button
