@@ -1,26 +1,25 @@
-import { getApp, getApps, initializeApp, type FirebaseOptions } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
+'use client';
+import { getApp, getApps, initializeApp, type FirebaseOptions, type FirebaseApp } from 'firebase/app';
+import { getAuth, type Auth } from 'firebase/auth';
+import { getFirestore, type Firestore } from 'firebase/firestore';
+import { firebaseConfig } from './config';
 
-let app, auth, firestore;
-
-function initializeFirebase(options: FirebaseOptions) {
-  if (getApps().length === 0) {
-    app = initializeApp(options);
-  } else {
-    app = getApp();
+// This function ensures Firebase is initialized only once.
+export function initializeFirebase(options: FirebaseOptions = firebaseConfig) {
+  if (getApps().length > 0) {
+    const app = getApp();
+    const auth = getAuth(app);
+    const firestore = getFirestore(app);
+    return { app, auth, firestore };
   }
-  auth = getAuth(app);
-  firestore = getFirestore(app);
+  
+  const app = initializeApp(options);
+  const auth = getAuth(app);
+  const firestore = getFirestore(app);
 
   return { app, auth, firestore };
 }
 
-export {
-  initializeFirebase
-};
 export * from './provider';
-export * from './use-user';
 export * from './use-collection';
 export * from './use-doc';
-export * from './client-provider';

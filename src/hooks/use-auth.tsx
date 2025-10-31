@@ -6,18 +6,15 @@ import {
   useState,
   useEffect,
   type ReactNode,
-  useMemo,
 } from 'react';
 import {
-  getAuth,
-  onAuthStateChanged,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
-  type Auth,
+  onAuthStateChanged,
 } from 'firebase/auth';
-import { getFirestore, doc, setDoc, getDoc, Firestore } from 'firebase/firestore';
-import { useFirebase } from '@/firebase';
+import { doc, setDoc, getDoc } from 'firebase/firestore';
+import { useAuthContext, useFirestore } from '@/firebase';
 import type { User } from '@/lib/types';
 import { useRouter } from 'next/navigation';
 
@@ -36,41 +33,38 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const { app } = useFirebase();
+  const auth = useAuthContext();
+  const firestore = useFirestore();
   const router = useRouter();
-
-  const auth: Auth | null = useMemo(() => (app ? getAuth(app) : null), [app]);
-  const firestore: Firestore | null = useMemo(() => (app ? getFirestore(app) : null), [app]);
 
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!auth || !firestore) {
-      // Keep loading if firebase services are not available yet.
-      // The effect will re-run once they are.
-      return;
-    }
-
+    // This effect runs once to set up the auth state listener.
+    // It will automatically update the user state on login, logout, or token refresh.
     const unsubscribe = onAuthStateChanged(auth, async firebaseUser => {
       if (firebaseUser) {
+        // If the user is logged in, fetch their profile from Firestore.
         const userDocRef = doc(firestore, 'users', firebaseUser.uid);
         const userDoc = await getDoc(userDocRef);
         if (userDoc.exists()) {
           setUser({ uid: firebaseUser.uid, ...userDoc.data() } as User);
         } else {
-          // This can happen if the user exists in Auth but not in Firestore yet.
-          // This might indicate an incomplete signup. For now, we set a minimal user object.
+           // This case can happen if the Firestore document creation failed after signup.
+           // We set a minimal user object to prevent the app from breaking.
            setUser({ uid: firebaseUser.uid, email: firebaseUser.email! });
         }
       } else {
+        // If the user is logged out, clear the user state.
         setUser(null);
       }
+      // Set loading to false once we have the initial auth state.
       setLoading(false);
     });
 
+    // Cleanup subscription on unmount
     return () => unsubscribe();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth, firestore]);
 
   const signup = async (
@@ -78,20 +72,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     password: string,
     additionalData: Partial<Omit<User, 'uid' | 'email' | 'role'>> = {}
   ) => {
-    if (!auth || !firestore) throw new Error("Firebase not initialized");
-    
     setLoading(true);
     try {
+      // 1. Create user in Firebase Authentication
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
         password
       );
       const firebaseUser = userCredential.user;
-      const userDocRef = doc(firestore, 'users', firebaseUser.uid);
-
+      
+      // 2. Determine user role
       const role = email.toLowerCase() === 'crismo@gmail.com' ? 'admin' : 'customer';
 
+      // 3. Prepare user data for Firestore
       const newUser: User = {
         uid: firebaseUser.uid,
         email: email,
@@ -100,34 +94,40 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         role: role,
       };
 
+      // 4. Create user document in Firestore
+      const userDocRef = doc(firestore, 'users', firebaseUser.uid);
       await setDoc(userDocRef, newUser);
+
+      // The onAuthStateChanged listener will automatically update the local user state.
+      // We don't need to call setUser here.
       
-      // The onAuthStateChanged listener will handle setting the user,
-      // so we don't need to call setUser here.
     } catch (error) {
       console.error('Error signing up:', error);
-      setLoading(false); // Make sure to stop loading on error
+      // Re-throw the error so the UI can catch it and display a message
       throw error;
+    } finally {
+      // ALWAYS stop loading, whether it succeeded or failed.
+      setLoading(false);
     }
   };
 
   const login = async (email: string, password: string) => {
-    if (!auth) throw new Error("Firebase not initialized");
     setLoading(true);
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      // onAuthStateChanged will handle the rest.
+      // onAuthStateChanged will handle setting the user state.
     } catch (error) {
       console.error('Error logging in:', error);
-      setLoading(false); // Make sure to stop loading on error
       throw error;
+    } finally {
+       setLoading(false);
     }
   };
 
   const logout = async () => {
-    if (!auth) throw new Error("Firebase not initialized");
     try {
       await signOut(auth);
+      // onAuthStateChanged will clear the user state.
       router.push('/');
     } catch (error) {
       console.error('Error logging out:', error);
