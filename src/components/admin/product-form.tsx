@@ -58,7 +58,7 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
   const [isSubmitting, setIsSubmitting] = useState(false);
 
 
-  const defaultValues = {
+  const defaultValues: ProductFormValues = {
     name: product?.name || '',
     slug: product?.slug || '',
     category: product?.category || '',
@@ -152,10 +152,10 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
 
       if (product && product.id) {
         const productRef = doc(firestore, 'products', product.id);
-        await updateDoc(productRef, productData);
+        await updateDoc(productRef, productData as any);
         toast({ title: 'Éxito', description: 'Producto actualizado correctamente.' });
       } else {
-        await addDoc(collection(firestore, 'products'), productData);
+        await addDoc(collection(firestore, 'products'), productData as any);
         toast({ title: 'Éxito', description: 'Producto añadido correctamente.' });
       }
       onSaveSuccess();
@@ -251,7 +251,7 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
                     <FormItem>
                     <FormLabel>Precio Original (Opcional)</FormLabel>
                     <FormControl>
-                        <Input type="number" step="0.01" {...field} />
+                        <Input type="number" step="0.01" {...field} value={field.value ?? ''} />
                     </FormControl>
                     <FormMessage />
                     </FormItem>
