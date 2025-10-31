@@ -100,56 +100,56 @@ export default function InventoryPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="hidden w-[100px] sm:table-cell">
-                  <span className="sr-only">Imagen</span>
+                <TableHead className="w-[120px] sm:w-[150px]">
+                  Imagen
                 </TableHead>
                 <TableHead>Nombre</TableHead>
-                <TableHead>Categoría</TableHead>
-                <TableHead className="hidden md:table-cell">
+                <TableHead className="w-[150px] hidden md:table-cell">Categoría</TableHead>
+                <TableHead className="w-[120px] hidden md:table-cell text-right">
                   Precio
                 </TableHead>
-                <TableHead>
-                  <span className="sr-only">Acciones</span>
+                <TableHead className="w-[80px] text-right">
+                  Acciones
                 </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {loading && Array.from({ length: 5 }).map((_, i) => (
                 <TableRow key={i}>
-                  <TableCell className="hidden sm:table-cell">
-                    <Skeleton className="h-16 w-16 rounded-md" />
+                  <TableCell>
+                    <Skeleton className="h-24 w-24 rounded-md" />
                   </TableCell>
                   <TableCell>
-                    <Skeleton className="h-4 w-32" />
-                  </TableCell>
-                  <TableCell>
-                    <Skeleton className="h-4 w-24" />
+                    <Skeleton className="h-4 w-48" />
                   </TableCell>
                   <TableCell className="hidden md:table-cell">
-                    <Skeleton className="h-4 w-16" />
+                    <Skeleton className="h-4 w-24" />
                   </TableCell>
-                  <TableCell>
-                    <Skeleton className="h-8 w-8 rounded-full" />
+                  <TableCell className="hidden md:table-cell text-right">
+                    <Skeleton className="h-4 w-16 ml-auto" />
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <Skeleton className="h-8 w-8 rounded-full ml-auto" />
                   </TableCell>
                 </TableRow>
               ))}
               {products?.map((product) => (
                 <TableRow key={product.id}>
-                  <TableCell className="hidden sm:table-cell">
+                  <TableCell>
                     <Image
                       alt={product.name}
                       className="aspect-square rounded-md object-cover"
-                      height="64"
+                      height="100"
                       src={product.images[0]?.url || '/placeholder.svg'}
-                      width="64"
+                      width="100"
                     />
                   </TableCell>
                   <TableCell className="font-medium">{product.name}</TableCell>
-                  <TableCell>
+                  <TableCell className="hidden md:table-cell">
                     <Badge variant="outline">{product.category}</Badge>
                   </TableCell>
-                  <TableCell className="hidden md:table-cell">S/{product.price.toFixed(2)}</TableCell>
-                  <TableCell>
+                  <TableCell className="hidden md:table-cell text-right">S/{product.price.toFixed(2)}</TableCell>
+                  <TableCell className="text-right">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button
@@ -184,7 +184,7 @@ export default function InventoryPage() {
        <AlertDialog open={isDeleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>¿Estás absolutamente seguro?</AlertDialogTitle>
+            <AlertDialogTitle>¿Estás absolutely seguro?</AlertDialogTitle>
             <AlertDialogDescription>
               Esta acción no se puede deshacer. Esto eliminará permanentemente
               el producto de tu base de datos.
