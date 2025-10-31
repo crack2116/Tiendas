@@ -1,12 +1,21 @@
-import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, addDoc, getDocs, writeBatch } from 'firebase/firestore';
+import admin from 'firebase-admin';
+import { getFirestore } from 'firebase-admin/firestore';
 import { firebaseConfig } from '../src/firebase/config';
 import placeholderImagesData from '../src/lib/placeholder-images.json';
 
-if (!firebaseConfig.projectId) {
-  console.error("Firebase project ID is not defined in your firebase/config.ts file.");
-  process.exit(1);
+// Initialize Firebase Admin SDK
+try {
+    admin.initializeApp({
+        credential: admin.credential.applicationDefault(),
+        projectId: firebaseConfig.projectId,
+    });
+} catch (error: any) {
+    if (error.code !== 'app/duplicate-app') {
+        console.error('Firebase admin initialization error', error);
+        process.exit(1);
+    }
 }
+
 
 const { placeholderImages } = placeholderImagesData;
 
@@ -270,16 +279,14 @@ const products = [
 async function seed() {
   console.log("Seeding database with initial data...");
 
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-  const productsCollection = collection(db, "products");
+  const db = getFirestore();
+  const productsCollection = db.collection("products");
 
   // Check if products already exist
-  const existingProductsSnapshot = await getDocs(productsCollection);
+  const existingProductsSnapshot = await productsCollection.get();
   if (!existingProductsSnapshot.empty) {
     console.log("Products collection already contains data. Deleting existing data.");
-    const batch = writeBatch(db);
+    const batch = db.batch();
     existingProductsSnapshot.docs.forEach(doc => {
         batch.delete(doc.ref);
     });
@@ -289,19 +296,24 @@ async function seed() {
 
   // Add new products
   try {
+    const batch = db.batch();
     for (const product of products) {
         // We are removing the id field as Firestore will generate one automatically.
-        const { id, ...productData } = product; 
-        await addDoc(productsCollection, productData);
+        const { id, ...productData } = product;
+        const docRef = productsCollection.doc(); // Let Firestore generate the ID
+        batch.set(docRef, productData);
     }
+    await batch.commit();
     console.log(`Successfully seeded ${products.length} products.`);
   } catch (error) {
     console.error("Error seeding database: ", error);
   }
 
-  // The script will exit automatically when done.
-  // We need to manually exit because the Firebase connection keeps the process alive.
-  process.exit(0);
+  console.log("Seeding complete.");
+  // The script will exit automatically when all async operations are done.
 }
 
-seed();
+seed().catch(error => {
+    console.error("Unhandled error in seed script: ", error);
+    process.exit(1);
+});
