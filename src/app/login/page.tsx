@@ -13,13 +13,23 @@ import { useToast } from '@/hooks/use-toast';
 
 export default function LoginPage() {
   const [isLogin, setIsLogin] = useState(true);
-  const { signup, login, loading } = useAuth();
+  const { signup, login, loading, user, isAdmin } = useAuth();
   const router = useRouter();
   const { toast } = useToast();
 
   const toggleForm = () => {
     setIsLogin(!isLogin);
   };
+  
+   if (user) {
+    if (isAdmin) {
+      router.push('/admin');
+    } else {
+      router.push('/account/orders');
+    }
+    return null;
+  }
+
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -35,7 +45,7 @@ export default function LoginPage() {
             const address = formData.get('address') as string;
             await signup(email, password, { name, address });
         }
-        router.push('/account/orders');
+        // Redirection is handled by onAuthStateChanged in useAuth
     } catch (error: any) {
         toast({
             variant: "destructive",

@@ -31,16 +31,20 @@ export default function AccountLayout({
 }: {
   children: React.ReactNode
 }) {
-  const { user, logout, loading } = useAuth();
+  const { user, logout, loading, isAdmin } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (!loading && !user) {
-      router.push('/login');
+    if (!loading) {
+      if (!user) {
+        router.push('/login');
+      } else if (isAdmin) {
+        router.push('/admin');
+      }
     }
-  }, [user, loading, router]);
+  }, [user, loading, router, isAdmin]);
 
-  if (loading || !user) {
+  if (loading || !user || isAdmin) {
     return (
         <div className="w-full min-h-screen flex items-center justify-center">
             <p>Cargando...</p>
@@ -70,26 +74,6 @@ export default function AccountLayout({
                     </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
-               {user.role === 'admin' && (
-                <>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton asChild>
-                      <Link href="/admin">
-                        <Shield />
-                        Panel de Admin
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton asChild>
-                      <Link href="/admin/inventory">
-                        <Warehouse />
-                        Inventario
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                </>
-              )}
             </SidebarMenu>
           </SidebarContent>
           <SidebarFooter>

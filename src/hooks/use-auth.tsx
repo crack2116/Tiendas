@@ -21,6 +21,7 @@ import { useRouter } from 'next/navigation';
 interface AuthContextType {
   user: User | null;
   loading: boolean;
+  isAdmin: boolean;
   signup: (
     email: string,
     password: string,
@@ -39,6 +40,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const isAdmin = user?.role === 'admin';
 
   useEffect(() => {
     // This effect runs once to set up the auth state listener.
@@ -51,7 +53,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const userDocRef = doc(firestore, 'users', firebaseUser.uid);
         const userDoc = await getDoc(userDocRef);
         if (userDoc.exists()) {
-          setUser({ uid: firebaseUser.uid, ...userDoc.data() } as User);
+          const userData = { uid: firebaseUser.uid, ...userDoc.data() } as User;
+          setUser(userData);
+           if (userData.role === 'admin') {
+            router.push('/admin');
+          }
         } else {
            // This case can happen if the Firestore document creation failed after signup.
            // We set a minimal user object to prevent the app from breaking.
@@ -67,7 +73,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     // Cleanup subscription on unmount
     return () => unsubscribe();
-  }, [auth, firestore]);
+  }, [auth, firestore, router]);
 
   const signup = async (
     email: string,
@@ -117,7 +123,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setLoading(true);
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      // onAuthStateChanged will handle setting the user state.
+      // onAuthStateChanged will handle setting the user state and redirection.
     } catch (error) {
       console.error('Error logging in:', error);
       throw error;
@@ -140,6 +146,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const authContextValue = {
     user,
     loading,
+    isAdmin,
     signup,
     login,
     logout,
