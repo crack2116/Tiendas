@@ -4,7 +4,7 @@ import { config } from 'dotenv';
 import placeholderImagesData from '../src/lib/placeholder-images.json';
 
 // Load environment variables from .env file
-config({ path: './.env' });
+config({ path: './.env.local' });
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
