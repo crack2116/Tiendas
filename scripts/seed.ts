@@ -1,3 +1,4 @@
+
 import admin from 'firebase-admin';
 import { getFirestore } from 'firebase-admin/firestore';
 import { firebaseConfig } from '../src/firebase/config';
@@ -19,16 +20,31 @@ try {
 
 const { placeholderImages } = placeholderImagesData;
 
+const getImageUrl = (id: string) => {
+    const image = placeholderImages.find(img => img.id === id);
+    if (image) {
+        // Construct the Firebase Storage URL from the image path
+        const imageName = image.imageUrl.split('/').pop()?.split('?')[0];
+        if (imageName) {
+            // This creates a predictable URL based on the file name for Firebase Storage.
+            // Note: The actual images need to be uploaded to this path in your Storage bucket.
+            return `https://storage.googleapis.com/${firebaseConfig.storageBucket}/products%2F${imageName}`;
+        }
+    }
+    return 'https://storage.googleapis.com/tienda-1247d.appspot.com/products%2Fdefault.jpg';
+}
+
+
 const getImage = (id: string, description: string, hint: string) => {
     const image = placeholderImages.find(img => img.id === id);
     return {
       id,
-      url: image?.imageUrl || 'https://picsum.photos/seed/default/800/1000',
+      url: getImageUrl(id),
       alt: image?.description || description,
       hint: image?.imageHint || hint,
     };
 };
-  
+
 
 const products = [
     {
@@ -317,3 +333,5 @@ seed().catch(error => {
     console.error("Unhandled error in seed script: ", error);
     process.exit(1);
 });
+
+    
