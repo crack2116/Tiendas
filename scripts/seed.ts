@@ -1,6 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, addDoc, getDocs, writeBatch } from 'firebase/firestore';
 import { config } from 'dotenv';
+import placeholderImagesData from '../src/lib/placeholder-images.json';
 
 // Load environment variables from .env file
 config({ path: './.env' });
@@ -19,123 +20,7 @@ if (!firebaseConfig.projectId) {
   process.exit(1);
 }
 
-const placeholderImages = [
-    {
-      "id": "hero",
-      "description": "Stylish woman in a modern cityscape",
-      "imageUrl": "https://images.unsplash.com/photo-1562572159-4efc207f5aff?q=80&w=1920",
-      "imageHint": "fashion model"
-    },
-    {
-      "id": "carousel-clothing",
-      "description": "A person wearing a stylish outfit",
-      "imageUrl": "https://www.iese.edu/es/insight/wp-content/uploads/sites/4/1970/01/Fast-Fashion-estrategia-minorista.jpg",
-      "imageHint": "fashion model"
-    },
-    {
-      "id": "carousel-beauty",
-      "description": "A collection of beauty products",
-      "imageUrl": "https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=1920",
-      "imageHint": "beauty products"
-    },
-    {
-      "id": "carousel-perfume",
-      "description": "An elegant perfume bottle",
-      "imageUrl": "https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=1920",
-      "imageHint": "perfume bottle"
-    },
-    {
-      "id": "carousel-accessories",
-      "description": "A collection of fashion accessories like sunglasses and a watch",
-      "imageUrl": "https://hips.hearstapps.com/hmg-prod/images/gettyimages-837641132-1531290955.jpg?crop=1.00xw:0.753xh;0,0.0234xh",
-      "imageHint": "fashion accessories"
-    },
-    {
-      "id": "carousel-face",
-      "description": "Woman applying face cream",
-      "imageUrl": "https://images.unsplash.com/photo-1512496015851-a90137ba0a43?q=80&w=1920",
-      "imageHint": "face care"
-    },
-    {
-      "id": "carousel-hair",
-      "description": "Hair care products on a shelf",
-      "imageUrl": "https://images.unsplash.com/photo-1620916298379-2475a2254332?q=80&w=1920",
-      "imageHint": "hair products"
-    },
-    {
-      "id": "carousel-body",
-      "description": "Woman applying body lotion",
-      "imageUrl": "https://images.unsplash.com/photo-1563291885-26155933a2a6?q=80&w=1920",
-      "imageHint": "body lotion"
-    },
-    {
-      "id": "product-1-a",
-      "description": "Front view of a minimalist white t-shirt",
-      "imageUrl": "https://images.unsplash.com/photo-1688111421202-bda886f5e215?q=80&w=1080",
-      "imageHint": "white t-shirt"
-    },
-    {
-      "id": "product-1-b",
-      "description": "Side view of a minimalist white t-shirt",
-      "imageUrl": "https://images.unsplash.com/photo-1576417677416-6ca3adfb5435?q=80&w=1080",
-      "imageHint": "white t-shirt"
-    },
-    {
-      "id": "product-2-a",
-      "description": "Slim-fit dark wash denim jeans",
-      "imageUrl": "https://images.unsplash.com/photo-1658910453954-6ca847bb7470?q=80&w=1080",
-      "imageHint": "denim jeans"
-    },
-    {
-      "id": "product-2-b",
-      "description": "Close-up of denim jeans fabric",
-      "imageUrl": "https://images.unsplash.com/photo-1637069585336-827b298fe84a?q=80&w=1080",
-      "imageHint": "denim jeans"
-    },
-    {
-      "id": "product-3-a",
-      "description": "Classic leather biker jacket",
-      "imageUrl": "https://images.unsplash.com/photo-1489286696299-aa7486820bd5?q=80&w=1080",
-      "imageHint": "leather jacket"
-    },
-    {
-      "id": "product-3-b",
-      "description": "Detail of biker jacket zipper",
-      "imageUrl": "https://images.unsplash.com/photo-1551028719-00167b16eac5?q=80&w=1080",
-      "imageHint": "leather jacket"
-    },
-    {
-      "id": "product-4-a",
-      "description": "Chunky knit wool sweater",
-      "imageUrl": "https://images.unsplash.com/photo-1601379327928-bedfaf9da2d0?q=80&w=1080",
-      "imageHint": "wool sweater"
-    },
-    {
-      "id": "product-5-a",
-      "description": "Sleek black Chelsea boots",
-      "imageUrl": "https://images.unsplash.com/photo-1637059037982-519896b99b0f?q=80&w=1080",
-      "imageHint": "black boots"
-    },
-    {
-      "id": "product-6-a",
-      "description": "Modern trench coat in beige",
-      "imageUrl": "https://images.unsplash.com/photo-1633821879282-0c4e91f96232?q=80&w=1080",
-      "imageHint": "trench coat"
-    },
-    {
-      "id": "product-7-a",
-      "description": "Silk floral print midi dress",
-      "imageUrl": "https://images.unsplash.com/photo-1503408024948-0a3e1b2b519c?q=80&w=1080",
-      "imageHint": "floral dress"
-    },
-    {
-      "id": "product-8-a",
-      "description": "Linen button-down shirt",
-      "imageUrl": "https://images.unsplash.com/photo-1665201462900-809f7773ff5f?q=80&w=1080",
-      "imageHint": "linen shirt"
-    }
-  ]
-}
+const { placeholderImages } = placeholderImagesData;
 
 const getImage = (id: string, description: string, hint: string) => {
     const image = placeholderImages.find(img => img.id === id);

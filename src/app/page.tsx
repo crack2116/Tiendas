@@ -17,7 +17,7 @@ import {
 import Autoplay from "embla-carousel-autoplay"
 import { Filter } from 'lucide-react';
 import { ProductFilters } from '@/components/product-filters';
-import { useCollection } from '@/firebase/use-collection';
+import { useCollection } from '@/firebase';
 import type { Product } from '@/lib/types';
 import { Skeleton } from '@/components/ui/skeleton';
 
