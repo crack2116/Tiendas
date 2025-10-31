@@ -6,7 +6,7 @@
 
 // Your web app's Firebase configuration
 export const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
+  apiKey: "AIzaSyAvSgXKwBfbcXZj7R6EAFHs8yloDET6JDY",
   authDomain: "tienda-1247d.firebaseapp.com",
   projectId: "tienda-1247d",
   storageBucket: "tienda-1247d.appspot.com",
