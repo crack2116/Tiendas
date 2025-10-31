@@ -59,21 +59,19 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: '',
-      slug: '',
-      category: '',
-      price: 0,
-      originalPrice: undefined,
-      description: '',
-      badge: '',
-      details: [{ value: '' }],
-      images: [],
+        name: '',
+        slug: '',
+        category: '',
+        price: 0,
+        originalPrice: undefined,
+        description: '',
+        badge: '',
+        details: [{ value: '' }],
+        images: [],
     },
-     mode: 'onChange'
+    mode: 'onChange'
   });
 
-  // This effect correctly resets the form when the `product` prop changes.
-  // It ensures the form is either cleared for a new product or populated for an existing one.
   useEffect(() => {
     if (product) {
       form.reset({
@@ -100,6 +98,7 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
         images: [{ id: crypto.randomUUID(), url: '', alt: '', file: undefined }],
       });
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [product, form.reset]);
 
 
@@ -423,5 +422,3 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
     </Form>
   );
 }
-
-    
