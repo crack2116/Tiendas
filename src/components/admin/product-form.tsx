@@ -101,6 +101,10 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
 
   const uploadImage = (file: File, path: string): Promise<string> => {
     return new Promise((resolve, reject) => {
+      if (!storage) {
+        reject(new Error("Firebase Storage is not initialized."));
+        return;
+      }
       const storageRef = ref(storage, path);
       const uploadTask = uploadBytesResumable(storageRef, file);
 
@@ -377,3 +381,5 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
     </Form>
   );
 }
+
+    
