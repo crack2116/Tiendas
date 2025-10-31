@@ -20,7 +20,7 @@ import { collection, addDoc, updateDoc, doc } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 import { Trash, Upload, Image as ImageIcon } from 'lucide-react';
 import { Separator } from '../ui/separator';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { Progress } from '@/components/ui/progress';
 import Image from 'next/image';
@@ -73,6 +73,7 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues,
+     mode: 'onChange'
   });
 
   const { fields: imageFields, append: appendImage, remove: removeImage, update: updateImage } = useFieldArray({
@@ -88,11 +89,11 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
     const file = e.target.files?.[0];
     if (file) {
-      const newImage: ImageFieldValue = {
-        id: imageFields[index].id,
-        url: URL.createObjectURL(file), // Temporary URL for preview
-        alt: '',
-        file: file
+      const currentImage = imageFields[index];
+      const newImage = {
+        ...currentImage,
+        url: URL.createObjectURL(file), // Use object URL for preview
+        file: file,
       };
       updateImage(index, newImage);
     }
@@ -138,39 +139,45 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
           if (image.file) {
             const filePath = `products/${Date.now()}_${image.file.name}`;
             const downloadURL = await uploadImage(image.file, filePath);
-            return { ...image, url: downloadURL, file: undefined };
+            return { ...image, url: downloadURL };
           }
           return image;
         })
       );
-
-      const productData = {
+        
+      const productDataForFirestore = {
         ...data,
-        images: uploadedImageUrls.map(({ file, ...rest}) => rest), // Remove file property before saving to Firestore
+        images: uploadedImageUrls.map(({ file, ...rest }) => rest), // Important: remove the 'file' property
         details: data.details?.map(d => d.value).filter(Boolean) || [],
       };
 
       if (product && product.id) {
         const productRef = doc(firestore, 'products', product.id);
-        await updateDoc(productRef, productData as any);
+        await updateDoc(productRef, productDataForFirestore as any);
         toast({ title: 'Éxito', description: 'Producto actualizado correctamente.' });
       } else {
-        await addDoc(collection(firestore, 'products'), productData as any);
+        await addDoc(collection(firestore, 'products'), productDataForFirestore as any);
         toast({ title: 'Éxito', description: 'Producto añadido correctamente.' });
       }
       onSaveSuccess();
-      form.reset();
     } catch (error: any) {
+      console.error("Error submitting product:", error);
       toast({
         variant: 'destructive',
         title: 'Error al guardar',
-        description: error.message,
+        description: error.message || 'Ocurrió un error inesperado.',
       });
     } finally {
       setIsSubmitting(false);
       setUploadProgress({});
     }
   };
+
+  // Reset form when product changes (e.g. closing and opening dialog for a new product)
+  useEffect(() => {
+    form.reset(defaultValues);
+  }, [product, form.reset]);
+
 
   return (
     <Form {...form}>
@@ -223,7 +230,7 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
                     <FormItem>
                     <FormLabel>Badge (Opcional)</FormLabel>
                     <FormControl>
-                        <Input placeholder="Ej: Nuevo, Oferta" {...field} />
+                        <Input placeholder="Ej: Nuevo, Oferta" {...field} value={field.value ?? ''}/>
                     </FormControl>
                     <FormMessage />
                     </FormItem>
@@ -251,7 +258,7 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
                     <FormItem>
                     <FormLabel>Precio Original (Opcional)</FormLabel>
                     <FormControl>
-                        <Input type="number" step="0.01" {...field} value={field.value ?? ''} />
+                        <Input type="number" step="0.01" {...field} value={field.value ?? ''} onChange={e => field.onChange(e.target.value === '' ? undefined : +e.target.value)} />
                     </FormControl>
                     <FormMessage />
                     </FormItem>
@@ -282,8 +289,10 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
                 <h3 className="text-lg font-medium mb-4">Imágenes</h3>
                 <div className="space-y-4">
                 {imageFields.map((field, index) => {
-                    const progress = field.file ? uploadProgress[`products/${Date.now()}_${field.file.name}`] : null;
-                    const previewUrl = field.file ? URL.createObjectURL(field.file) : field.url;
+                    const currentFieldValue = form.watch(`images.${index}`);
+                    const progress = currentFieldValue.file ? uploadProgress[`products/${Date.now()}_${currentFieldValue.file.name}`] : null;
+                    const previewUrl = currentFieldValue.url;
+                    
                     return (
                     <div key={field.id} className="p-4 border rounded-md space-y-4">
                         <div className="flex gap-4 items-start">
@@ -334,7 +343,7 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
                     variant="outline"
                     size="sm"
                     className="mt-4"
-                    onClick={() => appendImage({ id: crypto.randomUUID(), url: '', alt: '' })}
+                    onClick={() => appendImage({ id: crypto.randomUUID(), url: '', alt: '', file: undefined })}
                 >
                     Añadir Imagen
                 </Button>
@@ -381,5 +390,3 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
     </Form>
   );
 }
-
-    
