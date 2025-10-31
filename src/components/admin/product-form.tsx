@@ -170,8 +170,8 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+       <form onSubmit={form.handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="space-y-6">
             <FormField
               control={form.control}
               name="name"
@@ -198,181 +198,181 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
                 </FormItem>
               )}
             />
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <FormField
+                control={form.control}
+                name="category"
+                render={({ field }) => (
+                    <FormItem>
+                    <FormLabel>Categoría</FormLabel>
+                    <FormControl>
+                        <Input placeholder="Ej: Tops" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                    </FormItem>
+                )}
+                />
+                 <FormField
+                control={form.control}
+                name="badge"
+                render={({ field }) => (
+                    <FormItem>
+                    <FormLabel>Badge (Opcional)</FormLabel>
+                    <FormControl>
+                        <Input placeholder="Ej: Nuevo, Oferta" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                    </FormItem>
+                )}
+                />
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <FormField
+                control={form.control}
+                name="price"
+                render={({ field }) => (
+                    <FormItem>
+                    <FormLabel>Precio</FormLabel>
+                    <FormControl>
+                        <Input type="number" step="0.01" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                    </FormItem>
+                )}
+                />
+                <FormField
+                control={form.control}
+                name="originalPrice"
+                render={({ field }) => (
+                    <FormItem>
+                    <FormLabel>Precio Original (Opcional)</FormLabel>
+                    <FormControl>
+                        <Input type="number" step="0.01" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                    </FormItem>
+                )}
+                />
+            </div>
             <FormField
-            control={form.control}
-            name="category"
-            render={({ field }) => (
+              control={form.control}
+              name="description"
+              render={({ field }) => (
                 <FormItem>
-                <FormLabel>Categoría</FormLabel>
-                <FormControl>
-                    <Input placeholder="Ej: Tops" {...field} />
-                </FormControl>
-                <FormMessage />
+                  <FormLabel>Descripción</FormLabel>
+                  <FormControl>
+                    <Textarea placeholder="Describe el producto..." {...field} rows={5} />
+                  </FormControl>
+                  <FormMessage />
                 </FormItem>
-            )}
+              )}
             />
-             <FormField
-            control={form.control}
-            name="badge"
-            render={({ field }) => (
-                <FormItem>
-                <FormLabel>Badge (Opcional)</FormLabel>
-                <FormControl>
-                    <Input placeholder="Ej: Nuevo, Oferta" {...field} />
-                </FormControl>
-                <FormMessage />
-                </FormItem>
-            )}
-            />
+            
+            <Button type="submit" disabled={isSubmitting} className='mt-4'>
+            {isSubmitting ? 'Guardando...' : 'Guardar Producto'}
+            </Button>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <FormField
-            control={form.control}
-            name="price"
-            render={({ field }) => (
-                <FormItem>
-                <FormLabel>Precio</FormLabel>
-                <FormControl>
-                    <Input type="number" step="0.01" {...field} />
-                </FormControl>
-                <FormMessage />
-                </FormItem>
-            )}
-            />
-            <FormField
-            control={form.control}
-            name="originalPrice"
-            render={({ field }) => (
-                <FormItem>
-                <FormLabel>Precio Original (Opcional)</FormLabel>
-                <FormControl>
-                    <Input type="number" step="0.01" {...field} />
-                </FormControl>
-                <FormMessage />
-                </FormItem>
-            )}
-            />
-        </div>
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Descripción</FormLabel>
-              <FormControl>
-                <Textarea placeholder="Describe el producto..." {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        
-        <Separator />
 
-        <div>
-            <h3 className="text-lg font-medium mb-4">Imágenes</h3>
-            <div className="space-y-4">
-            {imageFields.map((field, index) => {
-                const progress = field.file ? uploadProgress[`products/${Date.now()}_${field.file.name}`] : null;
-                const previewUrl = field.file ? URL.createObjectURL(field.file) : field.url;
-                return (
-                <div key={field.id} className="p-4 border rounded-md space-y-4">
-                    <div className="flex gap-4 items-start">
-                    <div className="w-24 h-24 rounded-md bg-muted flex items-center justify-center overflow-hidden">
-                        {previewUrl ? (
-                            <Image src={previewUrl} alt="Vista previa" width={96} height={96} className="object-cover w-full h-full" />
-                        ) : (
-                            <ImageIcon className="text-muted-foreground" />
+        <div className="space-y-6">
+            <div>
+                <h3 className="text-lg font-medium mb-4">Imágenes</h3>
+                <div className="space-y-4">
+                {imageFields.map((field, index) => {
+                    const progress = field.file ? uploadProgress[`products/${Date.now()}_${field.file.name}`] : null;
+                    const previewUrl = field.file ? URL.createObjectURL(field.file) : field.url;
+                    return (
+                    <div key={field.id} className="p-4 border rounded-md space-y-4">
+                        <div className="flex gap-4 items-start">
+                        <div className="w-24 h-24 rounded-md bg-muted flex items-center justify-center overflow-hidden">
+                            {previewUrl ? (
+                                <Image src={previewUrl} alt="Vista previa" width={96} height={96} className="object-cover w-full h-full" />
+                            ) : (
+                                <ImageIcon className="text-muted-foreground" />
+                            )}
+                        </div>
+                        <div className="flex-1 space-y-2">
+                            <div className="grid gap-2">
+                            <Label htmlFor={`images.${index}.file`}>Subir imagen</Label>
+                                <Input
+                                    id={`images.${index}.file`}
+                                    type="file"
+                                    accept="image/png, image/jpeg, image/gif"
+                                    className="text-sm"
+                                    onChange={(e) => handleFileChange(e, index)}
+                                />
+                            </div>
+                            <FormField
+                                control={form.control}
+                                name={`images.${index}.alt`}
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Texto Alternativo</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="Descripción de la imagen" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
+                        <Button type="button" variant="destructive" size="icon" onClick={() => removeImage(index)} disabled={imageFields.length <= 1}>
+                            <Trash className="h-4 w-4" />
+                        </Button>
+                        </div>
+                        {progress != null && progress < 100 && (
+                            <Progress value={progress} className="w-full" />
                         )}
                     </div>
-                    <div className="flex-1 space-y-2">
-                         <div className="grid gap-2">
-                           <Label htmlFor={`images.${index}.file`}>Subir imagen</Label>
-                            <Input
-                                id={`images.${index}.file`}
-                                type="file"
-                                accept="image/png, image/jpeg, image/gif"
-                                className="text-sm"
-                                onChange={(e) => handleFileChange(e, index)}
-                            />
-                         </div>
-                        <FormField
-                            control={form.control}
-                            name={`images.${index}.alt`}
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Texto Alternativo</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="Descripción de la imagen" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                    </div>
-                     <Button type="button" variant="destructive" size="icon" onClick={() => removeImage(index)} disabled={imageFields.length <= 1}>
-                        <Trash className="h-4 w-4" />
-                    </Button>
-                    </div>
-                    {progress != null && progress < 100 && (
-                        <Progress value={progress} className="w-full" />
-                    )}
+                )})}
                 </div>
-            )})}
-            </div>
-            <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                className="mt-4"
-                onClick={() => appendImage({ id: crypto.randomUUID(), url: '', alt: '' })}
-            >
-                Añadir Imagen
-            </Button>
-        </div>
-
-
-        <Separator />
-
-         <div>
-          <h3 className="text-lg font-medium mb-2">Detalles del producto</h3>
-           {detailFields.map((field, index) => (
-            <div key={field.id} className="flex items-center gap-2 mb-2">
-                <FormField
-                    control={form.control}
-                    name={`details.${index}.value`}
-                    render={({ field }) => (
-                         <FormItem className='flex-1'>
-                            <FormLabel className="sr-only">Detalle</FormLabel>
-                            <FormControl>
-                                <Input placeholder="Ej: 100% Algodón" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                 <Button type="button" variant="destructive" size="icon" onClick={() => removeDetail(index)} disabled={detailFields.length <=1}>
-                    <Trash className="h-4 w-4" />
+                <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="mt-4"
+                    onClick={() => appendImage({ id: crypto.randomUUID(), url: '', alt: '' })}
+                >
+                    Añadir Imagen
                 </Button>
             </div>
-           ))}
-            <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                className="mt-2"
-                onClick={() => appendDetail({ value: '' })}
-            >
-                Añadir Detalle
-            </Button>
+
+
+            <Separator />
+
+            <div>
+            <h3 className="text-lg font-medium mb-2">Detalles del producto</h3>
+            {detailFields.map((field, index) => (
+                <div key={field.id} className="flex items-center gap-2 mb-2">
+                    <FormField
+                        control={form.control}
+                        name={`details.${index}.value`}
+                        render={({ field }) => (
+                            <FormItem className='flex-1'>
+                                <FormLabel className="sr-only">Detalle</FormLabel>
+                                <FormControl>
+                                    <Input placeholder="Ej: 100% Algodón" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <Button type="button" variant="destructive" size="icon" onClick={() => removeDetail(index)} disabled={detailFields.length <=1}>
+                        <Trash className="h-4 w-4" />
+                    </Button>
+                </div>
+            ))}
+                <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="mt-2"
+                    onClick={() => appendDetail({ value: '' })}
+                >
+                    Añadir Detalle
+                </Button>
+            </div>
         </div>
 
-
-        <Button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? 'Guardando...' : 'Guardar Producto'}
-        </Button>
       </form>
     </Form>
   );

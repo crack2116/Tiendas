@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/dialog';
 import { ProductForm } from './product-form';
 import type { Product } from '@/lib/types';
+import { ScrollArea } from '../ui/scroll-area';
 
 interface ProductDialogProps {
   isOpen: boolean;
@@ -25,12 +26,16 @@ export function ProductDialog({ isOpen, onClose, product }: ProductDialogProps) 
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-4xl">
+      <DialogContent className="sm:max-w-4xl max-h-[90vh] flex flex-col">
         <DialogHeader>
           <DialogTitle>{dialogTitle}</DialogTitle>
           <DialogDescription>{dialogDescription}</DialogDescription>
         </DialogHeader>
-        <ProductForm product={product} onSaveSuccess={onClose} />
+        <ScrollArea className='flex-1'>
+            <div className='pr-6'>
+                <ProductForm product={product} onSaveSuccess={onClose} />
+            </div>
+        </ScrollArea>
       </DialogContent>
     </Dialog>
   );
