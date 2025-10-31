@@ -55,9 +55,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         if (userDoc.exists()) {
           const userData = { uid: firebaseUser.uid, ...userDoc.data() } as User;
           setUser(userData);
-           if (userData.role === 'admin') {
-            router.push('/admin');
-          }
         } else {
            // This case can happen if the Firestore document creation failed after signup.
            // We set a minimal user object to prevent the app from breaking.
