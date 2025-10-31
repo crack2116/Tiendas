@@ -84,8 +84,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       );
       const firebaseUser = userCredential.user;
       
-      // 2. Determine user role
-      const role = email.toLowerCase() === 'crismo@gmail.com' ? 'admin' : 'customer';
+      // 2. All new signups are customers
+      const role = 'customer';
 
       // 3. Prepare user data for Firestore
       const newUser: User = {
