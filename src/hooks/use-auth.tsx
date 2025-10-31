@@ -43,6 +43,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     // This effect runs once to set up the auth state listener.
     // It will automatically update the user state on login, logout, or token refresh.
+    if (!auth) return; // Wait for Firebase to be initialized
+
     const unsubscribe = onAuthStateChanged(auth, async firebaseUser => {
       if (firebaseUser) {
         // If the user is logged in, fetch their profile from Firestore.

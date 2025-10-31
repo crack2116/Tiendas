@@ -4,9 +4,6 @@
 // For more information, see the Firebase CLI documentation:
 // https://firebase.google.com/docs/cli
 
-import { config } from 'dotenv';
-config();
-
 // Your web app's Firebase configuration
 export const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,

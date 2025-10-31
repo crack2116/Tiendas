@@ -45,12 +45,12 @@ export default function RootLayout({
         >
           <FirebaseClientProvider>
             <AuthProvider>
-            <CartProvider>
+              <CartProvider>
                 <Header />
                 <div className="flex-grow">{children}</div>
                 <Footer />
                 <Toaster />
-            </CartProvider>
+              </CartProvider>
             </AuthProvider>
           </FirebaseClientProvider>
         </ThemeProvider>
