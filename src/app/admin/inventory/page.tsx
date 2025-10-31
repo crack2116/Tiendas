@@ -8,8 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { MoreHorizontal, PlusCircle } from 'lucide-react';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { FilePenLine, PlusCircle, Trash2 } from 'lucide-react';
 import { ProductDialog } from '@/components/admin/product-dialog';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
@@ -78,7 +77,7 @@ export default function InventoryPage() {
   };
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full w-full">
         <div className="flex items-center justify-between p-4 sm:p-6 md:p-8">
             <h1 className="text-3xl font-bold font-headline">Inventario de Productos</h1>
             <Button onClick={handleAddProduct}>
@@ -89,7 +88,7 @@ export default function InventoryPage() {
       
       {error && <p className="text-destructive px-4 sm:px-6 md:px-8">Error: {error.message}</p>}
 
-      <Card className="flex-1 flex flex-col m-4 mt-0 sm:m-6 sm:mt-0 md:m-8 md:mt-0 border-0 shadow-none rounded-none sm:rounded-lg sm:shadow">
+      <Card className="flex-1 flex flex-col m-4 mt-0 sm:m-6 sm:mt-0 md:m-8 md:mt-0 border-0 shadow-none sm:border sm:shadow">
         <CardHeader className="pt-4 px-4 sm:px-6 md:px-7">
           <CardTitle>Productos</CardTitle>
           <CardDescription>
@@ -110,7 +109,7 @@ export default function InventoryPage() {
                 <TableHead className="hidden md:table-cell text-right w-[120px]">
                   Precio
                 </TableHead>
-                <TableHead className="text-right w-[80px] pr-4 sm:pr-6 md:pr-8">
+                <TableHead className="text-right w-[120px] pr-4 sm:pr-6 md:pr-8">
                   Acciones
                 </TableHead>
               </TableRow>
@@ -133,13 +132,16 @@ export default function InventoryPage() {
                     <Skeleton className="h-4 w-16 ml-auto" />
                   </TableCell>
                   <TableCell className="text-right pr-4 sm:pr-6 md:pr-8">
-                    <Skeleton className="h-8 w-8 rounded-full ml-auto" />
+                    <div className="flex gap-2 justify-end">
+                      <Skeleton className="h-8 w-8" />
+                      <Skeleton className="h-8 w-8" />
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}
               {products?.map((product) => (
                 <TableRow key={product.id}>
-                  <TableCell className="pl-4 sm:pl-6 md:pl-8">
+                  <TableCell className="pl-4 sm:pl-6 md:pl-8 align-top">
                     <Image
                       alt={product.name}
                       className="aspect-square rounded-md object-cover"
@@ -148,37 +150,39 @@ export default function InventoryPage() {
                       width="100"
                     />
                   </TableCell>
-                  <TableCell className="font-medium">{product.name}</TableCell>
-                   <TableCell className="hidden lg:table-cell text-sm text-muted-foreground max-w-xs truncate">
-                    {product.description}
+                  <TableCell className="font-medium align-top">{product.name}</TableCell>
+                   <TableCell className="hidden lg:table-cell text-sm text-muted-foreground align-top">
+                    <div className="max-w-xs whitespace-pre-wrap">{product.description}</div>
                   </TableCell>
-                   <TableCell className="hidden lg:table-cell text-sm text-muted-foreground">
-                    {product.details?.slice(0, 2).join(', ')}{product.details && product.details.length > 2 ? '...' : ''}
+                   <TableCell className="hidden lg:table-cell text-sm text-muted-foreground align-top">
+                    <ul className='list-disc list-inside'>
+                      {product.details?.map((detail, i) => <li key={i}>{detail}</li>)}
+                    </ul>
                   </TableCell>
-                  <TableCell className="hidden md:table-cell">
+                  <TableCell className="hidden md:table-cell align-top">
                     <Badge variant="outline">{product.category}</Badge>
                   </TableCell>
-                  <TableCell className="hidden md:table-cell text-right">S/{product.price.toFixed(2)}</TableCell>
-                  <TableCell className="text-right pr-4 sm:pr-6 md:pr-8">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button
-                          aria-haspopup="true"
-                          size="icon"
-                          variant="ghost"
-                        >
-                          <MoreHorizontal className="h-4 w-4" />
-                          <span className="sr-only">Toggle menu</span>
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Acciones</DropdownMenuLabel>
-                        <DropdownMenuItem onClick={() => handleEditProduct(product)}>Editar</DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => handleOpenDeleteDialog(product)} className="text-destructive">
-                          Eliminar
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                  <TableCell className="hidden md:table-cell text-right align-top">S/{product.price.toFixed(2)}</TableCell>
+                  <TableCell className="text-right pr-4 sm:pr-6 md:pr-8 align-top">
+                    <div className="flex gap-2 justify-end">
+                       <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleEditProduct(product)}
+                      >
+                        <FilePenLine className="h-4 w-4" />
+                        <span className="sr-only">Editar</span>
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleOpenDeleteDialog(product)}
+                        className="text-destructive hover:text-destructive"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                        <span className="sr-only">Eliminar</span>
+                      </Button>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}
