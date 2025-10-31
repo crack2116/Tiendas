@@ -21,7 +21,7 @@ import { useToast } from '@/hooks/use-toast';
 export function LoginDialog({ children }: { children: React.ReactNode }) {
   const [isLogin, setIsLogin] = useState(true);
   const [open, setOpen] = useState(false);
-  const { login, signup } = useAuth();
+  const { login, signup, loading } = useAuth();
   const router = useRouter();
   const { toast } = useToast();
 
@@ -77,7 +77,7 @@ export function LoginDialog({ children }: { children: React.ReactNode }) {
                 <>
                 <div className="grid gap-2">
                     <Label htmlFor="email-dialog">Email</Label>
-                    <Input id="email-dialog" name="email-dialog" type="email" placeholder="m@example.com" required defaultValue="test@example.com" />
+                    <Input id="email-dialog" name="email-dialog" type="email" placeholder="m@example.com" required defaultValue="Crismo@gmail.com" />
                 </div>
                 <div className="grid gap-2">
                     <div className="flex items-center">
@@ -86,9 +86,11 @@ export function LoginDialog({ children }: { children: React.ReactNode }) {
                         ¿Olvidaste tu contraseña?
                     </Link>
                     </div>
-                    <Input id="password-dialog" name="password-dialog" type="password" required defaultValue="password" />
+                    <Input id="password-dialog" name="password-dialog" type="password" required />
                 </div>
-                <Button type="submit" className="w-full">Entrar</Button>
+                <Button type="submit" className="w-full" disabled={loading}>
+                  {loading ? 'Cargando...' : 'Entrar'}
+                </Button>
                 </>
             ) : (
                 <>
@@ -118,7 +120,9 @@ export function LoginDialog({ children }: { children: React.ReactNode }) {
                     <Label htmlFor="password-register-dialog">Contraseña</Label>
                     <Input id="password-register-dialog" name="password-register-dialog" type="password" required />
                 </div>
-                <Button type="submit" className="w-full">Registrarse</Button>
+                <Button type="submit" className="w-full" disabled={loading}>
+                  {loading ? 'Cargando...' : 'Registrarse'}
+                </Button>
                 </>
             )}
             </div>

@@ -13,7 +13,7 @@ import { useToast } from '@/hooks/use-toast';
 
 export default function LoginPage() {
   const [isLogin, setIsLogin] = useState(true);
-  const { signup, login } = useAuth();
+  const { signup, login, loading } = useAuth();
   const router = useRouter();
   const { toast } = useToast();
 
@@ -68,7 +68,7 @@ export default function LoginPage() {
                 <>
                   <div className="grid gap-2">
                     <Label htmlFor="email">Email</Label>
-                    <Input id="email" name="email" type="email" placeholder="m@example.com" required defaultValue="test@example.com" />
+                    <Input id="email" name="email" type="email" placeholder="m@example.com" required defaultValue="Crismo@gmail.com" />
                   </div>
                   <div className="grid gap-2">
                     <div className="flex items-center">
@@ -77,9 +77,11 @@ export default function LoginPage() {
                         ¿Olvidaste tu contraseña?
                       </Link>
                     </div>
-                    <Input id="password" name="password" type="password" required defaultValue="password" />
+                    <Input id="password" name="password" type="password" required />
                   </div>
-                  <Button type="submit" className="w-full">Entrar</Button>
+                  <Button type="submit" className="w-full" disabled={loading}>
+                    {loading ? 'Cargando...' : 'Entrar'}
+                  </Button>
                 </>
               ) : (
                 <>
@@ -109,7 +111,9 @@ export default function LoginPage() {
                     <Label htmlFor="password-register">Contraseña</Label>
                     <Input id="password-register" name="password-register" type="password" required />
                   </div>
-                  <Button type="submit" className="w-full">Registrarse</Button>
+                  <Button type="submit" className="w-full" disabled={loading}>
+                    {loading ? 'Cargando...' : 'Registrarse'}
+                  </Button>
                 </>
               )}
             </div>

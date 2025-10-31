@@ -47,6 +47,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     if (!auth || !firestore) {
+      // Keep loading if firebase services are not available
       setLoading(true);
       return;
     }
