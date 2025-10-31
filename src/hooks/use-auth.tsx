@@ -27,7 +27,7 @@ interface AuthContextType {
   signup: (
     email: string,
     password: string,
-    additionalData?: Partial<User>
+    additionalData?: Partial<Omit<User, 'uid' | 'email' | 'role'>>
   ) => Promise<void>;
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
@@ -47,7 +47,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     if (!auth || !firestore) {
-      setLoading(true);
+      setLoading(true); // Keep loading if firebase services are not available
       return;
     }
 
@@ -59,8 +59,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           setUser({ uid: firebaseUser.uid, ...userDoc.data() } as User);
         } else {
           // This can happen if the user exists in Auth but not in Firestore yet.
-          // We'll wait for the signup/login logic to populate it.
-          setUser({ uid: firebaseUser.uid, email: firebaseUser.email! });
+          // This might indicate an incomplete signup. For now, we set a minimal user object.
+           setUser({ uid: firebaseUser.uid, email: firebaseUser.email! });
         }
       } else {
         setUser(null);
@@ -74,7 +74,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const signup = async (
     email: string,
     password: string,
-    additionalData: Partial<User> = {}
+    additionalData: Partial<Omit<User, 'uid' | 'email' | 'role'>> = {}
   ) => {
     if (!auth || !firestore) throw new Error("Firebase not initialized");
     try {
@@ -86,6 +86,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const firebaseUser = userCredential.user;
       const userDocRef = doc(firestore, 'users', firebaseUser.uid);
 
+      // Determine role, special-casing the admin email
       const role = email.toLowerCase() === 'crismo@gmail.com' ? 'admin' : 'customer';
 
       const newUser: User = {
@@ -96,7 +97,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         role: role,
       };
 
+      // Create the user document in Firestore
       await setDoc(userDocRef, newUser);
+      
+      // Set the user in the local state
       setUser(newUser);
     } catch (error) {
       console.error('Error signing up:', error);
@@ -125,11 +129,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const isLoading = loading || !auth || !firestore;
+
   return (
     <AuthContext.Provider
       value={{
         user,
-        loading: loading || !auth || !firestore,
+        loading: isLoading,
         signup,
         login,
         logout,
