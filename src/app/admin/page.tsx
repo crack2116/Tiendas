@@ -62,9 +62,8 @@ export default function AdminDashboard() {
 
 
   return (
-    <div className="flex min-h-screen w-full flex-col">
-      <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
-        <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
+    <main className="flex flex-1 flex-col gap-4">
+        <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-3">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
@@ -77,7 +76,7 @@ export default function AdminDashboard() {
                 <>
                   <div className="text-2xl font-bold">S/{totalRevenue.toFixed(2)}</div>
                   <p className="text-xs text-muted-foreground">
-                    Basado en {totalSales} ventas
+                    Basado en las últimas {totalSales} ventas
                   </p>
                 </>
               )}
@@ -116,17 +115,17 @@ export default function AdminDashboard() {
             </CardContent>
           </Card>
         </div>
-        <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">
-          <Card className="xl:col-span-2">
+        <div className="grid gap-4 md:gap-8 lg:grid-cols-1">
+          <Card>
             <CardHeader className="flex flex-row items-center">
               <div className="grid gap-2">
                 <CardTitle>Pedidos Recientes</CardTitle>
                 <CardDescription>
-                  Un resumen de los últimos pedidos en tu tienda.
+                  Un resumen de los últimos 5 pedidos en tu tienda.
                 </CardDescription>
               </div>
               <Button asChild size="sm" className="ml-auto gap-1">
-                <Link href="/account/orders">
+                <Link href="/admin/orders">
                   Ver Todos
                   <ArrowUpRight className="h-4 w-4" />
                 </Link>
@@ -137,8 +136,8 @@ export default function AdminDashboard() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Cliente</TableHead>
-                    <TableHead className="hidden xl:table-column">
+                    <TableHead>Cliente (ID)</TableHead>
+                    <TableHead className="hidden xl:table-cell">
                       Fecha
                     </TableHead>
                     <TableHead>Estado</TableHead>
@@ -150,20 +149,17 @@ export default function AdminDashboard() {
                     <TableRow key={i}>
                         <TableCell><Skeleton className="h-4 w-32" /></TableCell>
                         <TableCell className="hidden xl:table-column"><Skeleton className="h-4 w-24" /></TableCell>
-                        <TableCell><Skeleton className="h-6 w-20" /></TableCell>
-                        <TableCell className="text-right"><Skeleton className="h-4 w-16" /></TableCell>
+                        <TableCell><Skeleton className="h-6 w-20 rounded-full" /></TableCell>
+                        <TableCell className="text-right"><Skeleton className="h-4 w-16 ml-auto" /></TableCell>
                     </TableRow>
                   ))}
                   {orders?.map(order => (
                     <TableRow key={order.id}>
                         <TableCell>
-                            <div className="font-medium">Anónimo</div>
-                            <div className="hidden text-sm text-muted-foreground md:inline">
-                                ID: #{order.userId.substring(0, 6)}...
-                            </div>
+                            <div className="font-medium text-xs">#{order.userId.substring(0, 12)}...</div>
                         </TableCell>
-                        <TableCell className="hidden xl:table-column">
-                            {format(order.createdAt.toDate(), "d MMM, yyyy", { locale: es })}
+                        <TableCell className="hidden xl:table-cell">
+                            {format(order.createdAt.toDate(), "d MMM, yyyy, HH:mm", { locale: es })}
                         </TableCell>
                          <TableCell>
                             <Badge variant={getBadgeVariant(order.status) as any} className="text-xs" >
@@ -173,12 +169,18 @@ export default function AdminDashboard() {
                         <TableCell className="text-right">S/{order.total.toFixed(2)}</TableCell>
                     </TableRow>
                   ))}
+                   {!isLoading && orders?.length === 0 && (
+                        <TableRow>
+                            <TableCell colSpan={4} className="text-center h-24">
+                                Aún no hay pedidos.
+                            </TableCell>
+                        </TableRow>
+                    )}
                 </TableBody>
               </Table>
             </CardContent>
           </Card>
         </div>
       </main>
-    </div>
   );
 }

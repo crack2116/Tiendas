@@ -25,6 +25,7 @@ import {
   SidebarFooter,
 } from "@/components/ui/sidebar"
 import { Logo } from "@/components/logo"
+import { useTheme } from "@/hooks/use-theme";
 
 export default function AccountLayout({
   children,
@@ -33,20 +34,29 @@ export default function AccountLayout({
 }) {
   const { user, logout, loading, isAdmin } = useAuth();
   const router = useRouter();
+  const { setTheme } = useTheme();
+
+  // Set the theme to light for the customer account layout
+  useEffect(() => {
+    setTheme('light');
+  }, [setTheme]);
 
   useEffect(() => {
     if (!loading) {
       if (!user) {
         router.push('/login');
       } else if (isAdmin) {
+        // If user is admin, redirect them to the admin panel
         router.push('/admin');
       }
     }
   }, [user, loading, router, isAdmin]);
 
+  // While loading, or if the user is not a customer, show a loading message
+  // This prevents showing the customer layout to an admin before redirection.
   if (loading || !user || isAdmin) {
     return (
-        <div className="w-full min-h-screen flex items-center justify-center">
+        <div className="w-full min-h-screen flex items-center justify-center bg-background">
             <p>Cargando...</p>
         </div>
     );
