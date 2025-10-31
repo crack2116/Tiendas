@@ -78,7 +78,7 @@ export default function InventoryPage() {
   };
 
   return (
-    <div className="flex flex-col w-full h-full gap-6">
+    <div className="flex flex-col h-full gap-8">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold font-headline">Inventario de Productos</h1>
         <Button onClick={handleAddProduct}>
@@ -89,14 +89,14 @@ export default function InventoryPage() {
       
       {error && <p className="text-destructive">Error: {error.message}</p>}
 
-      <Card className="flex-1">
+      <Card className="flex-1 flex flex-col">
         <CardHeader>
           <CardTitle>Productos</CardTitle>
           <CardDescription>
             Gestiona los productos de tu tienda.
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="flex-1 overflow-y-auto">
           <Table>
             <TableHeader>
               <TableRow>
@@ -104,11 +104,11 @@ export default function InventoryPage() {
                   Imagen
                 </TableHead>
                 <TableHead>Nombre</TableHead>
-                <TableHead className="w-[150px] hidden md:table-cell">Categoría</TableHead>
-                <TableHead className="w-[120px] hidden md:table-cell text-right">
+                <TableHead className="hidden md:table-cell w-[150px]">Categoría</TableHead>
+                <TableHead className="hidden md:table-cell text-right w-[120px]">
                   Precio
                 </TableHead>
-                <TableHead className="w-[80px] text-right">
+                <TableHead className="text-right w-[80px]">
                   Acciones
                 </TableHead>
               </TableRow>
