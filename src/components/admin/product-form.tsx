@@ -31,7 +31,7 @@ const imageSchema = z.object({
   url: z.string().url('Debe ser una URL válida.').or(z.literal('')),
   alt: z.string(),
   hint: z.string().optional(),
-  file: z.instanceof(File).optional(),
+  file: z.any().optional(),
 });
 
 const formSchema = z.object({
@@ -72,7 +72,8 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
      mode: 'onChange'
   });
 
-  // Reset form when product changes
+  // This effect correctly resets the form when the `product` prop changes.
+  // It ensures the form is either cleared for a new product or populated for an existing one.
   useEffect(() => {
     if (product) {
       form.reset({
@@ -99,7 +100,7 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
         images: [{ id: crypto.randomUUID(), url: '', alt: '', file: undefined }],
       });
     }
-  }, [product, form]);
+  }, [product, form.reset]);
 
 
   const { fields: imageFields, append: appendImage, remove: removeImage, update: updateImage } = useFieldArray({
@@ -155,7 +156,7 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
   };
 
   const onSubmit = async (data: ProductFormValues) => {
-    if (!firestore || isSubmitting) return;
+    if (!firestore) return;
 
     setIsSubmitting(true);
     toast({ title: 'Guardando producto...', description: 'Por favor, espera.' });
@@ -422,3 +423,5 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
     </Form>
   );
 }
+
+    
