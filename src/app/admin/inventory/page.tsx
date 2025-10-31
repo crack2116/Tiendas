@@ -89,8 +89,8 @@ export default function InventoryPage() {
       
       {error && <p className="text-destructive px-4 sm:px-6 md:px-8">Error: {error.message}</p>}
 
-      <Card className="flex-1 flex flex-col m-4 mt-0 sm:m-6 sm:mt-0 md:m-8 md:mt-0 border-0 rounded-t-none">
-        <CardHeader className="pt-4 px-4 sm:px-6 md:px-8">
+      <Card className="flex-1 flex flex-col m-4 mt-0 sm:m-6 sm:mt-0 md:m-8 md:mt-0 border-0 shadow-none rounded-none sm:rounded-lg sm:shadow">
+        <CardHeader className="pt-4 px-4 sm:px-6 md:px-7">
           <CardTitle>Productos</CardTitle>
           <CardDescription>
             Gestiona los productos de tu tienda.
@@ -104,6 +104,8 @@ export default function InventoryPage() {
                   Imagen
                 </TableHead>
                 <TableHead>Nombre</TableHead>
+                <TableHead className="hidden lg:table-cell">Descripción</TableHead>
+                <TableHead className="hidden lg:table-cell">Detalles</TableHead>
                 <TableHead className="hidden md:table-cell w-[150px]">Categoría</TableHead>
                 <TableHead className="hidden md:table-cell text-right w-[120px]">
                   Precio
@@ -120,8 +122,10 @@ export default function InventoryPage() {
                     <Skeleton className="h-24 w-24 rounded-md" />
                   </TableCell>
                   <TableCell>
-                    <Skeleton className="h-4 w-48" />
+                    <Skeleton className="h-4 w-32" />
                   </TableCell>
+                  <TableCell className="hidden lg:table-cell"><Skeleton className="h-4 w-48" /></TableCell>
+                  <TableCell className="hidden lg:table-cell"><Skeleton className="h-4 w-40" /></TableCell>
                   <TableCell className="hidden md:table-cell">
                     <Skeleton className="h-4 w-24" />
                   </TableCell>
@@ -145,6 +149,12 @@ export default function InventoryPage() {
                     />
                   </TableCell>
                   <TableCell className="font-medium">{product.name}</TableCell>
+                   <TableCell className="hidden lg:table-cell text-sm text-muted-foreground max-w-xs truncate">
+                    {product.description}
+                  </TableCell>
+                   <TableCell className="hidden lg:table-cell text-sm text-muted-foreground">
+                    {product.details?.slice(0, 2).join(', ')}{product.details && product.details.length > 2 ? '...' : ''}
+                  </TableCell>
                   <TableCell className="hidden md:table-cell">
                     <Badge variant="outline">{product.category}</Badge>
                   </TableCell>
