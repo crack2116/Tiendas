@@ -28,7 +28,7 @@ import Image from 'next/image';
 
 const imageSchema = z.object({
   id: z.string(),
-  url: z.string().url('Debe ser una URL válida.'),
+  url: z.string().url('Debe ser una URL válida.').or(z.literal('')),
   alt: z.string(),
   hint: z.string().optional(),
   file: z.instanceof(File).optional(),
@@ -176,7 +176,7 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
   // Reset form when product changes (e.g. closing and opening dialog for a new product)
   useEffect(() => {
     form.reset(defaultValues);
-  }, [product, form.reset]);
+  }, [product, form]);
 
 
   return (
