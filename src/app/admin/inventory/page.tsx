@@ -78,29 +78,29 @@ export default function InventoryPage() {
   };
 
   return (
-    <div className="flex flex-col h-full gap-8">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold font-headline">Inventario de Productos</h1>
-        <Button onClick={handleAddProduct}>
-          <PlusCircle className="mr-2 h-4 w-4" />
-          Añadir Producto
-        </Button>
-      </div>
+    <div className="flex flex-col h-full">
+        <div className="flex items-center justify-between p-4 sm:p-6 md:p-8">
+            <h1 className="text-3xl font-bold font-headline">Inventario de Productos</h1>
+            <Button onClick={handleAddProduct}>
+            <PlusCircle className="mr-2 h-4 w-4" />
+            Añadir Producto
+            </Button>
+        </div>
       
-      {error && <p className="text-destructive">Error: {error.message}</p>}
+      {error && <p className="text-destructive px-8">Error: {error.message}</p>}
 
-      <Card className="flex-1 flex flex-col">
-        <CardHeader>
+      <Card className="flex-1 flex flex-col m-4 mt-0 sm:m-6 sm:mt-0 md:m-8 md:mt-0 border-0">
+        <CardHeader className="pt-0">
           <CardTitle>Productos</CardTitle>
           <CardDescription>
             Gestiona los productos de tu tienda.
           </CardDescription>
         </CardHeader>
-        <CardContent className="flex-1 overflow-y-auto">
+        <CardContent className="flex-1 overflow-y-auto p-0">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[120px] sm:w-[150px]">
+                <TableHead className="w-[120px] sm:w-[150px] pl-6">
                   Imagen
                 </TableHead>
                 <TableHead>Nombre</TableHead>
@@ -108,7 +108,7 @@ export default function InventoryPage() {
                 <TableHead className="hidden md:table-cell text-right w-[120px]">
                   Precio
                 </TableHead>
-                <TableHead className="text-right w-[80px]">
+                <TableHead className="text-right w-[80px] pr-6">
                   Acciones
                 </TableHead>
               </TableRow>
@@ -116,7 +116,7 @@ export default function InventoryPage() {
             <TableBody>
               {loading && Array.from({ length: 5 }).map((_, i) => (
                 <TableRow key={i}>
-                  <TableCell>
+                  <TableCell className="pl-6">
                     <Skeleton className="h-24 w-24 rounded-md" />
                   </TableCell>
                   <TableCell>
@@ -128,14 +128,14 @@ export default function InventoryPage() {
                   <TableCell className="hidden md:table-cell text-right">
                     <Skeleton className="h-4 w-16 ml-auto" />
                   </TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="text-right pr-6">
                     <Skeleton className="h-8 w-8 rounded-full ml-auto" />
                   </TableCell>
                 </TableRow>
               ))}
               {products?.map((product) => (
                 <TableRow key={product.id}>
-                  <TableCell>
+                  <TableCell className="pl-6">
                     <Image
                       alt={product.name}
                       className="aspect-square rounded-md object-cover"
@@ -149,7 +149,7 @@ export default function InventoryPage() {
                     <Badge variant="outline">{product.category}</Badge>
                   </TableCell>
                   <TableCell className="hidden md:table-cell text-right">S/{product.price.toFixed(2)}</TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="text-right pr-6">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button

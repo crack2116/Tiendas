@@ -123,7 +123,7 @@ export default function AdminLayout({
             </SidebarMenu>
           </SidebarFooter>
         </Sidebar>
-        <SidebarInset className="flex-1 bg-muted/40 p-4 sm:p-6 md:p-8">
+        <SidebarInset className="flex-1 bg-muted/40">
             {children}
         </SidebarInset>
       </div>
