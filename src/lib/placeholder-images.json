@@ -113,6 +113,54 @@
       "description": "Linen button-down shirt",
       "imageUrl": "https://images.unsplash.com/photo-1665201462900-809f7773ff5f?q=80&w=1080",
       "imageHint": "linen shirt"
+    },
+    {
+      "id": "product-9-a",
+      "description": "Elegant perfume bottle with a golden cap on a reflective surface",
+      "imageUrl": "https://images.unsplash.com/photo-1585399009939-d4239454f49b?q=80&w=1080",
+      "imageHint": "perfume bottle"
+    },
+    {
+      "id": "product-10-a",
+      "description": "White jar of moisturizing face cream on a clean background",
+      "imageUrl": "https://images.unsplash.com/photo-1580942358158-97a6c4233593?q=80&w=1080",
+      "imageHint": "face cream"
+    },
+    {
+      "id": "product-11-a",
+      "description": "Amber colored bottle of repairing shampoo with a pump",
+      "imageUrl": "https://images.unsplash.com/photo-1567946955371-331c34a95a43?q=80&w=1080",
+      "imageHint": "shampoo bottle"
+    },
+    {
+      "id": "product-12-a",
+      "description": "Minimalist bottle of body lotion with a white label",
+      "imageUrl": "https://images.unsplash.com/photo-1620916566398-35f16206b541?q=80&w=1080",
+      "imageHint": "body lotion"
+    },
+    {
+      "id": "product-13-a",
+      "description": "Vibrant red matte lipstick in a sleek black tube",
+      "imageUrl": "https://images.unsplash.com/photo-1596704017254-97c80de37456?q=80&w=1080",
+      "imageHint": "red lipstick"
+    },
+    {
+      "id": "product-14-a",
+      "description": "Eyeshadow palette with a range of warm, earthy tones",
+      "imageUrl": "https://images.unsplash.com/photo-1620468331322-6b3a28491fee?q=80&w=1080",
+      "imageHint": "eyeshadow palette"
+    },
+    {
+      "id": "product-15-a",
+      "description": "Exfoliating body scrub in a glass jar, showing texture",
+      "imageUrl": "https://images.unsplash.com/photo-1631751107539-42173a116035?q=80&w=1080",
+      "imageHint": "body scrub"
+    },
+    {
+      "id": "product-16-a",
+      "description": "Luxurious hair oil in a clear bottle with a dropper",
+      "imageUrl": "https://images.unsplash.com/photo-1629088275184-7a3b8364d9b7?q=80&w=1080",
+      "imageHint": "hair oil"
     }
   ]
 }

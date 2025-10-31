@@ -148,6 +148,122 @@ const products = [
       details: ['100% Linen', 'Button-down front', 'Chest pocket', 'Relaxed fit'],
       reviews: [],
     },
+    {
+      id: '9',
+      slug: 'eau-de-parfum-aura',
+      name: 'Eau de Parfum "Aura"',
+      category: 'Perfumería',
+      price: 125.00,
+      images: [
+        getImage('product-9-a', 'Elegant perfume bottle with a golden cap', 'perfume bottle'),
+      ],
+      description: 'Una fragancia cautivadora y misteriosa con notas de jazmín, ámbar y maderas exóticas. "Aura" es un perfume que deja una estela inolvidable, perfecto para ocasiones especiales.',
+      details: ['100ml', 'Eau de Parfum', 'Familia Olfativa: Oriental Floral', 'Larga duración'],
+      reviews: [
+        { id: 'r7', author: 'Sofia C.', rating: 5, comment: 'Absolutamente divino. Dura todo el día y recibo muchos cumplidos.', date: '2023-07-10' },
+      ],
+    },
+    {
+      id: '10',
+      slug: 'crema-facial-hidratante-aqua',
+      name: 'Crema Facial Hidratante "Aqua"',
+      category: 'Rostro',
+      price: 75.50,
+      badge: 'Más Vendido',
+      images: [
+        getImage('product-10-a', 'White jar of moisturizing face cream', 'face cream'),
+      ],
+      description: 'Hidratación intensa por 24 horas. Nuestra crema "Aqua" con ácido hialurónico y extractos botánicos deja la piel suave, tersa y radiante, sin sensación grasa.',
+      details: ['50ml', 'Para todo tipo de piel', 'Con Ácido Hialurónico', 'Dermatológicamente probada'],
+      reviews: [],
+    },
+    {
+      id: '11',
+      slug: 'shampoo-reparador-seda',
+      name: 'Shampoo Reparador "Seda"',
+      category: 'Cabello',
+      price: 45.00,
+      images: [
+        getImage('product-11-a', 'Amber colored bottle of repairing shampoo', 'shampoo bottle'),
+      ],
+      description: 'Devuélvele la vida a tu cabello. El shampoo "Seda" con aceite de argán y keratina repara el daño, reduce el frizz y aporta un brillo espectacular desde la primera lavada.',
+      details: ['400ml', 'Sin sulfatos ni parabenos', 'Para cabello seco o dañado', 'Con Aceite de Argán'],
+      reviews: [
+        { id: 'r8', author: 'Lucia M.', rating: 5, comment: 'Mi cabello nunca ha estado tan suave. ¡Lo amo!', date: '2023-06-25' },
+      ],
+    },
+    {
+      id: '12',
+      slug: 'locion-corporal-nube',
+      name: 'Loción Corporal "Nube"',
+      category: 'Cuerpo',
+      price: 55.00,
+      images: [
+        getImage('product-12-a', 'Minimalist bottle of body lotion', 'body lotion'),
+      ],
+      description: 'Una caricia para tu piel. La loción "Nube" se absorbe rápidamente, dejando la piel hidratada, suave y con un ligero aroma a flores blancas. Enriquecida con manteca de karité.',
+      details: ['350ml', 'Absorción rápida', 'Aroma floral ligero', 'Con Manteca de Karité'],
+      reviews: [],
+    },
+    {
+      id: '13',
+      slug: 'labial-mate-pasion',
+      name: 'Labial Mate "Pasión"',
+      category: 'Maquillaje',
+      price: 35.00,
+      originalPrice: 45.00,
+      badge: 'Oferta',
+      images: [
+        getImage('product-13-a', 'Vibrant red matte lipstick', 'red lipstick'),
+      ],
+      description: 'Un rojo clásico que nunca falla. Nuestro labial "Pasión" tiene un acabado mate aterciopelado, es de larga duración y no reseca los labios. El arma secreta para un look impactante.',
+      details: ['Acabado mate', 'Larga duración', 'Color: Rojo Pasión', 'No testeado en animales'],
+      reviews: [
+        { id: 'r9', author: 'Valeria G.', rating: 5, comment: 'El rojo perfecto. Cómodo y dura horas intacto.', date: '2023-08-01' },
+      ],
+    },
+    {
+      id: '14',
+      slug: 'paleta-sombras-tierra',
+      name: 'Paleta de Sombras "Tierra"',
+      category: 'Maquillaje',
+      price: 95.00,
+      badge: 'Nuevo',
+      images: [
+        getImage('product-14-a', 'Eyeshadow palette with warm, earthy tones', 'eyeshadow palette'),
+      ],
+      description: 'Crea looks naturales o ahumados con la paleta "Tierra". Incluye 12 sombras de alta pigmentación en tonos neutros y cálidos, con acabados mate y satinados.',
+      details: ['12 colores', 'Alta pigmentación', 'Incluye espejo', 'Fórmula fácil de difuminar'],
+      reviews: [],
+    },
+    {
+      id: '15',
+      slug: 'exfoliante-corporal-renacer',
+      name: 'Exfoliante Corporal "Renacer"',
+      category: 'Cuerpo',
+      price: 65.00,
+      images: [
+        getImage('product-15-a', 'Exfoliating body scrub in a glass jar', 'body scrub'),
+      ],
+      description: 'Piel nueva y luminosa. El exfoliante "Renacer" con cristales de azúcar y aceite de coco elimina las células muertas, dejando tu piel increíblemente suave y renovada.',
+      details: ['250g', 'Con Cristales de Azúcar y Aceite de Coco', 'Estimula la circulación', 'Piel suave y renovada'],
+      reviews: [],
+    },
+    {
+      id: '16',
+      slug: 'aceite-capilar-oro',
+      name: 'Aceite Capilar "Oro"',
+      category: 'Cabello',
+      price: 85.00,
+      images: [
+        getImage('product-16-a', 'Luxurious hair oil in a clear bottle', 'hair oil'),
+      ],
+      description: 'Un tratamiento de lujo para tu cabello. Nuestro aceite "Oro" es una mezcla de 7 aceites naturales que nutre, repara y protege, controlando el frizz y aportando un brillo sublime sin apelmazar.',
+      details: ['75ml', 'Con 7 aceites naturales', 'Control de frizz y brillo', 'Protección térmica'],
+      reviews: [
+        { id: 'r10', author: 'Daniela F.', rating: 5, comment: 'Unas pocas gotas son suficientes. Huele increíble y deja el pelo genial.', date: '2023-07-20' },
+      ],
+    }
   ];
   
 

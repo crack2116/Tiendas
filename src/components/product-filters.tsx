@@ -13,14 +13,22 @@ import { Label } from './ui/label';
 import { Slider } from './ui/slider';
 
 const filterCategories = [
-  { title: 'categoría', count: 1, options: ['Perfumería'] },
-  { title: 'marcas', count: 19, options: ['Natura', 'Essencial', 'Kaiak', 'Homem', 'Humor', 'Biografia', 'Ilía', 'Una'] },
-  { title: 'activo', count: 2, options: [] },
-  { title: 'especie', count: 49, options: [] },
-  { title: 'fragancia', count: 49, options: [] },
-  { title: 'ocasión', count: 8, options: [] },
-  { title: 'familia olfativa', count: 8, options: [] },
-  { title: 'rango de precios', options: [] },
+    { 
+        title: 'categoría', 
+        options: ['Tops', 'Jeans', 'Jackets', 'Knitwear', 'Footwear', 'Dresses', 'Perfumería', 'Rostro', 'Cabello', 'Cuerpo', 'Maquillaje'] 
+    },
+    { 
+        title: 'marcas', 
+        options: ['Natura', 'Essencial', 'Kaiak', 'Homem', 'Humor', 'Biografia', 'Ilía', 'Una', 'Noemia'] 
+    },
+    { 
+        title: 'familia olfativa', 
+        options: ['Oriental Floral', 'Amaderado', 'Cítrico', 'Fresco'] 
+    },
+    { 
+        title: 'rango de precios', 
+        options: [] 
+    },
 ];
 
 export function ProductFilters() {
@@ -32,13 +40,12 @@ export function ProductFilters() {
             <AccordionTrigger className="text-base font-medium capitalize">
               <div className="flex items-center">
                 <span>{category.title}</span>
-                {category.count && <span className="ml-1 text-muted-foreground">({category.count})</span>}
               </div>
             </AccordionTrigger>
             <AccordionContent>
               {category.title === 'rango de precios' ? (
                 <div className="p-2">
-                    <Slider defaultValue={[50]} max={100} step={1} />
+                    <Slider defaultValue={[250]} max={500} step={1} />
                     <div className="flex justify-between text-sm text-muted-foreground mt-2">
                         <span>S/0</span>
                         <span>S/500</span>
