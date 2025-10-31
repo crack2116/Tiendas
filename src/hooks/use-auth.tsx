@@ -47,7 +47,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     if (!auth || !firestore) {
-      // Keep loading if firebase services are not available
       setLoading(true);
       return;
     }
@@ -59,7 +58,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         if (userDoc.exists()) {
           setUser({ uid: firebaseUser.uid, ...userDoc.data() } as User);
         } else {
-          // This case might happen if user doc creation fails after signup
+          // This can happen if the user exists in Auth but not in Firestore yet.
+          // We'll wait for the signup/login logic to populate it.
           setUser({ uid: firebaseUser.uid, email: firebaseUser.email! });
         }
       } else {
@@ -86,13 +86,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const firebaseUser = userCredential.user;
       const userDocRef = doc(firestore, 'users', firebaseUser.uid);
 
-      const role = email === 'Crismo@gmail.com' ? 'admin' : 'customer';
+      const role = email.toLowerCase() === 'crismo@gmail.com' ? 'admin' : 'customer';
 
       const newUser: User = {
         uid: firebaseUser.uid,
         email: email,
+        name: additionalData.name || '',
+        address: additionalData.address || '',
         role: role,
-        ...additionalData,
       };
 
       await setDoc(userDocRef, newUser);
