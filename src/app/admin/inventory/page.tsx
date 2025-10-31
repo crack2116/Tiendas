@@ -78,7 +78,7 @@ export default function InventoryPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col w-full h-full gap-6">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold font-headline">Inventario de Productos</h1>
         <Button onClick={handleAddProduct}>
@@ -89,7 +89,7 @@ export default function InventoryPage() {
       
       {error && <p className="text-destructive">Error: {error.message}</p>}
 
-      <Card>
+      <Card className="flex-1">
         <CardHeader>
           <CardTitle>Productos</CardTitle>
           <CardDescription>
