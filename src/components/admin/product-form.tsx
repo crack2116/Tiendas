@@ -15,15 +15,15 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import type { Product } from '@/lib/types';
-import { useFirestore, useStorage } from '@/firebase';
+import { useFirestore } from '@/firebase';
 import { collection, addDoc, updateDoc, doc } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
-import { Trash, Upload, Image as ImageIcon } from 'lucide-react';
+import { Trash, Image as ImageIcon } from 'lucide-react';
 import { Separator } from '../ui/separator';
 import { useState, useEffect } from 'react';
-import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { Progress } from '@/components/ui/progress';
 import Image from 'next/image';
+import { uploadImageAction } from '@/app/actions/upload-image';
 
 
 const imageSchema = z.object({
@@ -31,7 +31,6 @@ const imageSchema = z.object({
   url: z.string().url('Debe ser una URL válida.').or(z.literal('')),
   alt: z.string(),
   hint: z.string().optional(),
-  file: z.any().optional(),
 });
 
 const formSchema = z.object({
@@ -49,12 +48,22 @@ const formSchema = z.object({
 type ProductFormValues = z.infer<typeof formSchema>;
 
 
+// Helper function to convert file to base64
+const toBase64 = (file: File): Promise<string> => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = error => reject(error);
+});
+
+
 export function ProductForm({ product, onSaveSuccess }: { product: Product | null, onSaveSuccess: () => void }) {
   const firestore = useFirestore();
-  const storage = useStorage();
   const { toast } = useToast();
-  const [uploadProgress, setUploadProgress] = useState<Record<string, number>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // This state will hold temporary previews and files to be uploaded
+  const [imageFiles, setImageFiles] = useState<Record<string, { file: File, preview: string }>>({});
 
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(formSchema),
@@ -81,7 +90,7 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
         price: product.price || 0,
         originalPrice: product.originalPrice ?? undefined,
         description: product.description || '',
-        badge: product.badge || '',
+        badge: product.badge ?? '',
         details: product.details?.map(d => ({ value: d })) || [{ value: '' }],
         images: product.images || [],
       });
@@ -95,10 +104,9 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
         description: '',
         badge: '',
         details: [{ value: '' }],
-        images: [{ id: crypto.randomUUID(), url: '', alt: '', file: undefined }],
+        images: [{ id: crypto.randomUUID(), url: '', alt: '' }],
       });
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [product, form.reset]);
 
 
@@ -112,47 +120,19 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
     name: 'details',
   });
   
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, fieldId: string) => {
     const file = e.target.files?.[0];
     if (file) {
-      const currentImage = imageFields[index];
-      const newImage = {
-        ...currentImage,
-        url: URL.createObjectURL(file), // Use object URL for preview
-        file: file,
-      };
-      updateImage(index, newImage);
+      setImageFiles(prev => ({
+        ...prev,
+        [fieldId]: {
+            file,
+            preview: URL.createObjectURL(file)
+        }
+      }));
     }
   };
 
-
-  const uploadImage = (file: File, path: string): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      if (!storage) {
-        reject(new Error("Firebase Storage is not initialized."));
-        return;
-      }
-      const storageRef = ref(storage, path);
-      const uploadTask = uploadBytesResumable(storageRef, file);
-
-      uploadTask.on('state_changed',
-        (snapshot) => {
-          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          setUploadProgress(prev => ({ ...prev, [path]: progress }));
-        },
-        (error) => {
-          console.error("Upload error:", error);
-          setUploadProgress(prev => ({ ...prev, [path]: -1 })); // Indicate error
-          reject(error);
-        },
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            resolve(downloadURL);
-          });
-        }
-      );
-    });
-  };
 
   const onSubmit = async (data: ProductFormValues) => {
     if (!firestore) return;
@@ -161,21 +141,19 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
     toast({ title: 'Guardando producto...', description: 'Por favor, espera.' });
 
     try {
-        const imageUploadPromises = data.images.map(async (image) => {
-            if (image.file) {
-                const filePath = `products/${Date.now()}_${image.file.name}`;
-                const downloadURL = await uploadImage(image.file, filePath);
-                // Return a clean object without the 'file' property
-                return {
-                    id: image.id,
-                    url: downloadURL,
-                    alt: image.alt,
-                    hint: image.hint,
-                };
+        const imageUploadPromises = data.images.map(async (image, index) => {
+            const imageFile = imageFiles[image.id];
+            if (imageFile) {
+                // New image to upload
+                const base64 = await toBase64(imageFile.file);
+                const { url, error } = await uploadImageAction(base64, imageFile.file.name, imageFile.file.type);
+                if (error) {
+                    throw new Error(`Error subiendo la imagen ${imageFile.file.name}: ${error}`);
+                }
+                return { ...image, url };
             }
-            // It's an existing image, return its data but without the file property
-            const { file, ...rest } = image;
-            return rest;
+            // Existing image, just return its data
+            return image;
         });
 
         const uploadedImages = await Promise.all(imageUploadPromises);
@@ -204,7 +182,7 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
         });
     } finally {
         setIsSubmitting(false);
-        setUploadProgress({});
+        setImageFiles({});
     }
   };
 
@@ -288,7 +266,7 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
                     <FormItem>
                     <FormLabel>Precio Original (Opcional)</FormLabel>
                     <FormControl>
-                        <Input type="number" step="0.01" {...field} value={field.value ?? ''} onChange={e => field.onChange(e.target.value === '' ? undefined : +e.target.value)} />
+                        <Input type="number" step="0.01" {...field} value={field.value ?? ''} onChange={e => field.onChange(e.target.valueAsNumber || undefined)} />
                     </FormControl>
                     <FormMessage />
                     </FormItem>
@@ -319,10 +297,8 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
                 <h3 className="text-lg font-medium mb-4">Imágenes</h3>
                 <div className="space-y-4">
                 {imageFields.map((field, index) => {
-                    const currentFieldValue = form.watch(`images.${index}`);
-                    const progressKey = currentFieldValue.file ? `products/${currentFieldValue.file.name}` : field.id;
-                    const progress = uploadProgress[progressKey];
-                    const previewUrl = currentFieldValue?.url;
+                    const imageFile = imageFiles[field.id];
+                    const previewUrl = imageFile?.preview || field.url;
                     
                     return (
                     <div key={field.id} className="p-4 border rounded-md space-y-4">
@@ -342,31 +318,34 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
                                     type="file"
                                     accept="image/png, image/jpeg, image/gif"
                                     className="text-sm"
-                                    onChange={(e) => handleFileChange(e, index)}
+                                    onChange={(e) => handleFileChange(e, field.id)}
                                 />
                             </div>
                             <FormField
                                 control={form.control}
                                 name={`images.${index}.alt`}
-                                render={({ field }) => (
+                                render={({ field: formField }) => (
                                     <FormItem>
                                         <FormLabel>Texto Alternativo</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="Descripción de la imagen" {...field} value={field.value ?? ''} />
+                                            <Input placeholder="Descripción de la imagen" {...formField} value={formField.value ?? ''} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
                                 )}
                             />
                         </div>
-                        <Button type="button" variant="destructive" size="icon" onClick={() => removeImage(index)} disabled={imageFields.length <= 1}>
+                        <Button type="button" variant="destructive" size="icon" onClick={() => {
+                            removeImage(index);
+                            setImageFiles(prev => {
+                                const newState = {...prev};
+                                delete newState[field.id];
+                                return newState;
+                            })
+                        }} disabled={imageFields.length <= 1}>
                             <Trash className="h-4 w-4" />
                         </Button>
                         </div>
-                        {progress != null && progress >= 0 && progress < 100 && (
-                            <Progress value={progress} className="w-full" />
-                        )}
-                        {progress === -1 && <p className='text-destructive text-sm'>Error al subir</p>}
                     </div>
                 )})}
                 </div>
@@ -375,7 +354,7 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
                     variant="outline"
                     size="sm"
                     className="mt-4"
-                    onClick={() => appendImage({ id: crypto.randomUUID(), url: '', alt: '', file: undefined })}
+                    onClick={() => appendImage({ id: crypto.randomUUID(), url: '', alt: '' })}
                 >
                     Añadir Imagen
                 </Button>
@@ -391,11 +370,11 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
                     <FormField
                         control={form.control}
                         name={`details.${index}.value`}
-                        render={({ field }) => (
+                        render={({ field: formField }) => (
                             <FormItem className='flex-1'>
                                 <FormLabel className="sr-only">Detalle</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="Ej: 100% Algodón" {...field} value={field.value ?? ''} />
+                                    <Input placeholder="Ej: 100% Algodón" {...formField} value={formField.value ?? ''} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
