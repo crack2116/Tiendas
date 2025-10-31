@@ -80,12 +80,7 @@ export function LoginDialog({ children }: { children: React.ReactNode }) {
                     <Input id="email-dialog" name="email-dialog" type="email" placeholder="m@example.com" required defaultValue="Crismo@gmail.com" />
                 </div>
                 <div className="grid gap-2">
-                    <div className="flex items-center">
                     <Label htmlFor="password-dialog">Contraseña</Label>
-                    <Link href="#" className="ml-auto inline-block text-sm underline">
-                        ¿Olvidaste tu contraseña?
-                    </Link>
-                    </div>
                     <Input id="password-dialog" name="password-dialog" type="password" required />
                 </div>
                 <Button type="submit" className="w-full" disabled={loading}>

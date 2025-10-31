@@ -71,12 +71,7 @@ export default function LoginPage() {
                     <Input id="email" name="email" type="email" placeholder="m@example.com" required defaultValue="Crismo@gmail.com" />
                   </div>
                   <div className="grid gap-2">
-                    <div className="flex items-center">
-                      <Label htmlFor="password">Contraseña</Label>
-                      <Link href="#" className="ml-auto inline-block text-sm underline">
-                        ¿Olvidaste tu contraseña?
-                      </Link>
-                    </div>
+                    <Label htmlFor="password">Contraseña</Label>
                     <Input id="password" name="password" type="password" required />
                   </div>
                   <Button type="submit" className="w-full" disabled={loading}>
