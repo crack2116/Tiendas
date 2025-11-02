@@ -27,10 +27,10 @@ export type SuggestComplementaryProductsInput = z.infer<
 const SuggestComplementaryProductsOutputSchema = z.object({
   suggestedProducts: z
     .array(z.string())
-    .describe('An array of suggested complementary products.'),
+    .describe('Un array de productos complementarios sugeridos.'),
   reasoning: z
     .string()
-    .describe('The reasoning behind the suggested products.'),
+    .describe('El razonamiento detrás de los productos sugeridos.'),
 });
 export type SuggestComplementaryProductsOutput = z.infer<
   typeof SuggestComplementaryProductsOutputSchema
@@ -46,11 +46,11 @@ const prompt = ai.definePrompt({
   name: 'suggestComplementaryProductsPrompt',
   input: {schema: SuggestComplementaryProductsInputSchema},
   output: {schema: SuggestComplementaryProductsOutputSchema},
-  prompt: `You are a personal styling assistant for an online modern clothing store. Suggest products to the user that complement the item they are currently viewing, so they can easily discover items that go well together and complete their look. Respond with a list of products and your reasoning for recommending them.
+  prompt: `Eres un asistente de estilismo personal para una tienda de ropa moderna en línea. Tu tarea es sugerir productos que complementen el artículo que el usuario está viendo actualmente. Responde en español.
 
-Product Description: {{{productDescription}}}
-Product Category: {{{productCategory}}}
-{{#if userPreferences}}User Preferences: {{{userPreferences}}}{{/if}}`,
+Descripción del Producto: {{{productDescription}}}
+Categoría del Producto: {{{productCategory}}}
+{{#if userPreferences}}Preferencias del Usuario: {{{userPreferences}}}{{/if}}`,
 });
 
 const suggestComplementaryProductsFlow = ai.defineFlow(
