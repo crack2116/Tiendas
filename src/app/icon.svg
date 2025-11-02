@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f37423"/>
+      <stop offset="100%" style="stop-color:#ff6b9d"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="url(#grad)"/>
+  <g transform="translate(14, 12)">
+    <!-- Estructura de tienda moderna -->
+    <path d="M18 6 L10 14 L10 30 L26 30 L26 14 Z" fill="white" fill-opacity="0.95"/>
+    <!-- Puerta -->
+    <path d="M14 22 L14 30 L22 30 L22 22" fill="url(#grad)"/>
+    <!-- Ventanas -->
+    <rect x="11.5" y="14" width="4" height="4" rx="0.5" fill="url(#grad)" fill-opacity="0.7"/>
+    <rect x="20.5" y="14" width="4" height="4" rx="0.5" fill="url(#grad)" fill-opacity="0.7"/>
+  </g>
+</svg>
