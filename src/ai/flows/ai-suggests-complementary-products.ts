@@ -27,10 +27,10 @@ export type SuggestComplementaryProductsInput = z.infer<
 const SuggestComplementaryProductsOutputSchema = z.object({
   suggestedProducts: z
     .array(z.string())
-    .describe('Un array de productos complementarios sugeridos.'),
+    .describe('Un array de nombres de productos complementarios sugeridos, en español.'),
   reasoning: z
     .string()
-    .describe('El razonamiento detrás de los productos sugeridos.'),
+    .describe('La justificación en español de por qué estos productos son una buena combinación.'),
 });
 export type SuggestComplementaryProductsOutput = z.infer<
   typeof SuggestComplementaryProductsOutputSchema
@@ -46,11 +46,15 @@ const prompt = ai.definePrompt({
   name: 'suggestComplementaryProductsPrompt',
   input: {schema: SuggestComplementaryProductsInputSchema},
   output: {schema: SuggestComplementaryProductsOutputSchema},
-  prompt: `Eres un asistente de estilismo personal para una tienda de ropa moderna en línea. Tu tarea es sugerir productos que complementen el artículo que el usuario está viendo actualmente. Responde en español.
+  prompt: `Eres un asistente de estilismo personal para una tienda de ropa y belleza en línea. Tu tarea es sugerir productos que complementen el artículo que el usuario está viendo.
 
-Descripción del Producto: {{{productDescription}}}
-Categoría del Producto: {{{productCategory}}}
-{{#if userPreferences}}Preferencias del Usuario: {{{userPreferences}}}{{/if}}`,
+**Toda tu respuesta debe estar obligatoriamente en español.** El campo 'reasoning' debe ser una explicación en español. El array 'suggestedProducts' debe contener nombres de tipos de productos también en español.
+
+Datos del producto actual:
+- Descripción: {{{productDescription}}}
+- Categoría: {{{productCategory}}}
+
+{{#if userPreferences}}Preferencias adicionales del usuario: {{{userPreferences}}}{{/if}}`,
 });
 
 const suggestComplementaryProductsFlow = ai.defineFlow(
