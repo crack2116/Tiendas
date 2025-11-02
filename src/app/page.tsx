@@ -2,7 +2,8 @@
 'use client';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect, Suspense } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
 import { ProductCard } from '@/components/product-card';
@@ -58,9 +59,46 @@ const carouselSlides = [
 ];
 
 
-export default function Home() {
+function HomeContent() {
   const [showFilters, setShowFilters] = useState(false);
-  const { data: products, loading, error } = useCollection<Product>('products');
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const selectedCategory = searchParams.get('category');
+  const searchQuery = searchParams.get('search');
+  
+  const { data: allProducts, loading, error } = useCollection<Product>('products');
+  
+  // Filtrar productos por categoría o búsqueda
+  const products = allProducts?.filter(product => {
+    // Si hay una búsqueda, filtrar por nombre o descripción
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      const matchesName = product.name?.toLowerCase().includes(query);
+      const matchesDescription = product.description?.toLowerCase().includes(query);
+      const matchesCategory = product.category?.toLowerCase().includes(query);
+      return matchesName || matchesDescription || matchesCategory;
+    }
+    
+    // Si hay una categoría seleccionada, filtrar por categoría
+    if (selectedCategory) {
+      return product.category?.toLowerCase() === selectedCategory.toLowerCase();
+    }
+    
+    // Si no hay filtros, mostrar todos los productos
+    return true;
+  });
+  
+  // Scroll a productos si hay una categoría o búsqueda seleccionada
+  useEffect(() => {
+    if (selectedCategory || searchQuery) {
+      setTimeout(() => {
+        const productsSection = document.getElementById('products');
+        if (productsSection) {
+          productsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
+    }
+  }, [selectedCategory, searchQuery]);
   
   return (
     <main className="flex-1">
@@ -115,11 +153,39 @@ export default function Home() {
 
       <section id="products" className="py-12 md:py-16">
         <div className="container mx-auto px-4 sm:px-6 md:px-8">
-            <div className="mb-8 flex justify-start">
-            <Button variant="outline" onClick={() => setShowFilters(!showFilters)}>
-                <Filter className="mr-2 h-4 w-4" />
-                {showFilters ? 'Ocultar Filtros' : 'Mostrar Filtros'}
-            </Button>
+            <div className="mb-8 flex justify-between items-center">
+              <div className="flex gap-4 items-center">
+                <Button variant="outline" onClick={() => setShowFilters(!showFilters)}>
+                  <Filter className="mr-2 h-4 w-4" />
+                  {showFilters ? 'Ocultar Filtros' : 'Mostrar Filtros'}
+                </Button>
+                {(selectedCategory || searchQuery) && (
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-muted-foreground">
+                      {searchQuery 
+                        ? <>Buscando: <span className="font-semibold text-foreground">"{searchQuery}"</span></>
+                        : <>Filtrando por: <span className="font-semibold text-foreground">{selectedCategory}</span></>
+                      }
+                    </span>
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      onClick={() => {
+                        router.push('/#products');
+                        setTimeout(() => {
+                          const productsSection = document.getElementById('products');
+                          if (productsSection) {
+                            productsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                          }
+                        }, 100);
+                      }}
+                      className="h-8"
+                    >
+                      Limpiar filtro
+                    </Button>
+                  </div>
+                )}
+              </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                 {showFilters && (
@@ -137,6 +203,17 @@ export default function Home() {
                         </div>
                         ))}
                         {error && <p className='text-destructive col-span-full'>Error al cargar los productos: {error.message}</p>}
+                        {!loading && products && products.length === 0 && (
+                            <div className="col-span-full text-center py-12">
+                                <p className="text-muted-foreground text-lg">
+                                    {searchQuery 
+                                        ? `No se encontraron productos para "${searchQuery}"`
+                                        : selectedCategory 
+                                        ? `No se encontraron productos en la categoría "${selectedCategory}"` 
+                                        : 'No hay productos disponibles'}
+                                </p>
+                            </div>
+                        )}
                         {products?.map(product => (
                             <ProductCard key={product.id} product={product} />
                         ))}
@@ -146,5 +223,27 @@ export default function Home() {
         </div>
       </section>
     </main>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={
+      <main className="flex-1">
+        <div className="container mx-auto px-4 py-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div key={i} className="space-y-2">
+                <Skeleton className="h-64" />
+                <Skeleton className="h-6" />
+                <Skeleton className="h-4 w-1/2" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </main>
+    }>
+      <HomeContent />
+    </Suspense>
   );
 }

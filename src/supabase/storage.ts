@@ -101,3 +101,61 @@ export function getSupabaseImageUrl(path: string, bucket: string = 'images'): st
   return data.publicUrl;
 }
 
+/**
+ * Sube un archivo PDF a Supabase Storage
+ * @param file - El archivo PDF a subir
+ * @param bucket - El nombre del bucket (por defecto 'images')
+ * @param path - La ruta donde se guardará el archivo (opcional)
+ * @returns La URL pública del archivo o null si hay error
+ */
+export async function uploadPdfToSupabase(
+  file: File,
+  bucket: string = 'images',
+  path?: string
+): Promise<string | null> {
+  // Validar que Supabase esté configurado
+  if (!supabaseConfig.supabaseUrl || !supabaseConfig.supabaseAnonKey) {
+    console.error('Supabase no está configurado');
+    throw new Error('Supabase no está configurado. Por favor, agrega las variables de entorno NEXT_PUBLIC_SUPABASE_URL y NEXT_PUBLIC_SUPABASE_ANON_KEY');
+  }
+
+  try {
+    // Generar un nombre único para el archivo
+    const fileName = path || `orders/${Date.now()}-${Math.random().toString(36).substring(7)}.pdf`;
+    
+    // Subir el archivo
+    const { data, error } = await supabase.storage
+      .from(bucket)
+      .upload(fileName, file, {
+        cacheControl: '3600',
+        upsert: false,
+        contentType: 'application/pdf'
+      });
+
+    if (error) {
+      console.error('Error uploading PDF to Supabase:', error);
+      
+      // Mensaje más específico para errores de RLS
+      if (error.message?.includes('row-level security') || error.message?.includes('RLS')) {
+        throw new Error(
+          'Error de seguridad: El bucket tiene RLS activado. ' +
+          'Por favor, crea políticas en Supabase Dashboard → Storage → images → Policies ' +
+          'o desactiva RLS en el bucket si debe ser público.'
+        );
+      }
+      
+      throw error;
+    }
+
+    // Obtener la URL pública
+    const { data: { publicUrl } } = supabase.storage
+      .from(bucket)
+      .getPublicUrl(data.path);
+
+    return publicUrl;
+  } catch (error: any) {
+    console.error('Error uploading PDF to Supabase:', error);
+    throw error;
+  }
+}
+

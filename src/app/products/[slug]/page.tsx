@@ -11,19 +11,26 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
-import { Star, ShoppingCart } from 'lucide-react';
+import { Star, ShoppingCart, ZoomIn, X } from 'lucide-react';
 import { useCart } from '@/hooks/use-cart';
 import { useToast } from '@/hooks/use-toast';
 import AiSuggestions from '@/components/ai-suggestions';
 import { useCollection } from '@/firebase/use-collection';
 import { Product } from '@/lib/types';
 import { Skeleton } from '@/components/ui/skeleton';
+import {
+  Dialog,
+  DialogContent,
+} from '@/components/ui/dialog';
 
 export default function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
   // Unwrap params Promise using React.use()
   const { slug } = use(params);
   
   const [quantity, setQuantity] = useState(1);
+  const [zoomPosition, setZoomPosition] = useState({ x: 0, y: 0 });
+  const [isZooming, setIsZooming] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { addToCart } = useCart();
   const { toast } = useToast();
   
@@ -93,15 +100,60 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
       <div className="grid md:grid-cols-2 gap-8 lg:gap-16">
         <div>
           {mainImage && (
-            <div className="aspect-square w-full overflow-hidden rounded-lg shadow-lg mb-4">
-              <Image
-                src={mainImage.url}
-                alt={mainImage.alt}
-                width={800}
-                height={800}
-                className="object-cover w-full h-full transition-transform duration-300 hover:scale-105"
-              />
-            </div>
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+              <div className="aspect-square w-full overflow-hidden rounded-lg shadow-lg mb-4 relative group cursor-zoom-in">
+                <div
+                  className="relative w-full h-full"
+                  onMouseMove={(e) => {
+                    if (isZooming) {
+                      const rect = e.currentTarget.getBoundingClientRect();
+                      const x = ((e.clientX - rect.left) / rect.width) * 100;
+                      const y = ((e.clientY - rect.top) / rect.height) * 100;
+                      setZoomPosition({ x, y });
+                    }
+                  }}
+                  onMouseEnter={() => setIsZooming(true)}
+                  onMouseLeave={() => setIsZooming(false)}
+                  onClick={() => setIsDialogOpen(true)}
+                >
+                  <Image
+                    src={mainImage.url}
+                    alt={mainImage.alt}
+                    width={800}
+                    height={800}
+                    className={`object-cover w-full h-full transition-transform duration-300 ${
+                      isZooming ? 'scale-150' : 'scale-100'
+                    }`}
+                    style={{
+                      transformOrigin: `${zoomPosition.x}% ${zoomPosition.y}%`,
+                    }}
+                  />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
+                    <div className="bg-white/90 rounded-full p-3 shadow-lg">
+                      <ZoomIn className="h-6 w-6 text-gray-900" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <DialogContent className="max-w-7xl w-full p-0 bg-black/95 border-0 [&>button]:hidden">
+                <div className="relative w-full h-[90vh] flex items-center justify-center p-4">
+                  <Image
+                    src={mainImage.url}
+                    alt={mainImage.alt}
+                    width={1200}
+                    height={1200}
+                    className="object-contain w-full h-full rounded-lg"
+                  />
+                  <button
+                    onClick={() => setIsDialogOpen(false)}
+                    className="absolute top-6 right-6 bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white rounded-full p-3 transition-colors z-10"
+                    aria-label="Cerrar"
+                  >
+                    <X className="h-6 w-6" />
+                  </button>
+                </div>
+              </DialogContent>
+            </Dialog>
           )}
           <div className="grid grid-cols-4 gap-4">
             {product.images.map(image => (
