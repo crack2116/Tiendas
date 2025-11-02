@@ -16,10 +16,11 @@ import { Textarea } from '@/components/ui/textarea';
 import type { Product } from '@/lib/types';
 import { useFirestore } from '@/firebase';
 import { collection, addDoc, updateDoc, doc } from 'firebase/firestore';
+import { uploadImageToSupabase } from '@/supabase/storage';
 import { useToast } from '@/hooks/use-toast';
 import { Trash, Image as ImageIcon } from 'lucide-react';
 import { Separator } from '../ui/separator';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type ReactElement } from 'react';
 import Image from 'next/image';
 
 const imageSchema = z.object({
@@ -27,6 +28,7 @@ const imageSchema = z.object({
   url: z.string().url('Debe ser una URL válida.').or(z.literal('')),
   alt: z.string().min(1, 'El texto alternativo es requerido.'),
   hint: z.string().optional(),
+  file: z.any().optional(), // File object, no validado por zod
 });
 
 const formSchema = z.object({
@@ -47,6 +49,7 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
   const firestore = useFirestore();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [uploadingImages, setUploadingImages] = useState<{ [key: string]: boolean }>({});
 
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(formSchema),
@@ -90,7 +93,8 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
         images: [{ id: crypto.randomUUID(), url: '', alt: '' }],
       });
     }
-  }, [product, form.reset]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [product]);
 
 
   const { fields: imageFields, append: appendImage, remove: removeImage } = useFieldArray({
@@ -102,6 +106,118 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
     control: form.control,
     name: 'details',
   });
+
+  const handleImageUpload = async (file: File, imageId: string, index: number) => {
+    setUploadingImages(prev => ({ ...prev, [imageId]: true }));
+    
+    try {
+      // Subir la imagen a Supabase Storage
+      const imageUrl = await uploadImageToSupabase(file, 'images', `products/${imageId}-${Date.now()}`);
+      
+      if (!imageUrl) {
+        throw new Error('No se pudo obtener la URL de la imagen');
+      }
+      
+      // Actualizar el campo en el formulario
+      form.setValue(`images.${index}.url`, imageUrl);
+      form.setValue(`images.${index}.file`, undefined);
+      
+      toast({
+        title: 'Imagen cargada',
+        description: 'La imagen se ha cargado correctamente a Supabase.',
+      });
+    } catch (error: any) {
+      console.error('Error uploading image:', error);
+      toast({
+        variant: 'destructive',
+        title: 'Error al cargar imagen',
+        description: error.message || 'Ocurrió un error al cargar la imagen a Supabase.',
+      });
+    } finally {
+      setUploadingImages(prev => ({ ...prev, [imageId]: false }));
+    }
+  };
+
+  const renderImageField = (field: (typeof imageFields)[number], index: number): ReactElement => {
+    const previewUrl = field.url || '';
+    const hasValidUrl = previewUrl.trim() !== '';
+    
+    const previewElement = hasValidUrl ? (
+      <Image src={previewUrl} alt="Vista previa" width={96} height={96} className="object-cover w-full h-full" />
+    ) : (
+      <ImageIcon className="text-muted-foreground" />
+    );
+    
+    return (
+      <div key={field.id} className="p-4 border rounded-md space-y-4">
+        <div className="flex gap-4 items-start">
+          <div className="w-24 h-24 rounded-md bg-muted flex items-center justify-center overflow-hidden">
+            {previewElement}
+          </div>
+          <div className="flex-1 space-y-2">
+            <FormField
+              control={form.control}
+              name={`images.${index}.alt`}
+              render={({ field: formField }) => (
+                <FormItem>
+                  <FormLabel>Texto Alternativo</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Ej: Camisa blanca de algodón" {...formField} value={formField.value ?? ''} />
+                  </FormControl>
+                  <FormMessage />
+                  <p className="text-xs text-muted-foreground">
+                    Describe la imagen. Se usa como texto alternativo y para accesibilidad.
+                  </p>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name={`images.${index}.file`}
+              render={({ field: formField }) => (
+                <FormItem>
+                  <FormLabel>Imagen</FormLabel>
+                  <FormControl>
+                    <div className="space-y-2">
+                      <Input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            formField.onChange(file);
+                            handleImageUpload(file, field.id, index);
+                          }
+                        }}
+                        disabled={uploadingImages[field.id]}
+                        className="cursor-pointer"
+                      />
+                      {uploadingImages[field.id] && (
+                        <p className="text-sm text-muted-foreground">Cargando imagen...</p>
+                      )}
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                  <p className="text-xs text-muted-foreground">
+                    Selecciona una imagen para subir. Se cargará automáticamente a Supabase Storage.
+                  </p>
+                </FormItem>
+              )}
+            />
+          </div>
+          <Button 
+            type="button" 
+            variant="destructive" 
+            size="icon" 
+            onClick={() => removeImage(index)} 
+            disabled={imageFields.length <= 1}
+          >
+            <Trash className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
+    );
+  };
   
   const onSubmit = async (data: ProductFormValues) => {
     if (!firestore) return;
@@ -110,16 +226,31 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
     toast({ title: 'Guardando producto...', description: 'Por favor, espera.' });
 
     try {
-        // Generate placeholder URLs for images that don't have one
+        // Verificar si hay imágenes subiéndose
+        const hasUploadingImages = Object.values(uploadingImages).some(uploading => uploading);
+        if (hasUploadingImages) {
+            toast({
+                variant: 'destructive',
+                title: 'Espera',
+                description: 'Por favor espera a que terminen de cargarse las imágenes.',
+            });
+            setIsSubmitting(false);
+            return;
+        }
+
+        // Procesar imágenes: eliminar la propiedad file y generar placeholder si no hay URL
         const processedImages = data.images.map(image => {
-            if (!image.url) {
+            const { file, ...imageWithoutFile } = image;
+            
+            if (!imageWithoutFile.url) {
                 return {
-                    ...image,
+                    ...imageWithoutFile,
                     url: `https://placehold.co/600x600?text=${encodeURIComponent(image.alt)}`,
                     hint: image.alt,
-                }
+                };
             }
-            return image;
+            
+            return imageWithoutFile;
         });
 
         const productDataForFirestore = {
@@ -127,6 +258,9 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
             images: processedImages,
             details: data.details?.map(d => d.value).filter(Boolean) || [],
         };
+
+        // Eliminar la propiedad file del objeto final
+        delete (productDataForFirestore as any).file;
 
         if (product && product.id) {
             const productRef = doc(firestore, 'products', product.id);
@@ -259,53 +393,7 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
             <div>
                 <h3 className="text-lg font-medium mb-4">Imágenes</h3>
                 <div className="space-y-4">
-                {imageFields.map((field, index) => {
-                    const previewUrl = field.url;
-                    
-                    return (
-                    <div key={field.id} className="p-4 border rounded-md space-y-4">
-                        <div className="flex gap-4 items-start">
-                        <div className="w-24 h-24 rounded-md bg-muted flex items-center justify-center overflow-hidden">
-                            {previewUrl ? (
-                                <Image src={previewUrl} alt="Vista previa" width={96} height={96} className="object-cover w-full h-full" />
-                            ) : (
-                                <ImageIcon className="text-muted-foreground" />
-                            )}
-                        </div>
-                        <div className="flex-1 space-y-2">
-                             <FormField
-                                control={form.control}
-                                name={`images.${index}.alt`}
-                                render={({ field: formField }) => (
-                                    <FormItem>
-                                        <FormLabel>Texto Alternativo (usado para generar la imagen)</FormLabel>
-                                        <FormControl>
-                                            <Input placeholder="Descripción de la imagen" {...formField} value={formField.value ?? ''} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
-                                name={`images.${index}.url`}
-                                render={({ field: formField }) => (
-                                    <FormItem>
-                                        <FormLabel>URL de la imagen (Opcional)</FormLabel>
-                                        <FormControl>
-                                            <Input placeholder="Dejar en blanco para generar placeholder" {...formField} value={formField.value ?? ''} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                        </div>
-                        <Button type="button" variant="destructive" size="icon" onClick={() => removeImage(index)} disabled={imageFields.length <= 1}>
-                            <Trash className="h-4 w-4" />
-                        </Button>
-                        </div>
-                    </div>
-                )})}
+                    {imageFields.map((field, index) => renderImageField(field, index))}
                 </div>
                 <Button
                     type="button"
