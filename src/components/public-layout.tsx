@@ -3,6 +3,7 @@
 import { usePathname } from 'next/navigation';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
+import { AiAssistant } from './ai-assistant';
 
 export function PublicLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -22,6 +23,7 @@ export function PublicLayout({ children }: { children: React.ReactNode }) {
       <>
         <Header />
         <main className="flex-grow">{children}</main>
+        <AiAssistant />
         <Footer />
       </>
     );
