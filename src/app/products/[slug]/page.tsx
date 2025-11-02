@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, use } from 'react';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { Button } from '@/components/ui/button';
@@ -19,13 +19,16 @@ import { useCollection } from '@/firebase/use-collection';
 import { Product } from '@/lib/types';
 import { Skeleton } from '@/components/ui/skeleton';
 
-export default function ProductPage({ params }: { params: { slug: string } }) {
+export default function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
+  // Unwrap params Promise using React.use()
+  const { slug } = use(params);
+  
   const [quantity, setQuantity] = useState(1);
   const { addToCart } = useCart();
   const { toast } = useToast();
   
   const { data, loading, error } = useCollection<Product>('products', {
-    where: [['slug', '==', params.slug]],
+    where: [['slug', '==', slug]],
     limit: 1,
   });
 

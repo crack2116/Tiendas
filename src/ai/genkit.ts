@@ -1,5 +1,4 @@
-'use client';
-
+// Genkit debe ejecutarse solo en el servidor, no usar 'use client'
 import {genkit} from 'genkit';
 import {googleAI} from '@genkit-ai/google-genai';
 
