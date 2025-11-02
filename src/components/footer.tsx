@@ -31,19 +31,38 @@ export function Footer() {
           <div className="col-span-1">
             <h3 className="font-semibold mb-4 font-headline">Tienda</h3>
             <ul className="space-y-2 text-sm">
-              <li><Link href="#" className="text-muted-foreground hover:text-primary">Novedades</Link></li>
-              <li><Link href="#" className="text-muted-foreground hover:text-primary">Ropa</Link></li>
-              <li><Link href="#" className="text-muted-foreground hover:text-primary">Accesorios</Link></li>
-              <li><Link href="#" className="text-muted-foreground hover:text-primary">Ofertas</Link></li>
-            </ul>
-          </div>
-          <div className="col-span-1">
-            <h3 className="font-semibold mb-4 font-headline">Soporte</h3>
-            <ul className="space-y-2 text-sm">
-              <li><Link href="#" className="text-muted-foreground hover:text-primary">Contáctanos</Link></li>
-              <li><Link href="#" className="text-muted-foreground hover:text-primary">Preguntas Frecuentes</Link></li>
-              <li><Link href="#" className="text-muted-foreground hover:text-primary">Envíos y Devoluciones</Link></li>
-              <li><Link href="#" className="text-muted-foreground hover:text-primary">Seguimiento de Pedido</Link></li>
+              <li>
+                <Link 
+                  href="/?category=Lanzamientos#products" 
+                  className="text-muted-foreground hover:text-primary"
+                >
+                  Novedades
+                </Link>
+              </li>
+              <li>
+                <Link 
+                  href="/?category=Hombre#products" 
+                  className="text-muted-foreground hover:text-primary"
+                >
+                  Ropa
+                </Link>
+              </li>
+              <li>
+                <Link 
+                  href="/?category=Accesorios#products" 
+                  className="text-muted-foreground hover:text-primary"
+                >
+                  Accesorios
+                </Link>
+              </li>
+              <li>
+                <Link 
+                  href="/?category=Promociones#products" 
+                  className="text-muted-foreground hover:text-primary"
+                >
+                  Ofertas
+                </Link>
+              </li>
             </ul>
           </div>
           <div className="col-span-1 md:col-span-4 lg:col-span-1">

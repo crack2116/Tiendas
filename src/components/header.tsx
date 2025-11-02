@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { useCart } from '@/hooks/use-cart';
 import { CartSheet } from './cart-sheet';
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { Logo } from './logo';
 import { LoginDialog } from './login-dialog';
 import { useAuth } from '@/hooks/use-auth';
@@ -21,29 +21,72 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { useTheme } from '@/hooks/use-theme';
+import { usePathname, useSearchParams, useRouter } from 'next/navigation';
 
 
 const navLinks = [
-  { href: '#', label: 'Lanzamientos' },
-  { href: '#', label: 'Más vendidos' },
-  { href: '#', label: 'Promociones' },
-  { href: '#', label: 'Perfumería' },
-  { href: '#', label: 'Rostro' },
-  { href: '#', label: 'Cabello' },
-  { href: '#', label: 'Cuerpo' },
-  { href: '#', label: 'Maquillaje' },
-  { href: '#', label: 'Regalos' },
-  { href: '#', label: 'Hombre' },
+  { href: '/?category=Lanzamientos', label: 'Lanzamientos', category: 'Lanzamientos' },
+  { href: '/?category=Más vendidos', label: 'Más vendidos', category: 'Más vendidos' },
+  { href: '/?category=Promociones', label: 'Promociones', category: 'Promociones' },
+  { href: '/?category=Perfumería', label: 'Perfumería', category: 'Perfumería' },
+  { href: '/?category=Rostro', label: 'Rostro', category: 'Rostro' },
+  { href: '/?category=Cabello', label: 'Cabello', category: 'Cabello' },
+  { href: '/?category=Cuerpo', label: 'Cuerpo', category: 'Cuerpo' },
+  { href: '/?category=Maquillaje', label: 'Maquillaje', category: 'Maquillaje' },
+  { href: '/?category=Regalos', label: 'Regalos', category: 'Regalos' },
+  { href: '/?category=Hombre', label: 'Hombre', category: 'Hombre' },
 ];
+
+function NavigationBar() {
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const currentCategory = searchParams.get('category');
+
+  return (
+    <nav className="hidden md:flex container items-center justify-center space-x-2 text-sm font-medium py-2">
+      {navLinks.map(link => {
+        const isActive = pathname === '/' && currentCategory === link.category;
+        return (
+          <Button
+            key={link.label}
+            variant='ghost'
+            size="sm"
+            asChild
+            className={`rounded-full ${
+              isActive 
+                ? 'bg-[#f37423] text-white' 
+                : 'hover:bg-[#f37423] hover:text-white'
+            }`}
+          >
+            <Link
+              href={`/?category=${encodeURIComponent(link.category)}#products`}
+            >
+              {link.label}
+            </Link>
+          </Button>
+        );
+      })}
+    </nav>
+  );
+}
 
 export function Header() {
   const [isCartOpen, setCartOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const router = useRouter();
   const { user, logout } = useAuth();
   const { theme, setTheme } = useTheme();
   
   const getInitials = (name?: string) => {
     if (!name) return 'U';
     return name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+  };
+
+  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/?search=${encodeURIComponent(searchQuery.trim())}#products`);
+    }
   };
 
 
@@ -68,7 +111,7 @@ export function Header() {
                     {navLinks.map(link => (
                       <Link
                         key={link.label}
-                        href={link.href}
+                        href={`/?category=${encodeURIComponent(link.category)}#products`}
                         className="text-lg"
                       >
                         {link.label}
@@ -84,13 +127,24 @@ export function Header() {
           </div>
 
           <div className="flex-1 min-w-0">
-            <form className="w-full max-w-xl mx-auto">
+            <form onSubmit={handleSearch} className="w-full max-w-xl mx-auto">
               <div className="relative">
                 <Input
+                  type="search"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full appearance-none bg-secondary pl-4 pr-10 h-12 rounded-full text-base"
                   placeholder="¿Qué buscas hoy?"
                 />
-                <Search className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                <Button
+                  type="submit"
+                  variant="ghost"
+                  size="icon"
+                  className="absolute right-1 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full"
+                >
+                  <Search className="h-5 w-5 text-muted-foreground" />
+                  <span className="sr-only">Buscar</span>
+                </Button>
               </div>
             </form>
           </div>
@@ -165,23 +219,23 @@ export function Header() {
         </div>
       </div>
 
-      <nav className="hidden md:flex container items-center justify-center space-x-2 text-sm font-medium py-2">
-        {navLinks.map(link => (
-          <Button
-            key={link.label}
-            variant='ghost'
-            size="sm"
-            asChild
-            className='hover:bg-[#f37423] hover:text-white rounded-full'
-          >
-            <Link
-              href={link.href}
+      <Suspense fallback={
+        <nav className="hidden md:flex container items-center justify-center space-x-2 text-sm font-medium py-2">
+          {navLinks.map(link => (
+            <Button
+              key={link.label}
+              variant='ghost'
+              size="sm"
+              className="rounded-full hover:bg-[#f37423] hover:text-white"
+              disabled
             >
               {link.label}
-            </Link>
-          </Button>
-        ))}
-      </nav>
+            </Button>
+          ))}
+        </nav>
+      }>
+        <NavigationBar />
+      </Suspense>
     </header>
   );
 }

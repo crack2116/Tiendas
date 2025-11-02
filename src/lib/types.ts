@@ -42,6 +42,9 @@ export type Order = {
   status: 'Procesando' | 'Enviado' | 'Entregado' | 'Cancelado';
   total: number;
   items: OrderItem[];
+  paymentMethod?: string;
+  yapeNumber?: string;
+  yapeVerificationCode?: string;
 };
 
 export type User = {
