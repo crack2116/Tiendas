@@ -1,5 +1,6 @@
 
 import type {NextConfig} from 'next';
+import webpack from 'webpack';
 
 const nextConfig: NextConfig = {
   /* config options here */
@@ -9,6 +10,12 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  // Excluir paquetes del bundle del cliente
+  serverComponentsExternalPackages: [
+    '@opentelemetry/context-async-hooks',
+    '@opentelemetry/api',
+    'genkit',
+  ],
   images: {
     unoptimized: true,
     remotePatterns: [
@@ -53,8 +60,56 @@ const nextConfig: NextConfig = {
         hostname: 'www.iese.edu',
         port: '',
         pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.supabase.co',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'isabxvegccfqfawdioys.supabase.co',
+        port: '',
+        pathname: '/**',
       }
     ],
+  },
+  webpack: (config, { isServer }) => {
+    // Excluir módulos de Node.js del bundle del cliente
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        async_hooks: false,
+        fs: false,
+        net: false,
+        tls: false,
+        crypto: false,
+        stream: false,
+        http: false,
+        https: false,
+        zlib: false,
+        url: false,
+        path: false,
+        os: false,
+      };
+      
+      // Excluir @opentelemetry completamente del bundle del cliente
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        '@opentelemetry/context-async-hooks': false,
+        '@opentelemetry/api': false,
+      };
+      
+      // Ignorar completamente @opentelemetry en el cliente
+      config.plugins = config.plugins || [];
+      config.plugins.push(
+        new webpack.IgnorePlugin({
+          resourceRegExp: /^@opentelemetry\/context-async-hooks$/,
+        })
+      );
+    }
+    return config;
   },
 };
 
