@@ -10,8 +10,8 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  // Excluir paquetes del bundle del cliente
-  serverComponentsExternalPackages: [
+  // Excluir paquetes del bundle del cliente (Next.js 15: serverExternalPackages)
+  serverExternalPackages: [
     '@opentelemetry/context-async-hooks',
     '@opentelemetry/api',
     'genkit',
