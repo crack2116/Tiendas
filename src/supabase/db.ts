@@ -53,7 +53,7 @@ export async function fetchProducts(options?: {
   if (options?.orderBy) {
     q = q.order(options.orderBy, { ascending: options?.orderDirection !== 'desc' });
   }
-  if (options?.limit) {
+  if (options?.limit != null) {
     q = q.limit(options.limit);
   }
   const { data, error } = await q;

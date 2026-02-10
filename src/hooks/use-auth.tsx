@@ -143,7 +143,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const login = async (email: string, password: string) => {
     setLoading(true);
     try {
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      const timeoutMs = 15000;
+      const result = await Promise.race([
+        supabase.auth.signInWithPassword({ email, password }),
+        new Promise<{ error: Error }>((_, reject) =>
+          setTimeout(() => reject(new Error('La conexión tardó demasiado. Comprueba tu red o la URL de Supabase.')), timeoutMs)
+        ),
+      ]);
+      const { error } = result;
       if (error) throw error;
     } catch (error) {
       console.error('Error logging in:', error);

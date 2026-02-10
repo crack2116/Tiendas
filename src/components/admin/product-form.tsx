@@ -19,8 +19,40 @@ import { uploadImageToSupabase } from '@/supabase/storage';
 import { useToast } from '@/hooks/use-toast';
 import { Trash, Image as ImageIcon } from 'lucide-react';
 import { Separator } from '../ui/separator';
-import { useState, useEffect, type ReactElement } from 'react';
-import Image from 'next/image';
+import { useState, useEffect, useRef, type ReactElement } from 'react';
+
+/** Vista previa de imagen: usa <img> para evitar restricciones de dominio y muestra fallback si falla. */
+function ImagePreview({ src, alt }: { src: string; alt: string }) {
+  const [error, setError] = useState(false);
+  const showImg = src && src.trim() !== '' && !error;
+  if (!showImg) {
+    return (
+      <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+        <ImageIcon className="h-10 w-10" />
+      </div>
+    );
+  }
+  return (
+    <img
+      src={src}
+      alt={alt}
+      className="object-cover w-full h-full"
+      onError={() => setError(true)}
+    />
+  );
+}
+
+/** Genera un ID único; usa crypto.randomUUID en contextos seguros, fallback en HTTP. */
+function generateId(): string {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID();
+  }
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0;
+    const v = c === 'x' ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+}
 
 const imageSchema = z.object({
   id: z.string(),
@@ -48,6 +80,8 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploadingImages, setUploadingImages] = useState<{ [key: string]: boolean }>({});
+  const lastAppendImageRef = useRef(0);
+  const isAppendingImageRef = useRef(false);
 
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(formSchema),
@@ -88,7 +122,7 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
         description: '',
         badge: '',
         details: [{ value: '' }],
-        images: [{ id: crypto.randomUUID(), url: '', alt: '' }],
+        images: [{ id: generateId(), url: '', alt: '' }],
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -137,20 +171,14 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
   };
 
   const renderImageField = (field: (typeof imageFields)[number], index: number): ReactElement => {
-    const previewUrl = field.url || '';
-    const hasValidUrl = previewUrl.trim() !== '';
-    
-    const previewElement = hasValidUrl ? (
-      <Image src={previewUrl} alt="Vista previa" width={96} height={96} className="object-cover w-full h-full" />
-    ) : (
-      <ImageIcon className="text-muted-foreground" />
-    );
-    
+    const previewUrl = form.watch(`images.${index}.url`) ?? field.url ?? '';
+    const previewAlt = form.watch(`images.${index}.alt`) ?? field.alt ?? 'Vista previa';
+
     return (
       <div key={field.id} className="p-4 border rounded-md space-y-4">
         <div className="flex gap-4 items-start">
-          <div className="w-24 h-24 rounded-md bg-muted flex items-center justify-center overflow-hidden">
-            {previewElement}
+          <div className="w-24 h-24 rounded-md bg-muted flex items-center justify-center overflow-hidden shrink-0">
+            <ImagePreview src={previewUrl} alt={previewAlt} />
           </div>
           <div className="flex-1 space-y-2">
             <FormField
@@ -234,20 +262,28 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
             return;
         }
 
-        // Procesar imágenes: eliminar la propiedad file y generar placeholder si no hay URL
-        const processedImages = data.images.map(image => {
+        // Procesar imágenes: eliminar la propiedad file, generar placeholder si no hay URL
+        // y evitar duplicados (p. ej. si por error se añadió dos veces el mismo bloque vacío).
+        const seenKeys = new Set<string>();
+        const processedImages = data.images.reduce<typeof data.images>((acc, image) => {
             const { file, ...imageWithoutFile } = image;
-            
-            if (!imageWithoutFile.url) {
-                return {
+
+            const baseImage = !imageWithoutFile.url
+                ? {
                     ...imageWithoutFile,
                     url: `https://placehold.co/600x600?text=${encodeURIComponent(image.alt)}`,
                     hint: image.alt,
-                };
+                  }
+                : imageWithoutFile;
+
+            const key = `${baseImage.url}|${baseImage.alt ?? ''}`;
+            if (seenKeys.has(key)) {
+              return acc;
             }
-            
-            return imageWithoutFile;
-        });
+            seenKeys.add(key);
+            acc.push(baseImage);
+            return acc;
+        }, []);
 
         const payload = {
             slug: data.slug,
@@ -399,7 +435,20 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
                     variant="outline"
                     size="sm"
                     className="mt-4"
-                    onClick={() => appendImage({ id: crypto.randomUUID(), url: '', alt: '' })}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      if (isAppendingImageRef.current) return;
+                      isAppendingImageRef.current = true;
+                      const now = Date.now();
+                      if (now - lastAppendImageRef.current < 400) {
+                        isAppendingImageRef.current = false;
+                        return;
+                      }
+                      lastAppendImageRef.current = now;
+                      appendImage({ id: generateId(), url: '', alt: '' });
+                      setTimeout(() => { isAppendingImageRef.current = false; }, 400);
+                    }}
                 >
                     Añadir Imagen
                 </Button>

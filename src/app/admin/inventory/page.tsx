@@ -221,6 +221,10 @@ export default function InventoryPage() {
         isOpen={isDialogOpen} 
         onClose={handleDialogClose}
         product={selectedProduct}
+        onSaveSuccess={() => {
+          refetch().catch(() => {});
+          handleDialogClose();
+        }}
       />
        <AlertDialog open={isDeleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>

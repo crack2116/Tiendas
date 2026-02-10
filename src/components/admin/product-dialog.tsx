@@ -16,16 +16,22 @@ interface ProductDialogProps {
   isOpen: boolean;
   onClose: () => void;
   product: Product | null;
+  onSaveSuccess?: () => void;
 }
 
-export function ProductDialog({ isOpen, onClose, product }: ProductDialogProps) {
+export function ProductDialog({ isOpen, onClose, product, onSaveSuccess }: ProductDialogProps) {
   const dialogTitle = product ? 'Editar Producto' : 'Añadir Nuevo Producto';
   const dialogDescription = product
     ? 'Edita los detalles de tu producto.'
     : 'Añade un nuevo producto a tu inventario.';
 
+  const handleSaveSuccess = () => {
+    onSaveSuccess?.();
+    onClose();
+  };
+
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={(open) => { if (!open) onClose(); }}>
       <DialogContent className="sm:max-w-4xl max-h-[90vh] flex flex-col">
         <DialogHeader>
           <DialogTitle>{dialogTitle}</DialogTitle>
@@ -33,7 +39,7 @@ export function ProductDialog({ isOpen, onClose, product }: ProductDialogProps) 
         </DialogHeader>
         <ScrollArea className='flex-1'>
             <div className='pr-6'>
-                <ProductForm product={product} onSaveSuccess={onClose} />
+                <ProductForm product={product} onSaveSuccess={handleSaveSuccess} />
             </div>
         </ScrollArea>
       </DialogContent>
