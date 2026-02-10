@@ -15,7 +15,7 @@ import { Star, ShoppingCart, ZoomIn, X } from 'lucide-react';
 import { useCart } from '@/hooks/use-cart';
 import { useToast } from '@/hooks/use-toast';
 import AiSuggestions from '@/components/ai-suggestions';
-import { useCollection } from '@/firebase/use-collection';
+import { useProductBySlug } from '@/hooks/use-product-by-slug';
 import { Product } from '@/lib/types';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
@@ -34,12 +34,7 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
   const { addToCart } = useCart();
   const { toast } = useToast();
   
-  const { data, loading, error } = useCollection<Product>('products', {
-    where: [['slug', '==', slug]],
-    limit: 1,
-  });
-
-  const product = data?.[0];
+  const { data: product, loading, error } = useProductBySlug(slug);
   const [mainImage, setMainImage] = useState(product?.images[0]);
 
   useEffect(() => {

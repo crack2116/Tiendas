@@ -14,8 +14,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import type { Product } from '@/lib/types';
-import { useFirestore } from '@/firebase';
-import { collection, addDoc, updateDoc, doc } from 'firebase/firestore';
+import { insertProduct, updateProduct } from '@/supabase/db';
 import { uploadImageToSupabase } from '@/supabase/storage';
 import { useToast } from '@/hooks/use-toast';
 import { Trash, Image as ImageIcon } from 'lucide-react';
@@ -46,7 +45,6 @@ const formSchema = z.object({
 type ProductFormValues = z.infer<typeof formSchema>;
 
 export function ProductForm({ product, onSaveSuccess }: { product: Product | null, onSaveSuccess: () => void }) {
-  const firestore = useFirestore();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploadingImages, setUploadingImages] = useState<{ [key: string]: boolean }>({});
@@ -220,8 +218,6 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
   };
   
   const onSubmit = async (data: ProductFormValues) => {
-    if (!firestore) return;
-
     setIsSubmitting(true);
     toast({ title: 'Guardando producto...', description: 'Por favor, espera.' });
 
@@ -253,21 +249,24 @@ export function ProductForm({ product, onSaveSuccess }: { product: Product | nul
             return imageWithoutFile;
         });
 
-        const productDataForFirestore = {
-            ...data,
+        const payload = {
+            slug: data.slug,
+            name: data.name,
+            category: data.category,
+            price: data.price,
+            originalPrice: data.originalPrice,
+            description: data.description,
+            badge: data.badge || undefined,
             images: processedImages,
             details: data.details?.map(d => d.value).filter(Boolean) || [],
+            reviews: product?.reviews ?? [],
         };
 
-        // Eliminar la propiedad file del objeto final
-        delete (productDataForFirestore as any).file;
-
         if (product && product.id) {
-            const productRef = doc(firestore, 'products', product.id);
-            await updateDoc(productRef, productDataForFirestore as any);
+            await updateProduct(product.id, payload);
             toast({ title: 'Éxito', description: 'Producto actualizado correctamente.' });
         } else {
-            await addDoc(collection(firestore, 'products'), productDataForFirestore);
+            await insertProduct(payload);
             toast({ title: 'Éxito', description: 'Producto añadido correctamente.' });
         }
         onSaveSuccess();

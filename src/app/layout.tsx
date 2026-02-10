@@ -4,7 +4,6 @@ import { CartProvider } from '@/hooks/use-cart';
 import { AuthProvider } from '@/hooks/use-auth';
 import { Toaster } from '@/components/ui/toaster';
 import { ThemeProvider } from '@/hooks/theme-provider';
-import { FirebaseClientProvider } from '@/firebase/client-provider';
 import { PublicLayout } from '@/components/public-layout';
 
 export const metadata: Metadata = {
@@ -42,16 +41,14 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
         >
-          <FirebaseClientProvider>
-            <AuthProvider>
-              <CartProvider>
-                <PublicLayout>
-                  {children}
-                </PublicLayout>
-                <Toaster />
-              </CartProvider>
-            </AuthProvider>
-          </FirebaseClientProvider>
+          <AuthProvider>
+            <CartProvider>
+              <PublicLayout>
+                {children}
+              </PublicLayout>
+              <Toaster />
+            </CartProvider>
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

@@ -2,8 +2,9 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { useCollection, useFirestore } from '@/firebase';
+import { useProducts } from '@/hooks/use-products';
 import type { Product } from '@/lib/types';
+import { deleteProduct } from '@/supabase/db';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -21,12 +22,10 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
-import { doc, deleteDoc } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 
 export default function InventoryPage() {
-  const { data: products, loading, error } = useCollection<Product>('products');
-  const firestore = useFirestore();
+  const { data: products, loading, error, refetch } = useProducts();
   const { toast } = useToast();
 
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -50,14 +49,15 @@ export default function InventoryPage() {
   };
 
   const handleDeleteProduct = async () => {
-    if (!firestore || !productToDelete) return;
+    if (!productToDelete) return;
 
     try {
-      await deleteDoc(doc(firestore, 'products', productToDelete.id));
+      await deleteProduct(productToDelete.id);
       toast({
         title: 'Producto Eliminado',
         description: `El producto "${productToDelete.name}" ha sido eliminado.`,
       });
+      refetch();
     } catch (error: any) {
       toast({
         variant: 'destructive',

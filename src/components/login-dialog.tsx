@@ -46,10 +46,14 @@ export function LoginDialog({ children }: { children: React.ReactNode }) {
         setOpen(false);
         router.push('/account/orders');
     } catch (error: any) {
+        const msg = error?.message ?? '';
+        const isRateLimit = msg.toLowerCase().includes('rate limit') || error?.status === 429;
         toast({
             variant: "destructive",
             title: "Error",
-            description: error.message || (isLogin ? 'No se pudo iniciar sesión.' : 'No se pudo crear la cuenta.'),
+            description: isRateLimit
+                ? 'Demasiados intentos. Espera unos minutos y vuelve a intentar, o prueba con otro correo.'
+                : (msg || (isLogin ? 'No se pudo iniciar sesión.' : 'No se pudo crear la cuenta.')),
         });
     }
   };

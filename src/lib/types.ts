@@ -1,5 +1,3 @@
-import { Timestamp } from 'firebase/firestore';
-
 export type Review = {
   id: string;
   author: string;
@@ -38,7 +36,7 @@ export type OrderItem = {
 export type Order = {
   id: string;
   userId: string;
-  createdAt: Timestamp;
+  createdAt: string; // ISO date string from Supabase
   status: 'Procesando' | 'Enviado' | 'Entregado' | 'Cancelado';
   total: number;
   items: OrderItem[];

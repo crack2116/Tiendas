@@ -19,7 +19,8 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ArrowUpRight, DollarSign, Users, CreditCard, Activity } from 'lucide-react';
-import { useCollection } from '@/firebase';
+import { useOrders } from '@/hooks/use-orders';
+import { useProducts } from '@/hooks/use-products';
 import type { Order, Product } from '@/lib/types';
 import { Skeleton } from '@/components/ui/skeleton';
 import { format } from 'date-fns';
@@ -30,16 +31,13 @@ export default function AdminDashboard() {
     data: orders,
     loading: ordersLoading,
     error: ordersError,
-  } = useCollection<Order>('orders', {
-    orderBy: [['createdAt', 'desc']],
-    limit: 5,
-  });
+  } = useOrders({ orderBy: 'created_at', orderDirection: 'desc', limit: 5 });
 
   const {
     data: products,
     loading: productsLoading,
     error: productsError,
-  } = useCollection<Product>('products');
+  } = useProducts();
 
   const isLoading = ordersLoading || productsLoading;
 
@@ -159,7 +157,7 @@ export default function AdminDashboard() {
                             <div className="font-medium text-xs">#{order.userId.substring(0, 12)}...</div>
                         </TableCell>
                         <TableCell className="hidden xl:table-cell">
-                            {format(order.createdAt.toDate(), "d MMM, yyyy, HH:mm", { locale: es })}
+                            {format(new Date(order.createdAt), "d MMM, yyyy, HH:mm", { locale: es })}
                         </TableCell>
                          <TableCell>
                             <Badge variant={getBadgeVariant(order.status) as any} className="text-xs" >

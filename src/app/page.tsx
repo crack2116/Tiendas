@@ -18,7 +18,7 @@ import {
 import Autoplay from "embla-carousel-autoplay"
 import { Filter } from 'lucide-react';
 import { ProductFilters } from '@/components/product-filters';
-import { useCollection } from '@/firebase';
+import { useProducts } from '@/hooks/use-products';
 import type { Product } from '@/lib/types';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -66,10 +66,10 @@ function HomeContent() {
   const selectedCategory = searchParams.get('category');
   const searchQuery = searchParams.get('search');
   
-  const { data: allProducts, loading, error } = useCollection<Product>('products');
+  const { data: allProducts, loading, error } = useProducts();
   
   // Filtrar productos por categoría o búsqueda
-  const products = allProducts?.filter(product => {
+  const products = (allProducts ?? []).filter(product => {
     // Si hay una búsqueda, filtrar por nombre o descripción
     if (searchQuery) {
       const query = searchQuery.toLowerCase();

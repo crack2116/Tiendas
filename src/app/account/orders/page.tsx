@@ -1,6 +1,6 @@
 'use client';
 
-import { useCollection } from '@/firebase';
+import { useUserOrders } from '@/hooks/use-user-orders';
 import type { Order } from '@/lib/types';
 import { useAuth } from '@/hooks/use-auth';
 import {
@@ -23,12 +23,7 @@ import { es } from 'date-fns/locale';
 export default function OrdersPage() {
   const { user, loading: userLoading } = useAuth();
   
-  const { data: orders, loading: ordersLoading, error } = useCollection<Order>(
-    user ? `users/${user.uid}/orders` : null,
-    {
-      orderBy: [['createdAt', 'desc']],
-    }
-  );
+  const { data: orders, loading: ordersLoading, error } = useUserOrders(user?.uid ?? null);
 
   const getBadgeVariant = (status: string) => {
     switch (status) {
@@ -79,7 +74,7 @@ export default function OrdersPage() {
               {!isLoading && orders && orders.length > 0 && orders.map(order => (
                 <TableRow key={order.id}>
                   <TableCell className="font-medium text-xs">#{order.id.substring(0, 7)}...</TableCell>
-                  <TableCell>{format(order.createdAt.toDate(), "d 'de' MMMM, yyyy", { locale: es })}</TableCell>
+                  <TableCell>{format(new Date(order.createdAt), "d 'de' MMMM, yyyy", { locale: es })}</TableCell>
                   <TableCell>
                     <Badge variant={getBadgeVariant(order.status) as any}>
                       {order.status}

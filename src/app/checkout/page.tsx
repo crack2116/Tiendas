@@ -10,10 +10,9 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/use-auth';
 import { useEffect, useState } from 'react';
-import { useFirestore } from '@/firebase';
-import { collection, addDoc, serverTimestamp, writeBatch, doc } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 import type { Order } from '@/lib/types';
+import { insertOrder } from '@/supabase/db';
 import jsPDF from 'jspdf';
 import { uploadPdfToSupabase } from '@/supabase/storage';
 
@@ -22,7 +21,6 @@ export default function CheckoutPage() {
   const { cart, totalPrice, clearCart, itemCount } = useCart();
   const { user } = useAuth();
   const router = useRouter();
-  const firestore = useFirestore();
   const { toast } = useToast();
   const [isSubmitting, setSubmitting] = useState(false);
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
@@ -140,7 +138,7 @@ export default function CheckoutPage() {
 
   const handlePlaceOrder = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!firestore || !user || isSubmitting) return;
+    if (!user || isSubmitting) return;
 
     setSubmitting(true);
 
@@ -150,7 +148,7 @@ export default function CheckoutPage() {
 
     const orderData: Omit<Order, 'id'> = {
       userId: user.uid,
-      createdAt: serverTimestamp() as any, // Firestore will set the date
+      createdAt: new Date().toISOString(),
       status: 'Procesando',
       total: totalPrice,
       items: cart.map(item => ({
@@ -166,17 +164,7 @@ export default function CheckoutPage() {
     };
     
     try {
-        const batch = writeBatch(firestore);
-
-        // Add to general orders collection (for admin)
-        const newOrderRef = doc(collection(firestore, 'orders'));
-        batch.set(newOrderRef, orderData);
-
-        // Add to user-specific orders subcollection
-        const userOrderRef = doc(collection(firestore, `users/${user.uid}/orders`, newOrderRef.id));
-        batch.set(userOrderRef, orderData);
-        
-        await batch.commit();
+        await insertOrder(orderData);
 
         toast({
             title: "¡Pedido realizado con éxito!",
